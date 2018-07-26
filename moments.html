@@ -24,9 +24,7 @@
 			.mui-content-padded a .mui-icon-extra {
 				margin-top: 12px;
 			}
-			.mui-spinner, .mui-spinner-white {
-				margin-top: 12px
-			}
+			
 			.active	.mui-spinner-indicator {
 				background: #007AFF;
 			}			
@@ -226,10 +224,17 @@
 				<span class="mui-tab-label">我的</span>
 			</a>
 		</nav>
-		<div id="content" class="mui-content">			
-			<p>
-				<img src="images/moment_background.jpg" height="230px" width="100%"/>
-			</p>
+		<div id="content" class="mui-content mui-scroll-wrapper">		
+			<div  class="mui-scroll">
+				<!--数据列表-->
+				<p>
+					<img src="images/moment_background.jpg" height="230px" width="100%"/>
+				</p>
+				<div id="messageDiv">
+				 
+				</div>
+			
+			</div>
 		</div>
 		<div id="comment" class="mui-popover mui-popover-action mui-popover-bottom">
 			<ul class="mui-table-view">
@@ -250,8 +255,10 @@
 	<script src="js/mui.pullToRefresh.material.js"></script>
 	<script src="js/mui.pullToRefresh.js"></script>
 	<script src="js/mui.previewimage.js"></script>
-	<script>
+	<script>		
 		mui.previewImage();
+	</script>
+	<script>
 		var boundaryId = -1;
 		var maxId =0;
 		var mid = 0;
@@ -289,12 +296,37 @@
 				id: 'my_own.html' 
 	    	});
 		})
-		var contents = document.getElementById("content");
+		/**
+		 * 下拉刷新具体业务实现
+		 */
+		function pulldownRefresh() {
+			setTimeout(function() {
+				getMessageByQidDownFresh(1);
+				mui('#content').pullRefresh().endPulldownToRefresh(); //refresh completed
+				
+			}, 1500);
+		}
+	
+		/**
+		 * 上拉加载具体业务实现
+		 */
+		function pullupRefresh() {
+			setTimeout(function() {
+				//mui('#pullrefresh').pullRefresh().endPullupToRefresh((++count > 2)); //参数为true代表没有更多数据了。
+				console.log("bound="+boundaryId);
+				getMessageByQid(1,boundaryId);
+				mui('#content').pullRefresh().endPullupToRefresh(boundaryId==-2);
+			}, 1500);
+		}
+	</script>
+	<script>
+		var contents = document.getElementById("messageDiv");
 		var prePend = document.getElementById("backImg");
-		getMessageByQid(-1);
+		getMessageByQid(1,-1);
 		getNickName();
+		
 		function getNickName(){
-			   mui.ajax(PREPATH+"/selectUserByUid",{
+			mui.ajax(PREPATH+"/selectUserByUid",{
 				type:"post",
 				async:true,
 				data:{},
@@ -316,11 +348,12 @@
 		}
 		
 		
-		function getMessageByQidDownFresh(){
-			    mui.ajax(PREPATH+"/selectAllMessageByQidDownFresh",{
+		function getMessageByQidDownFresh(qid){
+
+			mui.ajax(PREPATH+"/selectAllMessageByQidDownFresh",{
 				type:"post",
 				async:true,
-				data:{maxId:maxId},
+				data:{qid:qid,maxId:maxId},
 				dataType:"json",
 				xhrFields: {  
 					withCredentials: true  
@@ -328,11 +361,12 @@
 				crossDomain: true,
 				success:function(data){
 					for(var i=data.length-1;i>=0;i--){
-						$(prePend).after(showComment(data[i]));		
+						jQuery(prePend).after(showComment(data[i]));		
 					}
 					if(data.length>0){
 							maxId = data[0].mid;
 					}
+					
 				},
 				error:function(xhr,type,errorThrown){
 					//异常处理；
@@ -341,11 +375,11 @@
 			});
 		}
 	
-		function getMessageByQid(rowId){
+		function getMessageByQid(qid,rowId){
 			mui.ajax(PREPATH+"/selectAllMessageByPageAndQid",{
 				type:"post",
 				async:true,
-				data:{rowId:rowId},
+				data:{qid:qid,rowId:rowId},
 				dataType:"json",
 				xhrFields: {  
 					withCredentials: true  
@@ -354,7 +388,7 @@
 				success:function(data){
 					for(var i=0;i<data.length;i++){
 					//	console.log(data.length);
-						$(contents).append(showComment(data[i]));		
+						jQuery(contents).append(showComment(data[i]));		
 					}
 					
 					if(data.length!=0)
@@ -363,11 +397,6 @@
 						boundaryId = -2;
 					if(rowId==-1)
 						maxId = data[0].mid;
-					
-					setDisplayNone();
-				},
-				done:function(){
-					setDisplayNone();
 				},
 				error:function(xhr,type,errorThrown){
 					//异常处理；
@@ -377,6 +406,7 @@
 		}
 		
 		function showComment(data){
+				 
 			html = [];
 			html.push('<div class="mui-card" id="card'+ data.mid +'" style="margin-bottom: 20px;">');
 			html.push('<div class="mui-card-header">');
@@ -385,7 +415,7 @@
 			html.push('<div class="mui-card-content-inner">');				 
 			for(var j=0;j<data.imgs.length;j++){
 				html.push('<span class="messagelist-imgs'+data.imgs.length+'" style="background-image: url('+'images/'+ data.imgs[j].imgurl+ ');">');
-				html.push('<img src="'+IMGPATH+data.imgs[j].imgurl+'" data-preview-src="" data-preview-group="1"  style="opacity: 0;width: 100%;height: 100%;"/></span>');
+				html.push('<img src="images/'+data.imgs[j].imgurl+'" data-preview-src="" data-preview-group="1"  style="opacity: 0;width: 100%;height: 100%;"/></span>');
 			}
 			html.push('<p align="right">');
 			html.push(data.mtime);
@@ -399,6 +429,7 @@
 					{
 						redOrNot= 'red';
 					}
+					 
 				}
 				html.push('<a class="mui-card-link"><span style="color:'+redOrNot +'" class="mui-icon mui-icon-extra mui-icon-extra-heart-filled" value="'+data.mid +'"></span></a>');
 				html.push('<a href="#comment" class="mui-card-link"><span class="mui-icon mui-icon-compose" value="'+data.mid +'" ></span></a></div>');				
@@ -430,7 +461,7 @@
 		}		
 			
 		function saveLike(mid){
-			   mui.ajax(PREPATH+"/addLike",{
+			mui.ajax(PREPATH+"/addLike",{
 				type:"post",
 				async:true,
 				data:{mid:mid},
@@ -451,7 +482,7 @@
 		};
 	 
 		function deleteLike(mid){
-			    mui.ajax(PREPATH+"/deleteLike",{
+			mui.ajax(PREPATH+"/deleteLike",{
 				type:"post",
 				async:true,
 				data:{mid:mid},
@@ -473,8 +504,7 @@
 		}; 
 	
 		function saveComment(mid,comment){
-			console.log("xxxx");
-			   mui.ajax(PREPATH+"/addMessageReply",{
+			mui.ajax(PREPATH+"/addMessageReply",{
 				type:"post",
 				async:true,
 				data:{mid:mid,comment:comment},
@@ -504,11 +534,12 @@
 	    		this.style.color="red";
 	    		saveLike(mid);
 	    	}
+	   
 	    });
 	    
 	    mui("#comment").on('tap','#publish',function(item){
 	    	var innerComment = $('#commentValue').val();
-	    	//console.log(innerComment);	    
+	    	console.log(innerComment);	    
 	    	if(document.getElementById('reply'+mid+'')==undefined){
 	    		var html = [];
 	    		html.push('<div id="reply'+mid+'" class="mui-card-footer">');
@@ -518,7 +549,6 @@
 			 	saveComment(mid,innerComment);
 	    	}else{
 	    		document.getElementById('reply'+mid+'').innerHTML += nickName+':'+innerComment;
-	    		saveComment(mid,innerComment);
 	    	}
 	    	document.getElementById("comment").style.display = 'none';	    	
 	    });	    
@@ -527,36 +557,6 @@
 	    	mid = $(this).attr('value');
 	   	});
 		
-		/**
-		 * 下拉刷新具体业务实现
-		 */
-		function pulldownRefresh() {
-			setTimeout(function() {
-				getMessageByQidDownFresh();
-				mui('#content').pullRefresh().endPulldownToRefresh(); //refresh completed
-				setDisplayNone();
-			}, 1500);
-		}
-	
-		/**
-		 * 上拉加载具体业务实现
-		 */
-		function pullupRefresh() {
-			setTimeout(function() {
-				//mui('#pullrefresh').pullRefresh().endPullupToRefresh((++count > 2)); //参数为true代表没有更多数据了。
-				console.log("bound="+boundaryId);
-				getMessageByQid(boundaryId);
-				mui('#content').pullRefresh().endPullupToRefresh(boundaryId==-2);
-				setDisplayNone();
-			}, 1500);
-		}
-		function setDisplayNone(){
-			var bottomPocker = document.getElementsByClassName("mui-pull-bottom-pocket")[0];
-			var topPocker = document.getElementsByClassName("mui-pull-top-pocket")[0];
-		    console.log(bottomPocker);
-	        bottomPocker.style.display = 'none'; 
-	    	topPocker.style.display = 'none';
-		}
 		
 	</script>
 

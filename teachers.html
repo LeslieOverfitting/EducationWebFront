@@ -43,8 +43,8 @@
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
 			<h1 class="mui-title">师资力量</h1>
 		</header>
-		<div class="mui-content">
-			<div id="tabbar" class="mui-control-content mui-active">
+		<div id="pullrefresh" class="mui-content mui-scroll-wrapper">
+			<div id="tabbar" class="mui-control-content mui-active mui-scroll">
 				<div id="slider" class="mui-slider">
 					<div class="mui-slider-group mui-slider-loop">
 						<!-- 额外增加的一个节点(循环轮播：第一个节点是最后一张轮播) -->
@@ -91,32 +91,43 @@
 						<div class="mui-indicator"></div>
 					</div>
 				</div>
+				<div id="teacherDiv" class="mui-scroll">
+				</div>
 			</div>
 		</div>			
 	</body>
 	<script src="js/mui.min.js"></script>
 	<script>
 		mui.init({
-			swipeBack:true //启用右滑关闭功能
+			swipeBack:true, //启用右滑关闭功能
+			pullRefresh: {
+					container: '#pullrefresh',
+					up: {
+						auto:false,
+						contentrefresh: '正在加载...',
+						callback: pullupRefresh
+					}
+				}
 		});
+		
 		var slider = mui("#slider");
 		slider.slider({
 			interval: 3000
 		});
-
-		$(function() {
+		var tid = -1;
+		selectAllTeachersByPageAndQid();
+		function selectAllTeachersByPageAndQid() {
 			mui.ajax(PREPATH+"/selectAllTeachersByPageAndQid",{
 				type:"get",
 				async:true,
-				data:{},
+				data:{tid:tid},
 				dataType:"json",
 				xhrFields: {  
 					withCredentials: true  
 				},  
 				crossDomain: true,
 				success:function(data){
-					var fatherDiv = $('#tabbar');
-					
+					var fatherDiv = $('#teacherDiv');
 					for(var i = 0; i < data.length;i++ ){
 						var content = '<div class="mui-card">';
 						content += '<div class="mui-card-header" style="font-size: 20px; align-content: center;">';
@@ -141,7 +152,11 @@
 						content += '</div>';
 						fatherDiv.append(content);
 					}	
-					
+					if(data.length!=0){
+						tid = data[data.length-1].tid;
+					}else{
+						tid = -2;
+					}
 				},
 				error:function(xhr,type,errorThrown){
     							//异常处理；
@@ -149,7 +164,14 @@
 				}
 
 			});
-		})
+		}
+		function pullupRefresh() {
+				setTimeout(function() {
+					selectAllTeachersByPageAndQid();
+					mui('#pullrefresh').pullRefresh().endPullupToRefresh((++count > 2)); //参数为true代表没有更多数据了。
+				}, 1500);
+			}
+
 		
 	</script>
 </html>

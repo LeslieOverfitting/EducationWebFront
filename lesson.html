@@ -248,18 +248,6 @@
 				mui('#pullrefresh').pullRefresh().endPullupToRefresh(boundaryId==-2);
 			}, 1500);
 		}
-		/**
-		 * 上拉加载具体业务实现
-		 */
-		function pullupRefresh() {
-			setTimeout(function() {
-				//mui('#pullrefresh').pullRefresh().endPullupToRefresh((++count > 2)); //参数为true代表没有更多数据了。
-			//	console.log(lessonRequestUrl);
-			//	console.log("bound="+boundaryId);
-				getLessonByBranchNameCategoryAndPage(lessonRequestUrl,branchName,category,boundaryId);
-				mui('#pullrefresh').pullRefresh().endPullupToRefresh(false);
-			}, 1500);
-		}
 		
 	</script>
 

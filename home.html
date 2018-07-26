@@ -215,8 +215,9 @@
 				},  
 				crossDomain: true,
 				success:function(data){
-					selectAllFreeListenByQidAndPage();
-					selectAllLessonByQidAndPage();
+					console.log("dataLength"+data.length);
+					selectHomePageFreeListenByQid();
+					selectHomePageLessonByQid();
 					var slider = $('#slider');
 					var content='<div class="mui-slider-group mui-slider-loop">';	
 				    content +='<div class="mui-slider-item mui-slider-item-duplicate">';
