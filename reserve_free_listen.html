@@ -13,6 +13,7 @@
 		<link rel="stylesheet" type="text/css" href="css/loading.css"/>
 		<script src="js/jquery.min.js" type="text/javascript"></script>
 		<script src="js/loading.animation.js" type="text/javascript"></script>
+		<script src="js/config.js" type="text/javascript"></script>
 		<style>
 			h5 {
 				margin: 5px 7px;
@@ -22,24 +23,28 @@
 			}
 		</style>
 	</head>
+			
 	<!--loading页开始-->
-		<div class="loading">
-			<div class="loader">
-		        <div class="loader-inner pacman">
-		          <div></div>
-		          <div></div>
-		          <div></div>
-		          <div></div>
-		          <div></div>
-		        </div>
-			</div>
+	<div class="loading">
+		<div class="loader">
+	        <div class="loader-inner pacman">
+	          <div></div>
+	          <div></div>
+	          <div></div>
+	          <div></div>
+	          <div></div>
+	        </div>
 		</div>
+	</div>
 	<!--loading页结束-->
+	
 	<body>
+		
 		<header class="mui-bar mui-bar-nav">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
 			<h1 class="mui-title">试听课程预约</h1>
 		</header>
+		
 		<div class="mui-content">
 			<div class="mui-content-padded" style="margin: 10px;">
 				<form class="mui-input-group">
@@ -69,8 +74,11 @@
 				<div id="info" align="center" style="padding-top: 10px; font-family: '宋体'; font-size: 17px;"></div>
 			</div>
 		</div>
+		
 		<script src="js/mui.min.js"></script>
+		
 		<script>
+		
 			mui.init({
 				swipeBack: true //启用右滑关闭功能
 			});			 
@@ -119,10 +127,10 @@
 				var userName = $('#userName').val();
 				var tel = $('#tel').val();
 				var comment = $('#comment').val();
-				mui.ajax("http://localhost:8083/education/saveFreeListenByLid",{
+				mui.ajax(PREPATH+"/saveFreeListenByLid",{
 					type:"post",
 					async:true,
-					data:{qid:1,fid:fid,userName:userName,tel:tel,comment:comment},
+					data:{fid:fid,userName:userName,tel:tel,comment:comment},
 					dataType:"json",
 					xhrFields: {  
 						withCredentials: true  
@@ -153,6 +161,7 @@
 			}
 			
 		</script>
+		
 	</body>
 
 </html>

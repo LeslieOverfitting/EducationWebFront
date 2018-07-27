@@ -10,8 +10,8 @@
 		<link rel="stylesheet" type="text/css" href="css/loading.css"/>
 		<script src="js/jquery.min.js" type="text/javascript"></script>
 		<script src="js/loading.animation.js" type="text/javascript"></script>
+		<script src="js/config.js" type="text/javascript"></script>
 		<style>
-			
 			.title{
 				margin: 15px 15px 0px;
 				color: #6d6d72;
@@ -21,7 +21,6 @@
 			.mui-icon-clear {
 				margin-top: 8px;
 			}
-			
 		</style>
 
 	</head>
@@ -126,7 +125,7 @@
 							setTimeout(function() {
 								//发送手机验证码
 								$.ajax({
-									url: "http://localhost:8083/education/sendMobileCode",
+									url: PREPATH+"/sendMobileCode",
 									type: "post",
 									data: {tel: tel},
 									dataType: "json",
@@ -163,7 +162,7 @@
 								mui(this).button('loading');
 								setTimeout(function() {
 									$.ajax({
-										url: "http://localhost:8083/education/checkMobileCode",
+										url: PREPATH+"/checkMobileCode",
 										type: "post",
 										data: {qid: 1, tel: tel, code: code},
 										dataType: "json",

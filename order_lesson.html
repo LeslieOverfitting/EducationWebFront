@@ -8,6 +8,7 @@
 		<link href="css/mui.min.css" rel="stylesheet" />
 		<link rel="stylesheet" type="text/css" href="css/loaders.min.css"/>
 		<link rel="stylesheet" type="text/css" href="css/loading.css"/>
+		<script src="js/config.js" type="text/javascript"></script>
 		<script src="js/jquery.min.js" type="text/javascript"></script>
 		<script src="js/loading.animation.js" type="text/javascript"></script>
 		<style>
@@ -23,6 +24,7 @@
 		</style>
 
 	</head>
+	
 	<!--loading页开始-->
 	<div class="loading">
 		<div class="loader">
@@ -38,10 +40,12 @@
 	<!--loading页结束-->
 
 	<body>
+		
 		<header class="mui-bar mui-bar-nav">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
 			<h1 class="mui-title">精品课程购买</h1>
 		</header>
+		
 		<div class="mui-content">
 			<div class="mui-content-padded" style="margin: 10px;">
 				<form class="mui-input-group">
@@ -71,7 +75,8 @@
 			</div>
 			<div id="info"></div>
 		</div>
-		<script src="js/mui.min.js"></script>
+		
+		<script src="js/mui.min.js"></script>		
 		<script type="text/javascript" charset="utf-8">
 			
 			//mui初始化
@@ -84,19 +89,17 @@
 		 	var lid = parameters[0].split('=')[1];
 		 	var oid = parameters[1].split('=')[1];
 		 	var requestUrl = "";
-		 	
 		 	if(oid=='0')
-		 		requestUrl = "http://localhost:8083/education/selectLessonByLid";
+		 		requestUrl = PREPATH + "/selectLessonByLid";
 		 	else
-		 		requestUrl = "http://localhost:8083/education/selectLessonByOid";
-		 	
+		 		requestUrl = PREPATH + "/selectLessonByOid";
 			getLesson(lid,oid,requestUrl);
 			
 			function getLesson(lid,oid,requestUrl){
 				mui.ajax(requestUrl,{
 					type:"post",
 					async:true,
-					data:{qid:1,lessonId:lid,oid:oid},
+					data:{lessonId:lid,oid:oid},
 					dataType:"json",
 					xhrFields: {  
 						withCredentials: true  
@@ -115,10 +118,10 @@
 			}
 				
 			function saveOrder(userName,tel,oid,lid){
-				mui.ajax("http://localhost:8083/education/saveSorder",{
+				mui.ajax(PREPATH + "/saveSorder", {
 					type:"post",
 					async:true,
-					data:{qid:1,lessonId:lid,oid:oid,tel:tel,userName:userName},
+					data:{lessonId:lid,oid:oid,tel:tel,userName:userName},
 					dataType:"json",
 					xhrFields: {  
 						withCredentials: true  
@@ -161,7 +164,8 @@
 				})
 			});
 			
-		</script>	
+		</script>
+		
 	</body>
 
 </html>

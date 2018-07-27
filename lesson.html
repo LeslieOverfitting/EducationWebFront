@@ -19,6 +19,7 @@
 		<link rel="stylesheet" type="text/css" href="css/loaders.min.css"/>
 		<link rel="stylesheet" type="text/css" href="css/loading.css"/>
 		<script src="js/jquery.min.js" type="text/javascript"></script>
+		<script src="js/config.js" type="text/javascript"></script>
 		<script src="js/loading.animation.js" type="text/javascript"></script>
 		<style>
 			.active .mui-spinner-indicator {
@@ -59,19 +60,21 @@
 		</style>
 		
 	</head>
+	
 	<!--loading页开始-->
-		<div class="loading">
-			<div class="loader">
-		        <div class="loader-inner pacman">
-		          <div></div>
-		          <div></div>
-		          <div></div>
-		          <div></div>
-		          <div></div>
-		        </div>
-			</div>
+	<div class="loading">
+		<div class="loader">
+	        <div class="loader-inner pacman">
+	          <div></div>
+	          <div></div>
+	          <div></div>
+	          <div></div>
+	          <div></div>
+	        </div>
 		</div>
-		<!--loading页结束-->
+	</div>
+	<!--loading页结束-->
+	
 	<body>
 		<header class="mui-bar mui-bar-nav">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
@@ -107,6 +110,7 @@
 
 		</div>
 	</body>
+	
 	<script src="js/mui.min.js"></script>
 	<script type="text/javascript" src="js/mui.poppicker.js"></script>
 	<script type="text/javascript" src="js/mui.picker.js"></script>
@@ -117,9 +121,6 @@
 			swipeBack: true ,//启用右滑关闭功能,
 			pullRefresh: {
 				container: '#pullrefresh',
-				down: {
-					callback: pulldownRefresh
-				},
 				up: {
 					contentrefresh: '正在加载...',
 					callback: pullupRefresh
@@ -153,56 +154,53 @@
 			$.init();
 			$.ready(function() {
 				//级联示例
-				var lessonPicker = new $.PopPicker({
+				var lessionPicker = new $.PopPicker({
 					layer: 3
 				});			 
-				mui.ajax("http://localhost:8083/education/selectAllCategoryByQid",{
+				mui.ajax(PREPATH+"/selectAllCategoryByQid",{
 					type:"post",
 					async:true,
-					data:{qid:1},
+					data:{},
 					dataType:"json",
 					xhrFields: {  
 						withCredentials: true  
 					},  
 					crossDomain: true,
 					success:function(data){
-						 lessonPicker.setData(data); 
-						 lessonRequestUrl= "http://localhost:8083/education/selectLessonByBranchNameCategoryAndPageAndQid";
-						 getLessonByBranchNameCategoryAndPage(lessonRequestUrl,1,data[0].text,"",-1);
+						 lessionPicker.setData(data); 
+						 lessonRequestUrl= PREPATH+"/selectLessonByBranchNameCategoryAndPageAndQidAndPage";
+						 getLessonByBranchNameCategoryAndPage(lessonRequestUrl,data[0].text,"",-1);
 					},
 					error:function(xhr,type,errorThrown){
         							//异常处理；
         							console.log(type);
     				}
-			    });
-		 		var showCityPickerButton = doc.getElementById('showLessonPicker');
-				var lessonResult = doc.getElementById('segmentedControlContents'); 	 
+				});
+		 		var showCityPickerButton = $('#showLessionPicker');
+				var lessionResult = $('#segmentedControlContents'); 	 
 				showCityPickerButton.addEventListener('tap', function(event) {
-					lessonPicker.show(function(items) {
-						showCityPickerButton.innerText = items[0].text + "-" + items[1].text + "-" + items[2].text;
+					lessionPicker.show(function(items) {
+						 showCityPickerButton.text(items[0].text + "-" + items[1].text + "-" + items[2].text);
 						 branchName = items[0].text;
 						 freeOrNot = items[1].text;
 						 category = items[2].text;
 						 if("精品课"==items[1].text){
-						 	lessonRequestUrl = "http://localhost:8083/education/selectLessonPageByBranchNameAndCategoryAndQid";
+						 	lessonRequestUrl = PREPATH+"/selectLessonByBranchNameCategoryAndPageAndQidAndPage";
 						 }else{
-						 	lessonRequestUrl = "http://localhost:8083/education/selectFreeListenPageByBranchNameAndCategoryAndQid";
+						 	lessonRequestUrl = PREPATH+"/selectFreeListenByBranchNameAndCategoryAndQidAndPage";
 						 }
 						 boundaryId = -1;
-						 console.log(boundaryId);
-						 getLessonByBranchNameCategoryAndPage(lessonRequestUrl,1,items[0].text,items[2].text,boundaryId);
-   						
+						 getLessonByBranchNameCategoryAndPage(lessonRequestUrl,items[0].text,items[2].text,boundaryId);
 					});
 				}, false);
 			});
 		})(mui, document);
-
 		
-		function getLessonByBranchNameCategoryAndPage(requestUrl,qid,branchName,category,rowId){
+		function getLessonByBranchNameCategoryAndPage(requestUrl,branchName,category,rowId){
 	    	mui.ajax(requestUrl,{
 				type:"post",
 				async:true,
-				data:{qid:qid,branchName:branchName,category:category,rowId:rowId},
+				data:{branchName:branchName,category:category,rowId:rowId},
 				dataType:"json",
 				withCredentials:true,
 				crossDomain: true,
@@ -229,11 +227,11 @@
 					}else{
 						boundaryId =-2;
 					}
-					
 					html.push('</ul></div>');
-					if(rowId ==-1)
-						jQuery('#segmentedControlContents').empty();
-					jQuery('#segmentedControlContents').append(html.join(''));		
+					if(rowId ==-1) {
+						$('#segmentedControlContents').empty();
+					}						
+					$('#segmentedControlContents').append(html.join(''));
 				},
 				error:function(xhr,type,errorThrown){
 					//异常处理；
@@ -241,8 +239,8 @@
 				}
 	    	});
 		}
-		
-		/**
+
+	    /**
 		 * 下拉刷新具体业务实现
 		 */
 		function pulldownRefresh() {
@@ -259,7 +257,7 @@
 				mui('#pullrefresh').pullRefresh().endPulldownToRefresh(); //refresh completed
 			}, 1500);
 		}
-		
+
 		/**
 		 * 上拉加载具体业务实现
 		 */
@@ -268,43 +266,11 @@
 				//mui('#pullrefresh').pullRefresh().endPullupToRefresh((++count > 2)); //参数为true代表没有更多数据了。				
 				console.log(lessonRequestUrl);
 				console.log("bound="+boundaryId);
-				getLessonByBranchNameCategoryAndPage(lessonRequestUrl,1,branchName,category,boundaryId);
+				getLessonByBranchNameCategoryAndPage(lessonRequestUrl,branchName,category,boundaryId);
 				mui('#pullrefresh').pullRefresh().endPullupToRefresh(boundaryId==-2);
 			}, 1500);
 		}
-		
-		/**
-		 * 下拉刷新具体业务实现
-		 */
-		function pulldownRefresh() {
-			setTimeout(function() {
-				var table = document.body.querySelector('.mui-table-view');
-				var cells = document.body.querySelectorAll('.mui-table-view-cell');
-				for (var i = cells.length, len = i + 3; i < len; i++) {
-					var li = document.createElement('li');
-					li.className = 'mui-table-view-cell';
-					li.innerHTML = '<a class="mui-navigate-right">Item ' + (i + 1) + '</a>';
-					//下拉刷新，新纪录插到最前面；
-					table.insertBefore(li, table.firstChild);
-				}
-				mui('#pullrefresh').pullRefresh().endPulldownToRefresh(); //refresh completed
-			}, 1500);
-		}
-	
-		/**
-		 * 上拉加载具体业务实现
-		 */
-		function pullupRefresh() {
-			setTimeout(function() {
-				//mui('#pullrefresh').pullRefresh().endPullupToRefresh((++count > 2)); //参数为true代表没有更多数据了。
-				console.log('345');
-				console.log(lessonRequestUrl);
-				console.log("bound="+boundaryId);
-				getLessonByBranchNameCategoryAndPage(lessonRequestUrl,1,branchName,category,boundaryId);
-				mui('#pullrefresh').pullRefresh().endPullupToRefresh(false);
-			}, 1500);
-		}
-		
+
 	</script>
 
 </html>

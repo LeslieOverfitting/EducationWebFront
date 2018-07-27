@@ -13,6 +13,7 @@
 		<link rel="stylesheet" type="text/css" href="css/loading.css"/>
 		<script src="js/jquery.min.js" type="text/javascript"></script>
     	<script src="js/loading.animation.js" type="text/javascript"></script>
+    	<script src="js/config.js" type="text/javascript"></script>
 		<!--App自定义的css-->
 		<style type="text/css">
 			.mui-preview-image.mui-fullscreen {
@@ -275,16 +276,18 @@
 				</div>
 			</div>
 
-			<div class="mui-content-padded" id="showContent" >
+			<div class="mui-content-padded">
 				<p>
-					<h4 align="center">机构简介</h4></p>
-				    <p id="introduction">					
+					<h4 align="center">机构简介</h4>
+				</p>
+				<p id="introduction">					
 				</p>
 				<hr>
 				<p>
 					<h4 align="center" >精彩展示</h4>
 				</p>
-				
+				<div id="jczs">
+				</div>				
 			</div>
 		</div>
 	</body>
@@ -293,6 +296,7 @@
 	<script src="js/html5video.js"></script>
 	<script src="js/mui.previewimage.js"></script>
 	<script>
+		
 		mui.init();
 		mui.previewImage();
 
@@ -313,7 +317,7 @@
 					var introduction = data.introduction;
 					var jczs =  data.jczs;
 					$('#introduction').text(introduction);
-					$('#showContent').append(jczs);						
+					$('#jczs').append(jczs);						
 					var htmlvideo = Html5video("#video_Container", {
 						title: "企业介绍", //视频标题，当全屏时会显示
 						url:  video_path, //支持本地视频和网络视频，格式MP4

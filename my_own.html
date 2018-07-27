@@ -185,7 +185,7 @@
 				font-size: 20px;
 				font-weight: bold;
 			}
-			
+
 		</style>
 	</head>
 	<!--loading页开始-->
@@ -265,9 +265,11 @@
 			</ul>
 		</div>
 	</body>
+	
 	<script src="js/mui.min.js"></script>
 	<script src="js/mui.zoom.js"></script>
 	<script src="js/mui.previewimage.js"></script>
+	
 	<script>
 		
 		mui.init({
@@ -275,8 +277,8 @@
 		});
 		
 		$(function() {
-			$.ajax({
-				url: "http://localhost:8083/education/getUser",
+			 $.ajax({
+				url: PREPATH+"/getUser",
 				type: "post",
 				dataType: "json",
 				xhrFields: {  
@@ -286,10 +288,10 @@
 				success: function(data) {
 					if (data.uid !== -1) {
 						if (data.userimg !== null && data.userimg !== "") {
-							$("#userimg").attr("src", data.userimg);
+							$("#userimg").attr("src", IMGPATH + data.userimg);
 						}
 						else {
-							$("#userimg").attr("src", "images/portrait.jpg");
+							$("#userimg").attr("src", IMGPATH + "portrait.jpg");
 						}
 						if (data.nickname !== null && data.nickname !== "") {
 							$("#nickname").text(data.nickname);
