@@ -172,8 +172,7 @@
 						 getLessonByBranchNameCategoryAndPage(lessonRequestUrl,data[0].text,"",-1);
 					},
 					error:function(xhr,type,errorThrown){
-        							//异常处理；
-        							console.log(type);
+        				mui.toast("信息获取失败");
     				}
 				});
 		 		var showCityPickerButton = $('#showLessionPicker');
@@ -234,8 +233,7 @@
 					$('#segmentedControlContents').append(html.join(''));
 				},
 				error:function(xhr,type,errorThrown){
-					//异常处理；
-					console.log(type);
+					mui.toast("信息获取失败");
 				}
 	    	});
 		}

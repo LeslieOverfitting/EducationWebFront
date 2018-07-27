@@ -104,7 +104,6 @@
 				console.log(fid);				
 				var skpiUrl = 'reserve_free_listen.html?fid='+fid+"&fname="+$("#lessonTitle").html();
 				encodeURI(skpiUrl);
-				console.log(skpiUrl);
 				mui.openWindow({
 					url:skpiUrl ,
 					id: 'reserve_free_listen.html' 
@@ -136,8 +135,7 @@
 				    $("#reserve").val(fid);
 				},
 				error:function(xhr,type,errorThrown){
-					//异常处理；
-					console.log(type);
+					mui.toast("信息获取失败，服务器异常");
 				}
 
 			});				
