@@ -499,8 +499,8 @@
 					 document.getElementById('likersName'+mid+'').innerText = temp;				 
 				},
 				error:function(xhr,type,errorThrown){
-    							//异常处理；
-    							console.log(type);
+					//异常处理；
+					console.log(type);
 			}
 			});			
 		}; 
@@ -547,7 +547,7 @@
 	    		html.push('<div id="reply'+mid+'" class="mui-card-footer">');
 	    		html.push(nickName +':'+innerComment+'<br>');
 				html.push('</div>');
-				$("#card"+mid+'').append(html.join(''));
+				$("#card" + mid).append(html.join(''));
 			 	saveComment(mid,innerComment);
 	    	}else{
 	    		document.getElementById('reply'+mid+'').innerHTML += nickName+':'+innerComment;

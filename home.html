@@ -268,25 +268,24 @@
 				},  
 				crossDomain: true,
 				success:function(data){
-				   var fatherDiv = $("#freeListenCards");
-				   for(var i = 0;i < data.length;i++){			   		  
-				   		var content = '<div class="mui-card" style="margin-bottom: 23px;">';
-				   		content += '<div class="mui-card-header mui-card-media" style="background-image: url('+IMGPATH + data[i].imgurl +'); background-size: 100% 100%; height: 200px;">'+data[i].id +'</div>';
-				   		content += '<div class="mui-card-content">';
-				   		content += '<div class="mui-card-content-inner">';
-				   		content += '<p style="color: #333;">' + data[i].title+ '</p>';
-				   		content += '<p>' +data[i].fdesc	+ '</p>';
-				   		content += '<p class="fid" style="display: none;">'+ data[i].id+'</p>';
-				   		content += '</div>';
-				   		content += '</div>';
-				   		content += '</div>';
-				   		fatherDiv.append(content);
-				   }
-					 mui('#freeListenCards').on('tap', '.mui-card', function() {
+					var fatherDiv = $("#freeListenCards");
+					for(var i = 0;i < data.length;i++){
+						var content = '<div class="mui-card" style="margin-bottom: 23px;">';
+						content += '<div class="mui-card-header mui-card-media" style="background-image: url('+IMGPATH + data[i].imgurl +'); background-size: 100% 100%; height: 200px;">'+data[i].id +'</div>';
+						content += '<div class="mui-card-content">';
+						content += '<div class="mui-card-content-inner">';
+						content += '<p style="color: #333;">' + data[i].title+ '</p>';
+						content += '<p>' +data[i].fdesc	+ '</p>';
+						content += '<p class="fid" style="display: none;">'+ data[i].id+'</p>';
+						content += '</div>';
+						content += '</div>';
+						content += '</div>';
+						fatherDiv.append(content);
+					}
+					mui('#freeListenCards').on('tap', '.mui-card', function() {
 						var url = 'free_listen_info.html?fid='+this.querySelector(".fid").innerHTML;
 						mui.openWindow({
-							url: url,
-							id: 'lesson_info.html' 
+							url: url
 						});
 					});
 				},
@@ -325,8 +324,7 @@
 			   		mui('#lessonCards').on('tap', '.mui-card', function() {
 						var url = 'lesson_info.html?lid='+this.querySelector(".lid").innerHTML;
 							mui.openWindow({
-							url: url,
-							id: 'lesson_info.html' 
+								url: url
 							});
 					    });
 				},
