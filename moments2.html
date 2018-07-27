@@ -14,13 +14,27 @@
 		<link rel="stylesheet" type="text/css" href="fonts/mui-icons-extra.ttf" />
 		<!--App自定义的css-->
 		<link rel="stylesheet" type="text/css" href="css/app.css" />
+		<link rel="stylesheet" type="text/css" href="css/moment.css" />
 		<link rel="stylesheet" type="text/css" href="css/loaders.min.css"/>
 		<link rel="stylesheet" type="text/css" href="css/loading.css"/>
 		<script src="js/jquery.min.js" type="text/javascript"></script>
 		<script src="js/loading.animation.js" type="text/javascript"></script>
 		<style>
-			
-			/*头像预览样式*/
+			.mui-content-padded a .mui-icon-extra {
+				margin-top: 12px;
+			}
+			.mui-spinner, .mui-spinner-white {
+				margin-top: 12px
+			}
+			.active	.mui-spinner-indicator {
+				background: #007AFF;
+			}			
+			.mui-content a {
+				color: #8F8F94;
+			}
+			.mui-content a.active {
+				color: #007aff;
+			}
 			.mui-preview-image.mui-fullscreen {
 				position: fixed;
 				z-index: 20;
@@ -42,7 +56,7 @@
 				bottom: 0px;
 			}
 			.mui-preview-header .mui-preview-indicator {
-				display: none;
+				display: block;
 				line-height: 25px;
 				color: #fff;
 				text-align: center;
@@ -171,40 +185,26 @@
 			p img {
 				max-width: 100%;
 				height: auto;
-			}
-			
-			/*头像和昵称的样式*/
-			.portrait {
-				border-radius: 50%; 
-				width: 31%;
-				border: 5px solid;
-				border-color: #FFFFFF;
-			}
-			.nickname {
-				font-family: "仿宋";
-				font-size: 20px;
-				font-weight: bold;
-			}
-
+			}			
 		</style>
 	</head>
 	<!--loading页开始-->
-	<div class="loading">
-		<div class="loader">
-	        <div class="loader-inner pacman">
-	          <div></div>
-	          <div></div>
-	          <div></div>
-	          <div></div>
-	          <div></div>
-	        </div>
+		<div class="loading">
+			<div class="loader">
+		        <div class="loader-inner pacman">
+		          <div></div>
+		          <div></div>
+		          <div></div>
+		          <div></div>
+		          <div></div>
+		        </div>
+			</div>
 		</div>
-	</div>
-	<!--loading页结束-->
+		<!--loading页结束-->
 	<body>
 		<header class="mui-bar mui-bar-nav">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
-			<h1 class="mui-title">我的</h1>
+			<h1 class="mui-title">动态发现</h1>
 		</header>
 		<nav class="mui-bar mui-bar-tab">
 			<a class="mui-tab-item" id="home">
@@ -216,99 +216,45 @@
 				<span class="mui-icon mui-icon-extra mui-icon-extra-class" style="font-size: 25px;"></span>
 				<span class="mui-tab-label">课程</span>
 			</a>
-			<a class="mui-tab-item" id="moments">
+			<a class="mui-tab-item mui-active">
 				<span class="mui-icon mui-icon-search" style="font-size: 25px;"></span>
 				<span class="mui-tab-label">发现</span>
 			</a>
-			<a class="mui-tab-item mui-active">
+			<a class="mui-tab-item" id="my_own">
 				<span class="mui-icon mui-icon-contact" style="font-size: 25px;"></span>
 				<span class="mui-tab-label">我的</span>
 			</a>
 		</nav>
-		<div class="mui-content">
-			<div style="background-image: url(images/background.jpg); width: 100%; height: 256px;">
-				<center style="padding-top: 15%;">
-					<img id="userimg" src="images/portrait.jpg" class="portrait" data-preview-src="" data-preview-group="1"/>
-				</center>
-				<center style="padding-top: 1%;">
-					<span id="nickname" class="nickname">颜日升</span>
-				</center>
-			</div>
-			<ul class="mui-table-view mui-grid-view mui-grid-9">
-				<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4">
-					<a href="my_reservations.html">
-						<span class="mui-icon mui-icon-extra mui-icon-extra-cate" style="font-size:35px;"></span>
-						<div class="mui-media-body">我的预约</div>
-					</a>
-				</li>
-				<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4">
-					<a href="my_orders.html">
-						<span class="mui-icon mui-icon-extra mui-icon-extra-cart" style="font-size:35px;">
-	                    	<span class="mui-badge">5</span>
-						</span>
-						<div class="mui-media-body">我的订单</div>
-					</a>
-				</li>
-				<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4">
-					<a href="contact_us.html">
-						<span class="mui-icon mui-icon-extra mui-icon-extra-custom" style="font-size: 35px;"></span>
-						<div class="mui-media-body">我的客服</div>
-					</a>
-				</li>
-			</ul>
-			<ul class="mui-table-view" style="margin-top: 25px;">
+		<div id="content" class="mui-content">			
+			<p>
+				<img src="images/moment_background.jpg" height="230px" width="100%"/>
+			</p>
+		</div>
+		<div id="comment" class="mui-popover mui-popover-action mui-popover-bottom">
+			<ul class="mui-table-view">
 				<li class="mui-table-view-cell">
-					<a style="text-align: center;color: #FF3B30;">
-						退出登录
-					</a>
+					<span class="mui-input-row">
+						<input type="text" style="width: 77%; margin-bottom: 0px; color: #555555;" placeholder="评论一下">
+						<button  id="publish" type="button" class="mui-btn mui-btn-green"
+							style="width: 20%; font-size: 15px;">
+							发表
+						</button>
+					</span>
 				</li>
-			</ul>
+			</ul>			
 		</div>
 	</body>
-	
 	<script src="js/mui.min.js"></script>
 	<script src="js/mui.zoom.js"></script>
 	<script src="js/mui.previewimage.js"></script>
-	
+	<script>
+		mui.previewImage();
+	</script>
 	<script>
 		
 		mui.init({
 			swipeBack: true //启用右滑关闭功能
 		});
-		
-		$(function() {
-			 $.ajax({
-				url: PREPATH+"/getUser",
-				type: "post",
-				dataType: "json",
-				xhrFields: {  
-					withCredentials: true  
-				},  
-				crossDomain: true,
-				success: function(data) {
-					if (data.uid !== -1) {
-						if (data.userimg !== null && data.userimg !== "") {
-							$("#userimg").attr("src", IMGPATH + data.userimg);
-						}
-						else {
-							$("#userimg").attr("src", IMGPATH + "portrait.jpg");
-						}
-						if (data.nickname !== null && data.nickname !== "") {
-							$("#nickname").text(data.nickname);
-						}
-						else {
-							$("#nickname").text("无名氏");
-						}
-					}
-					else {
-						console.log(data);
-						$("#userimg").attr("src", "images/portrait.jpg");
-						$("#nickname").text("点击登录");
-						console.log($("#nickname").text());
-					}					
-				}
-			});
-		})
 		
 		//注册点击事件
 		document.getElementById("home").addEventListener("tap", function() {
@@ -323,29 +269,59 @@
 				id: 'lesson.html' 
 	    	});
 		})
-		document.getElementById("moments").addEventListener("tap", function() {
+		document.getElementById("my_own").addEventListener("tap", function() {
 			mui.openWindow({
-				url: 'moments.html',
-				id: 'moments.html' 
+				url: 'my_own.html',
+				id: 'my_own.html' 
 	    	});
 		})
-		document.getElementById("nickname").addEventListener("tap", function() {
-			var nickname = $("#nickname").text();
-			if (nickname === "点击登录") {
-				mui.openWindow({
-					url: 'login.html',
-		    	});
-			}
-			else {
-				mui.openWindow({
-					url: 'personal_info.html',
-		    	});
-			}
-		})
+				
+		var contents = document.getElementById("content");
+		html =[];
 		
-		//图片预览
-		mui.previewImage();
+		for(var i=1;i<=9;i++){
+			html.push('<div class="mui-card" style="margin-bottom: 20px;">');
+			html.push('<div class="mui-card-header">');
+			html.push('我爱学习，学习爱我');
+			html.push('</div><div class="mui-card-content">');
+			html.push('<div class="mui-card-content-inner">');				 
+			for(var j=1;j<=i;j++){
+				html.push('<span class="messagelist-imgs'+i+'" style="background-image: url('+'images/moment'+(j%2+1)+'.jpg);">');
+				html.push('<img src="images/moment'+(j%2+1)+'.jpg " data-preview-src="" data-preview-group="1"  style="opacity: 0;width: 100%;height: 100%;"/></span>');
+			}
+			html.push('<p>');
+			html.push('近日，有调查显示，越来越多的网友在微信朋友圈设置“三天可见”，缩小朋友圈记录的查看范围。该功能被广泛使用后，网友开始分站两边。');
+			html.push('</p>');
+			html.push('<p align="right">');			
+			html.push('2018-6-23 13:40:12');
+			html.push('</p>');
+			html.push('</div></div>');
+			html.push('<div class="mui-card-footer">');
+			html.push('<div> ');
+			html.push('<a class="mui-card-link"><span class="mui-icon mui-icon-extra mui-icon-extra-heart-filled"></span></a>');	
+			html.push('<a class="mui-card-link" href="#comment"><span class="mui-icon mui-icon-compose"></span></a>')
+			html.push('</div>');
+			html.push('<div>');
+			html.push('<p>');
+			html.push('小王');
+			html.push('小李');
+			html.push('</p>');
+			html.push('</div></div>');
+			
+			
+			html.push('<div class="mui-card-footer">');
+			html.push('颜日升：哈哈哈<br>');
+			html.push('丘山日生点三口：哈哈哈<br>');
+			html.push('</div></div>');
+		}
 		
+		contents.innerHTML += html.join('');
+		mui(".mui-content").on('tap','.mui-icon-extra-heart-filled',function(item){
+	    	if((''+this.style.color) =="red")
+	    		this.style.color="";
+	    	else
+	    		this.style.color="red";	    	
+		});		
 	</script>
 
 </html>

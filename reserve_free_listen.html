@@ -18,26 +18,33 @@
 			h5 {
 				margin: 5px 7px;
 			}
+			.mui-icon-clear {
+				margin-top: 8px;
+			}
 		</style>
 	</head>
+			
 	<!--loading页开始-->
-		<div class="loading">
-			<div class="loader">
-		        <div class="loader-inner pacman">
-		          <div></div>
-		          <div></div>
-		          <div></div>
-		          <div></div>
-		          <div></div>
-		        </div>
-			</div>
+	<div class="loading">
+		<div class="loader">
+	        <div class="loader-inner pacman">
+	          <div></div>
+	          <div></div>
+	          <div></div>
+	          <div></div>
+	          <div></div>
+	        </div>
 		</div>
+	</div>
 	<!--loading页结束-->
+	
 	<body>
+		
 		<header class="mui-bar mui-bar-nav">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
 			<h1 class="mui-title">试听课程预约</h1>
 		</header>
+		
 		<div class="mui-content">
 			<div class="mui-content-padded" style="margin: 10px;">
 				<form class="mui-input-group">
@@ -54,7 +61,7 @@
 						<input id="tel" type="text" class="mui-input-clear" placeholder="最好输入手机号码">
 					</div>
 					<div class="mui-input-row" style="height: 160px; padding: 8px;">
-						<label>备注</label>
+						<label>预约备注</label>
 						<textarea id="comment" rows="5" placeholder="您有什么特殊的需求"></textarea>
 					</div>
 					<div class="mui-button-row" style="height: 60px; padding: 10px;">
@@ -67,8 +74,11 @@
 				<div id="info" align="center" style="padding-top: 10px; font-family: '宋体'; font-size: 17px;"></div>
 			</div>
 		</div>
+		
 		<script src="js/mui.min.js"></script>
+		
 		<script>
+		
 			mui.init({
 				swipeBack: true //启用右滑关闭功能
 			});			 
@@ -151,6 +161,7 @@
 			}
 			
 		</script>
+		
 	</body>
 
 </html>

@@ -1,10 +1,11 @@
 <!DOCTYPE html>
+
 <html>
 
 	<head>
 		<meta charset="utf-8">
 		<title>Education</title>
-		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
 		<!--标准mui.css-->
@@ -173,21 +174,54 @@
 				height: auto;
 			}
 			
-			/*头像和昵称的样式*/
+			/*文件上传input标签样式*/
+			.mui-table-view-cell {
+				height: 55px;
+				padding: 15px;
+				font-size: 19px;
+				color: #333333;
+			}
+			.a-upload {
+				padding: 8px 12px;
+				line-height: 20px;
+				position: relative;
+				cursor: pointer;
+				color: #007aff;
+				background: transparent;
+				border: 1px solid #007aff;
+				border-radius: 4px;
+				overflow: hidden;
+				display: inline-block;
+				*display: inline;
+				*zoom: 1
+			}			
+			.a-upload input {
+				position: absolute;
+				font-size: 15px;
+				right: 0;
+				top: 0;
+				opacity: 0;
+				filter: alpha(opacity=0);
+				cursor: pointer
+			}			
+			.a-upload:hover {
+				color: #FFFFFF;
+				background: #007aff;
+				border-color: #007aff;
+				text-decoration: none
+			}
+			
+			/*头像样式*/
 			.portrait {
-				border-radius: 50%; 
-				width: 31%;
-				border: 5px solid;
+				border-radius: 50%;
+				width: 37%;
+				border: 6px solid;
 				border-color: #FFFFFF;
 			}
-			.nickname {
-				font-family: "仿宋";
-				font-size: 20px;
-				font-weight: bold;
-			}
-
+			
 		</style>
 	</head>
+	
 	<!--loading页开始-->
 	<div class="loading">
 		<div class="loader">
@@ -201,68 +235,31 @@
 		</div>
 	</div>
 	<!--loading页结束-->
+	
 	<body>
 		<header class="mui-bar mui-bar-nav">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
-			<h1 class="mui-title">我的</h1>
+			<h1 class="mui-title">我的头像</h1>
 		</header>
-		<nav class="mui-bar mui-bar-tab">
-			<a class="mui-tab-item" id="home">
-				<span class="mui-icon mui-icon-home" style="font-size: 25px;"></span>
-				<span class="mui-tab-label">首页</span>
-			</a>
-
-			<a class="mui-tab-item" id="lesson">
-				<span class="mui-icon mui-icon-extra mui-icon-extra-class" style="font-size: 25px;"></span>
-				<span class="mui-tab-label">课程</span>
-			</a>
-			<a class="mui-tab-item" id="moments">
-				<span class="mui-icon mui-icon-search" style="font-size: 25px;"></span>
-				<span class="mui-tab-label">发现</span>
-			</a>
-			<a class="mui-tab-item mui-active">
-				<span class="mui-icon mui-icon-contact" style="font-size: 25px;"></span>
-				<span class="mui-tab-label">我的</span>
-			</a>
-		</nav>
 		<div class="mui-content">
-			<div style="background-image: url(images/background.jpg); width: 100%; height: 256px;">
+			<div style="background-image: url(images/background.jpg); width: 100%; height: 256px; margin-top: 25px;">
 				<center style="padding-top: 15%;">
 					<img id="userimg" src="images/portrait.jpg" class="portrait" data-preview-src="" data-preview-group="1"/>
 				</center>
-				<center style="padding-top: 1%;">
-					<span id="nickname" class="nickname">颜日升</span>
-				</center>
 			</div>
-			<ul class="mui-table-view mui-grid-view mui-grid-9">
-				<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4">
-					<a href="my_reservations.html">
-						<span class="mui-icon mui-icon-extra mui-icon-extra-cate" style="font-size:35px;"></span>
-						<div class="mui-media-body">我的预约</div>
-					</a>
-				</li>
-				<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4">
-					<a href="my_orders.html">
-						<span class="mui-icon mui-icon-extra mui-icon-extra-cart" style="font-size:35px;">
-	                    	<span class="mui-badge">5</span>
-						</span>
-						<div class="mui-media-body">我的订单</div>
-					</a>
-				</li>
-				<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4">
-					<a href="contact_us.html">
-						<span class="mui-icon mui-icon-extra mui-icon-extra-custom" style="font-size: 35px;"></span>
-						<div class="mui-media-body">我的客服</div>
-					</a>
-				</li>
-			</ul>
-			<ul class="mui-table-view" style="margin-top: 25px;">
-				<li class="mui-table-view-cell">
-					<a style="text-align: center;color: #FF3B30;">
-						退出登录
-					</a>
-				</li>
-			</ul>
+			<div class="mui-content-padded" style="margin-top: 30px;">
+				<center>
+					<form id="uploadForm" enctype="multipart/form-data">
+						<a class="a-upload" style="margin-right: 10px;">
+							<input type="file" accept="image/*">选择头像
+						</a>
+						<button id="uploadBtn" type="button" class="mui-btn mui-btn-primary mui-btn-outlined" 
+							style="font-size: 15px; padding: 7px 12px; margin-left: 10px;">
+							上传头像
+						</button>
+					</form>				
+				</center>
+			</div>			
 		</div>
 	</body>
 	
@@ -274,78 +271,38 @@
 		
 		mui.init({
 			swipeBack: true //启用右滑关闭功能
-		});
+		});		
 		
 		$(function() {
-			 $.ajax({
-				url: PREPATH+"/getUser",
-				type: "post",
-				dataType: "json",
-				xhrFields: {  
-					withCredentials: true  
-				},  
-				crossDomain: true,
-				success: function(data) {
-					if (data.uid !== -1) {
+			//注册按钮的点击事件
+			$("#uploadBtn").click(function() {
+				var formData = new FormData(document.getElementById("uploadForm"));
+				$.ajax({
+					url: "uploadUserimg",
+					data: formData,
+					type: "post",					
+					processData: false,
+					contentType: false,
+					dataType: "json",
+					xhrFields: {  
+						withCredentials: true  
+					},  
+					crossDomain: true,
+					success: function(data) {
 						if (data.userimg !== null && data.userimg !== "") {
-							$("#userimg").attr("src", IMGPATH + data.userimg);
+							$("#userimg").attr("src", data.userimg);
 						}
-						else {
-							$("#userimg").attr("src", IMGPATH + "portrait.jpg");
-						}
-						if (data.nickname !== null && data.nickname !== "") {
-							$("#nickname").text(data.nickname);
-						}
-						else {
-							$("#nickname").text("无名氏");
-						}
+					},
+					error: function() {
+						mui.toast("上传失败");
 					}
-					else {
-						console.log(data);
-						$("#userimg").attr("src", "images/portrait.jpg");
-						$("#nickname").text("点击登录");
-						console.log($("#nickname").text());
-					}					
-				}
+				});
 			});
-		})
-		
-		//注册点击事件
-		document.getElementById("home").addEventListener("tap", function() {
-			mui.openWindow({
-				url: 'home.html',
-				id: 'home.html' 
-	    	});
-		})
-		document.getElementById("lesson").addEventListener("tap", function() {
-			mui.openWindow({
-				url: 'lesson.html',
-				id: 'lesson.html' 
-	    	});
-		})
-		document.getElementById("moments").addEventListener("tap", function() {
-			mui.openWindow({
-				url: 'moments.html',
-				id: 'moments.html' 
-	    	});
-		})
-		document.getElementById("nickname").addEventListener("tap", function() {
-			var nickname = $("#nickname").text();
-			if (nickname === "点击登录") {
-				mui.openWindow({
-					url: 'login.html',
-		    	});
-			}
-			else {
-				mui.openWindow({
-					url: 'personal_info.html',
-		    	});
-			}
 		})
 		
 		//图片预览
 		mui.previewImage();
-		
+
 	</script>
 
 </html>

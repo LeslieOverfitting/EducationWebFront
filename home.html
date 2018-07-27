@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 	<head>
 		<meta charset="utf-8">
 		<title>Education</title>
@@ -27,22 +28,22 @@
 			}
 			.mui-content-padded {
 				padding: 10px;
-			}
+			}			
 		</style>
 	</head>
-		<!--loading页开始-->
-		<div class="loading">
-			<div class="loader">
-		        <div class="loader-inner pacman">
-		          <div></div>
-		          <div></div>
-		          <div></div>
-		          <div></div>
-		          <div></div>
-		        </div>
+	<!--loading页开始-->
+	<div class="loading">
+		<div class="loader">
+			<div class="loader-inner pacman">
+				<div></div>
+				<div></div>
+				<div></div>
+				<div></div>
+				<div></div>
 			</div>
 		</div>
-		<!--loading页结束-->
+	</div>
+	<!--loading页结束-->
 
 	<body>
 		<header class="mui-bar mui-bar-nav">
@@ -68,9 +69,9 @@
 			</a>
 		</nav>
 		<div class="mui-content">
-			<div id="slider" class="mui-slider">			
+			<div id="slider" class="mui-slider">
 			</div>
-	        <ul class="mui-table-view mui-grid-view mui-grid-9" style="margin-top: 5px;">
+			<ul class="mui-table-view mui-grid-view mui-grid-9" style="margin-top: 5px;">
 				<li class="mui-table-view-cell mui-media mui-col-xs-3 mui-col-sm-3" style="padding: 5px 0px;">
 					<a href="enterprise_introduction.html" style="color: #F0AD4E;">
 						<span class="mui-icon mui-icon-home"></span>
@@ -95,7 +96,7 @@
 						<div class="mui-media-body" style="color: #FF5053;">联系我们</div>
 					</a>
 				</li>
-	        </ul>
+			</ul>
 			<hr>
 			<div id="freeListenCards">
 				<div class="mui-row">
@@ -104,8 +105,8 @@
 					<div class="mui-col-xs-1"></div>
 					<div id="more1" class="mui-col-xs-3;" style="padding-top: 28px; font-size: 15px;">
 						更多<span class="mui-icon mui-icon-arrowthinright" style="font-size: 15px;"></span>
-					</div>					
-				</div>				
+					</div>
+				</div>
 			</div>
 			<hr>
 			<div id="lessonCards">
@@ -117,13 +118,16 @@
 						更多<span class="mui-icon mui-icon-arrowthinright" style="font-size: 15px;"></span>
 					</div>
 				</div>
-			</div>			
+			</div>
 		</div>
 	</body>
+	
 	<script src="js/mui.min.js"></script>
+	
 	<script>
+		
 		mui.init({
-			swipeBack: true ,//启用右滑关闭功能,
+			swipeBack: true, //启用右滑关闭功能,
 			pullRefresh: {
 				container: '#pullrefresh',
 				down: {
@@ -135,36 +139,32 @@
 				}
 			}
 		});
+		
 		//注册点击事件
 		document.getElementById("lesson").addEventListener("tap", function() {
 			mui.openWindow({
-				url: 'lesson.html',
-				id: 'lesson.html' 
-	    	});
+				url: 'lesson.html'
+			});
 		})
 		document.getElementById("moments").addEventListener("tap", function() {
 			mui.openWindow({
-				url: 'moments.html',
-				id: 'moments.html' 
-	    	});
+				url: 'moments.html'
+			});
 		})
 		document.getElementById("my_own").addEventListener("tap", function() {
 			mui.openWindow({
-				url: 'my_own.html',
-				id: 'my_own.html' 
-	    	});
+				url: 'my_own.html'
+			});
 		})
 		document.getElementById("more1").addEventListener("tap", function() {
 			mui.openWindow({
-				url: 'lesson.html',
-				id: 'lesson.html' 
-	    	});
+				url: 'lesson.html'
+			});
 		})
 		document.getElementById("more2").addEventListener("tap", function() {
 			mui.openWindow({
-				url: 'lesson.html',
-				id: 'lesson.html' 
-	    	});
+				url: 'lesson.html'
+			});
 		})
 
 		/**
@@ -185,6 +185,7 @@
 			}, 1500);
 		}
 		var count = 0;
+		
 		/**
 		 * 上拉加载具体业务实现
 		 */
@@ -200,9 +201,12 @@
 					table.appendChild(li);
 				}
 			}, 1500);
-		}	
+		}
+		
 	</script>
+	
 	<script>
+	
 		// 查询轮播图
 		$(function(){
 			mui.ajax(PREPATH+"/selectHomePageSwiperByQid",{
@@ -334,4 +338,5 @@
 		 }
 		 
 	</script>
+
 </html>

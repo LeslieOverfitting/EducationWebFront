@@ -35,11 +35,11 @@
 	<body>
 
 		<style>
+			
 			.mui-control-content {
 				background-color: #EFEFF4;
 				min-height: 580px;
-			}
-			
+			}			
 			.mui-control-content .mui-loading {
 				margin-top: 50px;
 			}
@@ -115,6 +115,7 @@
 			.mui-slider-indicator.mui-segmented-control {
 				background-color: #efeff4;
 			}
+
 		</style>
 		<header class="mui-bar mui-bar-nav">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
@@ -145,7 +146,6 @@
 						<div id="scroll1" class="mui-scroll-wrapper">
 							<div class="mui-scroll">
 								<div class="orderContentDiv">
-									
 								</div>
 							</div>
 						</div>
@@ -158,7 +158,6 @@
 									</div>
 								</div>
 								<div class="orderContentDiv">
-									
 								</div>
 							</div>
 						</div>
@@ -171,12 +170,10 @@
 									</div>
 								</div>
 								<div class="orderContentDiv">
-									
 								</div>
 							</div>
 						</div>
 					</div>
-
 					<div id="item4" class="mui-slider-item mui-control-content">
 						<div id="scroll4" class="mui-scroll-wrapper">
 							<div class="mui-scroll">
@@ -185,12 +182,10 @@
 									</div>
 								</div>
 								<div class="orderContentDiv">
-									
 								</div>
 							</div>
 						</div>
 					</div>
-
 					<div id="item5" class="mui-slider-item mui-control-content">
 						<div id="scroll5" class="mui-scroll-wrapper">
 							<div class="mui-scroll">
@@ -199,7 +194,6 @@
 									</div>
 								</div>
 								<div class="orderContentDiv">
-									
 								</div>
 							</div>
 						</div>
@@ -208,9 +202,11 @@
 			</div>
 		</div>
 	</body>
+	
 	<script src="js/mui.min.js"></script>
 	<script src="js/mui.pullToRefresh.js"></script>
 	<script src="js/mui.pullToRefresh.material.js"></script>
+	
 	<script>
 		
 		var rowId = -1;
@@ -218,6 +214,7 @@
 		var orderStatus="";
 		
 		mui.init();
+		
 		(function($) {
 				//阻尼系数
 				var deceleration = mui.os.ios?0.003:0.0009;
@@ -338,7 +335,7 @@
 				requestUrl = PREPATH+"/addRefundRecord";
 				alertMsg = "您确定要退款？";
 			}else if(text=="删除"){
-				requestUrl = PREPATH+"/deleteSorderRecord";    //*****************************************************************************///
+				requestUrl = PREPATH+"/deleteSorderRecord";
 				alertMsg = "您确定要记录？";
 			}
 			mui.confirm(alertMsg, '提示', btnArray, function(e) {
@@ -355,7 +352,7 @@
 			html_content += '		<table width="100%">';
 			html_content += '			<tr>';
 			html_content += '				<td width="50%">订单编号' + data.oid + '</td>';
-			html_content += '				<td width="50%" align="right" id="status'+data.oid+'" >' + data.status + '</td>';
+			html_content += '				<td width="50%" align="right" id="status'+data.oid+'">' + data.status + '</td>';
 			html_content += '			</tr>';
 			html_content += '		</table>';
 			html_content += '	</div>';
@@ -468,8 +465,7 @@
 					//force repaint
 					sliderProgressBar.setAttribute('style', sliderProgressBar.getAttribute('style'));
 				}
-			});			
-			
+			});
 		})(mui);
 		
 	</script>

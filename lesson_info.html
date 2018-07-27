@@ -27,19 +27,21 @@
 		</style>
 		
 	</head>
+	
 	<!--loading页开始-->
-		<div class="loading">
-			<div class="loader">
-		        <div class="loader-inner pacman">
-		          <div></div>
-		          <div></div>
-		          <div></div>
-		          <div></div>
-		          <div></div>
-		        </div>
-			</div>
+	<div class="loading">
+		<div class="loader">
+	        <div class="loader-inner pacman">
+	          <div></div>
+	          <div></div>
+	          <div></div>
+	          <div></div>
+	          <div></div>
+	        </div>
 		</div>
-		<!--loading页结束-->
+	</div>
+	<!--loading页结束-->
+	
 	<body>
 		<header class="mui-bar mui-bar-nav">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
@@ -50,7 +52,6 @@
 				<img id="lessonImg" src=" " data-preview-src="" data-preview-group="1" width="100%" height="25%"/>
 			</div>
 			<div id="lessonTitle" class="title">
-				 
 			</div>
 			<div class="mui-card">
 				<ul class="mui-table-view">
@@ -58,21 +59,21 @@
 						<img class="mui-media-object mui-pull-right" src="images/pretty.jpg">
 						<div class="mui-media-body">
 							学习方向
-							<p id="studyDirection" class='mui-ellipsis'>Java与大数据方向</p>
+							<p id="studyDirection" class='mui-ellipsis'></p>
 						</div>						
 					</li>
 					<li class="mui-table-view-cell mui-media">
 						<img class="mui-media-object mui-pull-right" src="images/pretty.jpg">
 						<div class="mui-media-body">
 							开课分校
-							<p id="schoolLoaction" class='mui-ellipsis'>实训中心，恒大名都</p>
+							<p id="schoolLoaction" class='mui-ellipsis'></p>
 						</div>
 					</li>
 					<li class="mui-table-view-cell mui-media">
 						<img class="mui-media-object mui-pull-right" src="images/pretty.jpg">
 						<div class="mui-media-body">
 							课程费用
-							<p id="lessonPrice" class='mui-ellipsis'>200￥</p>
+							<p id="lessonPrice" class='mui-ellipsis'></p>
 						</div>
 					</li>
 				</ul>
@@ -96,25 +97,28 @@
 	</body>
 	<script src="js/mui.min.js"></script>
 	<script>
+		
 		mui.init({
 			swipeBack:true //启用右滑关闭功能
 		});
+		
 		function skipHtml(url){
 			 mui.openWindow({
 				url: url
 			});
 		};
+		
 		var parameters = ((window.location+'').split('?')[1]).split('=');
 		var requestUrl =PREPATH+"/selectLessonByLid";
 		var lessonId = parameters[1];
-		
 		lessonId = parameters[1];
 		console.log(lessonId);
 		$("#lessonHeader").text('精品课程')
 		getLessonInfo(requestUrl,1,lessonId);
+		
 		function getLessonInfo(url,qid,lessonId){
 			//获取所有订单
-			    mui.ajax(url,{
+			mui.ajax(url,{
 				type:"post",
 				async:true,
 				data:{qid:1,lessonId:lessonId},
@@ -159,8 +163,6 @@
 
 			});
 		})	
-		
-		
 		
 		document.getElementById("order").addEventListener('tap', function() {
 				skipHtml("order_lesson.html?lid="+lessonId+'&oid=0');
