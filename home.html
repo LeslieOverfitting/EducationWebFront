@@ -125,7 +125,6 @@
 	<script src="js/mui.min.js"></script>
 	
 	<script>
-		
 		mui.init({
 			swipeBack: true, //启用右滑关闭功能,
 			pullRefresh: {
@@ -139,7 +138,6 @@
 				}
 			}
 		});
-		
 		//注册点击事件
 		document.getElementById("lesson").addEventListener("tap", function() {
 			mui.openWindow({
@@ -185,7 +183,6 @@
 			}, 1500);
 		}
 		var count = 0;
-		
 		/**
 		 * 上拉加载具体业务实现
 		 */
@@ -202,7 +199,6 @@
 				}
 			}, 1500);
 		}
-		
 	</script>
 	
 	<script>
@@ -219,7 +215,6 @@
 				},  
 				crossDomain: true,
 				success:function(data){
-					console.log("dataLength"+data.length);
 					selectHomePageFreeListenByQid();
 					selectHomePageLessonByQid();
 					var slider = $('#slider');
@@ -251,8 +246,7 @@
 					});	
 				},
 				error:function(xhr,type,errorThrown){
-					//异常处理；
-					console.log(type);
+					mui.toast("信息加载失败");
 				}
 			});		 	
 		})
@@ -291,8 +285,7 @@
 					});
 				},
 				error:function(xhr,type,errorThrown){
-					//异常处理；
-					console.log(type);
+					mui.toast("信息加载失败");
 				}
 			});
 		 }
@@ -331,8 +324,7 @@
 					    });
 				},
 				error:function(xhr,type,errorThrown){
-					//异常处理；
-					console.log(type);
+					mui.toast("信息加载失败");
 				}
 			});	 	
 		 }

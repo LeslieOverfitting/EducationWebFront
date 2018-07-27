@@ -296,13 +296,11 @@
 	<script src="js/html5video.js"></script>
 	<script src="js/mui.previewimage.js"></script>
 	<script>
-		
 		mui.init();
 		mui.previewImage();
-
 		var video_path="";
 		$(function(){
-			mui.ajax("http://localhost:8083/education/selectEnterpriseByQid",{
+			mui.ajax(PREPATH+"/selectEnterpriseByQid",{
 				type: "get",
 				async: true,
 				data:{qid:1},
@@ -340,8 +338,7 @@
 					});
 				},
 				error:function(xhr,type,errorThrown){
-					//异常处理；
-					console.log(type);
+					mui.toast("信息获取失败");
 				}
 			});
 		 	
