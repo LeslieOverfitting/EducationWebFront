@@ -58,6 +58,13 @@
 					<li class="mui-table-view-cell mui-media">
 						<img class="mui-media-object mui-pull-right" src="images/pretty.jpg">
 						<div class="mui-media-body">
+							开课分部
+							<p id="schoolLoaction" class='mui-ellipsis'></p>
+						</div>
+					</li>
+					<li class="mui-table-view-cell mui-media">
+						<img class="mui-media-object mui-pull-right" src="images/pretty.jpg">
+						<div class="mui-media-body">
 							学习方向
 							<p id="studyDirection" class='mui-ellipsis'></p>
 						</div>
@@ -65,8 +72,8 @@
 					<li class="mui-table-view-cell mui-media">
 						<img class="mui-media-object mui-pull-right" src="images/pretty.jpg">
 						<div class="mui-media-body">
-							开课分校
-							<p id="schoolLoaction" class='mui-ellipsis'></p>
+							课程状态
+							<p id="lessonStatus" class='mui-ellipsis'></p>
 						</div>
 					</li>
 					<li class="mui-table-view-cell mui-media">
@@ -106,7 +113,7 @@
 				url: url
 			});
 		};
-
+		var lprice = 0;
 		var parameters = ((window.location + '').split('?')[1]).split('=');
 		var requestUrl = PREPATH + "/selectLessonByLid";
 		var lessonId = parameters[1];
@@ -131,10 +138,16 @@
 				success: function(data) {
 					$("#lessonImg").attr('src', IMGPATH + data.imgurl);
 					$("#studyDirection").text(data.category)
-					$("#lessonTitle").html(data.title);
-					$("#schoolLoaction").text(data.branch + data.address);
-					$("#lessonPrice").text(data.price + '￥');
-					$("#lessonDesc").text(data.lessonDesc);
+					$("#lessonTitle").html(data.lname);
+					var schoolContent = data.branches[0].branch;
+					for(var i=1;i<data.branches.length;i++){
+						schoolContent +=","+data.branches[i].branch;
+					}
+					$("#schoolLoaction").text(schoolContent);
+					$("#lessonPrice").text(data.lprice + '￥');
+					lprice = data.lprice;
+					$("#lessonDesc").text(data.ldesc);
+					$("#lessonStatus").text(data.status);
 				},
 				error: function(xhr, type, errorThrown) {
 				 	mui.toast("信息获取失败");
@@ -142,11 +155,13 @@
 			});
 		};
 		document.getElementById("bookOrder").addEventListener('tap', function() {
-			mui.ajax(PREPATH + "/bookSorder", {
+			mui.ajax(PREPATH + "/saveSorderUnpaid", {
 				type: "post",
 				async: true,
 				data: {
-					lid: lessonId
+					lid: lessonId,
+					total:lprice,
+					actual:lprice
 				},
 				dataType: "json",
 				xhrFields: {

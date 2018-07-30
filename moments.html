@@ -333,7 +333,7 @@
 		 */
 		function pulldownRefresh() {
 			setTimeout(function() {
-				getMessageByQidDownFresh(1);
+				selectMessageByQidAndPageDownFresh(1);
 				mui('#content').pullRefresh().endPulldownToRefresh(); //refresh completed
 
 			}, 1500);
@@ -344,16 +344,15 @@
 		 */
 		function pullupRefresh() {
 			setTimeout(function() {
-				//mui('#pullrefresh').pullRefresh().endPullupToRefresh((++count > 2)); //参数为true代表没有更多数据了。
 				console.log("bound=" + boundaryId);
-				getMessageByQid(1, boundaryId);
+				selectMessageByQidAndPage(boundaryId);
 				mui('#content').pullRefresh().endPullupToRefresh(boundaryId == -2);
 			}, 1500);
 		}
 
 		var contents = document.getElementById("messageDiv");
 		var prePend = document.getElementById("backImg");
-		getMessageByQid(1, -1);
+		selectMessageByQidAndPage(1, -1);
 		getNickName();
 
 		function getNickName() {
@@ -376,12 +375,11 @@
 			});
 		}
 
-		function getMessageByQidDownFresh(qid) {
-			mui.ajax(PREPATH + "/selectAllMessageByQidDownFresh", {
+		function selectMessageByQidDownFresh() {
+			mui.ajax(PREPATH + "/selectMessageByQidDownFresh", {
 				type: "post",
 				async: true,
 				data: {
-					qid: qid,
 					maxId: maxId
 				},
 				dataType: "json",
@@ -391,7 +389,7 @@
 				crossDomain: true,
 				success: function(data) {
 					for(var i = data.length - 1; i >= 0; i--) {
-						jQuery(prePend).after(showComment(data[i]));
+						jQuery(prePend).after(getCommentStr(data[i]));
 					}
 					if(data.length > 0) {
 						maxId = data[0].mid;
@@ -404,13 +402,12 @@
 			});
 		}
 
-		function getMessageByQid(qid, rowId) {
-			mui.ajax(PREPATH + "/selectAllMessageByPageAndQid", {
+		function selectMessageByQidAndPage(rowId) {
+			mui.ajax(PREPATH + "/selectMessageByQidAndPage", {
 				type: "post",
 				async: true,
 				data: {
-					qid: qid,
-					rowId: rowId
+					startId: rowId
 				},
 				dataType: "json",
 				xhrFields: {
@@ -419,7 +416,7 @@
 				crossDomain: true,
 				success: function(data) {
 					for(var i = 0; i < data.length; i++) {
-						jQuery(contents).append(showComment(data[i]));
+						jQuery(contents).append(getCommentStr(data[i]));
 					}
 					if(data.length != 0)
 						boundaryId = data[data.length - 1].mid;
@@ -434,48 +431,47 @@
 			});
 		}
 
-		function showComment(data) {
+		function getCommentStr(data) {
 			html = [];
 			html.push('<div class="mui-card" id="card' + data.mid + '" style="margin-bottom: 20px;">');
 			html.push('<div class="mui-card-header">');
 			html.push(data.mtitle);
 			html.push('</div><div class="mui-card-content">');
 			html.push('<div class="mui-card-content-inner">');
-			for(var j = 0; j < data.imgs.length; j++) {
-				html.push('<span class="messagelist-imgs' + data.imgs.length + '" style="background-image: url(' + 'images/' + data.imgs[j].imgurl + ');">');
-				html.push('<img src="images/' + data.imgs[j].imgurl + '" data-preview-src="" data-preview-group="1"  style="opacity: 0;width: 100%;height: 100%;"/></span>');
+			for(var j = 0; j < data.messageimgs.length; j++) {
+				html.push('<span class="messagelist-imgs' + data.messageimgs.length + '" style="background-image: url(' + 'images/' + data.imgs[j].imgurl + ');">');
+				html.push('<img src="images/' + data.messageimgs[j].imgurl + '" data-preview-src="" data-preview-group="1"  style="opacity: 0;width: 100%;height: 100%;"/></span>');
 			}
 			html.push('<p align="right">');
 			html.push(data.mtime);
 			html.push('</p>');
 			html.push('</div></div>');
-			if(data.likes.length > 0 && data.replies.length > 0) {
+			if(data.messagelikes.length > 0 && data.messagereply.length > 0) {
 				html.push('<div class="mui-card-footer">');
 				var redOrNot = '';
-				for(var j = 0; j < data.likes.length; j++) {
-					if(data.likes[j].user.uid == uid) {
+				for(var j = 0; j < data.messagelikes.length; j++) {
+					if(data.messagelikes[j].user.uid == uid) {
 						redOrNot = 'red';
 					}
-
 				}
 				html.push('<a class="mui-card-link"><span style="color:' + redOrNot + '" class="mui-icon mui-icon-extra mui-icon-extra-heart-filled" value="' + data.mid + '"></span></a>');
 				html.push('<a href="#comment" class="mui-card-link"><span class="mui-icon mui-icon-compose" value="' + data.mid + '" ></span></a></div>');
-				if(data.replies.length > 0) {
+				if(data.messagereply.length > 0) {
 					html.push('<div class="mui-card-footer" style="display: block;">');
 					html.push('<div  style="margin-bottom: 10px;">');
 					html.push('<span class="mui-icon mui-icon-extra mui-icon-extra-heart-filled" style="font-size: 15px;"></span> ');
 					html.push('<p style="display:inline" id="likersName' + data.mid + '" >');
-					for(var j = 0; j < data.likes.length; j++) {
-						if(j + 1 < data.likes.length)
-							html.push(data.likes[j].user.nickname + ' ');
+					for(var j = 0; j < data.messagelikes.length; j++) {
+						if(j + 1 < data.messagelikes.length)
+							html.push(data.messagelikes[j].user.nickname + ' ');
 						else
-							html.push(data.likes[j].user.nickname);
+							html.push(data.messagelikes[j].user.nickname);
 					}
 					html.push('</p>');
 					html.push('</div>');
 					html.push('<div id="reply' + data.mid + '" style="margin-bottom: 5px;">');
-					for(var j = 0; j < data.replies.length; j++) {
-						html.push(data.replies[j].user.nickname + ':' + data.replies[j].content + '<br>');
+					for(var j = 0; j < data.messagereply.length; j++) {
+						html.push(data.messagereply[j].user.nickname + ':' + data.messagereply[j].content + '<br>');
 					}
 					html.push('</div>');
 					html.push('</div>');

@@ -78,13 +78,12 @@
 				swipeBack: true //启用右滑关闭功能
 			});
 
-			var parameters = ((window.location + '').split('?')[1]).split('='); // ?oid=0&lid=0
+			var parameters = ((window.location + '').split('?')[1]).split('='); // ?oid=0
 			var oid = parameters[1];
-			var requestUrl = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"; //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-			getLesson(lid, oid, requestUrl);
+			getLesson(oid, requestUrl);
 
-			function getLesson(lid, oid, requestUrl) {
-				mui.ajax(requestUrl, {
+			function getLesson(oid, requestUrl) {
+				mui.ajax(PREPATH+"/selectRefundInfoByOID", {
 					type: "post",
 					async: true,
 					data: {
@@ -98,7 +97,7 @@
 					success: function(data) { // lname ,lprice , refundreason
 
 						$("#lname").val(data.lname);
-						$("#lprice").val(data.lprice + '￥');
+						$("#lprice").val(data.actual + '￥');
 					},
 					error: function(xhr, type, errorThrown) {
 						//异常处理；
@@ -109,13 +108,13 @@
 				});
 			}
 
-			function saveRefund(oid, reason) {
-				mui.ajax("********************************************", {
+			function saveRefund(oid, refundreason) {
+				mui.ajax(PREPATH+"/saveRefund", {
 					type: "post",
 					async: true,
 					data: {
 						oid: oid,
-						refundreason: reason
+						refundreason: refundreason
 					},
 					dataType: "json",
 					xhrFields: {
