@@ -21,8 +21,8 @@
 		<script src="js/config.js" type="text/javascript"></script>
 		<script src="js/loading.animation.js" type="text/javascript"></script>
 		<style>
-			/*朋友圈图片预览样式*/
 			
+			/*朋友圈图片预览样式*/
 			.mui-content-padded a .mui-icon-extra {
 				margin-top: 12px;
 			}
@@ -213,6 +213,7 @@
 				max-width: 100%;
 				height: auto;
 			}
+			
 		</style>
 	</head>
 
@@ -287,6 +288,7 @@
 	<script src="js/mui.previewimage.js"></script>
 
 	<script>
+		
 		mui.previewImage();
 
 		var boundaryId = -1;
@@ -581,7 +583,7 @@
 				html.push('<div id="reply' + mid + '" class="mui-card-footer">');
 				html.push(nickName + ':' + innerComment + '<br>');
 				html.push('</div>');
-				$("#card" + mid + '').append(html.join(''));
+				$("#card" + mid).append(html.join(''));
 				saveComment(mid, innerComment);
 			} else {
 				document.getElementById('reply' + mid + '').innerHTML += nickName + ':' + innerComment;
@@ -592,6 +594,7 @@
 		mui(".mui-content").on('tap', '.mui-icon-compose', function(item) {
 			mid = $(this).attr('value');
 		});
+
 	</script>
 
 </html>

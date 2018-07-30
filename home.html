@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 
 	<head>
@@ -248,12 +248,14 @@
 				dataType: "json",
 				xhrFields: {
 					withCredentials: true
+
 				},
 				crossDomain: true,
 				success: function(data) {
 					setSwipers(data.swipers);
 					selectHomePageFreeListenByQid(data.frelistens);
 					selectHomePageLessonByQid(data.lesson);
+
 				},
 				error: function(xhr, type, errorThrown) {
 					mui.toast("信息加载失败");
