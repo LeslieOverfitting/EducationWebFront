@@ -178,22 +178,22 @@
         				mui.toast("信息获取失败");
     				}
 				});
-		 		var showCityPickerButton = $('#showlessonPicker');
-				var lessonResult = $('#segmentedControlContents'); 	 
-				showCityPickerButton.click(function(event) {
-					lessonPicker.show(function(items) {
-						var pickResult = '<span style="font-family: "华文新魏"; font-size: 20px; color: #CF2D28;">' + items[0].text + '</span>&nbsp;-&nbsp;';
-						pickResult += '<span style="font-family: "华文新魏"; font-size: 20px; color: #CF2D28;">' + items[1].text + '</span>&nbsp;-&nbsp;';
-						pickResult += '<span style="font-family: "华文新魏"; font-size: 20px; color: #CF2D28;">' + items[2].text;
-						showCityPickerButton.text(pickResult);
+		 		var showCityPickerButton = document.getElementById('showLessonPicker');
+				var lessionResult = $('#segmentedControlContents'); 	 
+				showCityPickerButton.addEventListener('tap', function(event) {
+					lessionPicker.show(function(items) {
 						branchName = items[0].text;
 						freeOrNot = items[1].text;
 						category = items[2].text;
-						if("精品课"==items[1].text){
-							lessonRequestUrl = PREPATH+"/selectLessonByBranchNameCategoryAndPageAndQidAndPage";
+						var pickResult = '<span style="font-family: "华文新魏"; font-size: 20px; color: #CF2D28;">' + branchName + '</span>&nbsp;-&nbsp;';
+						pickResult += '<span style="font-family: "华文新魏"; font-size: 20px; color: #CF2D28;">' + freeOrNot + '</span>&nbsp;-&nbsp;';
+						pickResult += '<span style="font-family: "华文新魏"; font-size: 20px; color: #CF2D28;">' + category;
+						showCityPickerButton.text(pickResult);						
+						if ("精品课"==items[1].text) {
+						 	lessonRequestUrl = PREPATH + "/selectLessonByBranchNameCategoryAndPageAndQidAndPage";
 						}
-						else{
-							lessonRequestUrl = PREPATH+"/selectFreeListenByBranchNameAndCategoryAndQidAndPage";
+						else {
+							lessonRequestUrl = PREPATH + "/selectFreeListenByBranchNameAndCategoryAndQidAndPage";
 						}
 						boundaryId = -1;
 						getLessonByBranchNameCategoryAndPage(lessonRequestUrl,items[0].text,items[2].text,boundaryId);

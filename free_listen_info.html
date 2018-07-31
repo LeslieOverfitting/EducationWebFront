@@ -72,7 +72,7 @@
 						<img class="mui-media-object mui-pull-right" src="images/pretty.jpg">
 						<div class="mui-media-body">
 							课程状态
-							<p class='mui-ellipsis'>进行中</p>
+							<p id="lessonStatus" class='mui-ellipsis'>进行中</p>
 						</div>
 					</li>
 				</ul>
@@ -102,7 +102,7 @@
 			document.getElementById("reserve").addEventListener('tap', function() {
 				var fid =this.value;
 				console.log(fid);				
-				var skpiUrl = 'reserve_free_listen.html?fid='+fid+"&fname="+$("#lessonTitle").html();
+				var skpiUrl = 'reserve_free_listen.html?fid='+fid+"";
 				encodeURI(skpiUrl);
 				mui.openWindow({
 					url:skpiUrl ,
@@ -114,13 +114,13 @@
 	 
 		var fid = ((window.location+'').split('?')[1]).split('=')[1];
 		var requestUrl = PREPATH+"/selectFreeListenByFid";
-	    getFreeListenInfo(requestUrl,1,fid);
-		function getFreeListenInfo(url,qid,fid){
+	    getFreeListenInfo(requestUrl,fid);
+		function getFreeListenInfo(url,fid){
 			//获取所有订单
 			   mui.ajax(url,{
 				type:"post",
 				async:true,
-				data:{fid:fid},
+				data:{id:fid},
 				dataType:"json",
 				xhrFields: {  
 					withCredentials: true  
@@ -130,9 +130,11 @@
 					$("#lessonImg").attr('src',IMGPATH +data.imgurl) ;
 					$("#studyDirection").text(data.category)
 				    $("#lessonTitle").html(data.title);
-				    $("#schoolLoaction").text(data.branch + data.address);
-				    $("#lessonDesc").text(data.lessonDesc);
+				    $("#schoolLoaction").text(data.branch);
+				    $("#lessonDesc").text(data.fdesc);
 				    $("#reserve").val(fid);
+				    $("#lessonStatus").text(data.status);
+				    
 				},
 				error:function(xhr,type,errorThrown){
 					mui.toast("信息获取失败，服务器异常");

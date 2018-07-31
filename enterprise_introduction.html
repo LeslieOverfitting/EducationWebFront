@@ -13,7 +13,7 @@
 		<link rel="stylesheet" type="text/css" href="css/loading.css"/>
 		<script src="js/jquery.min.js" type="text/javascript"></script>
     	<script src="js/loading.animation.js" type="text/javascript"></script>
-    	<script src="js/config.js" type="text/javascript"></script>
+    	<script src="js/config.js" type="text/javascript"></script>  
 		<!--App自定义的css-->
 		<style type="text/css">
 			.mui-preview-image.mui-fullscreen {
@@ -300,7 +300,7 @@
 		mui.previewImage();
 		var video_path="";
 		$(function(){
-			mui.ajax(PREPATH+"/selectEnterpriseByQid",{
+			mui.ajax(PREPATH+"/selectEnterPriseByQid",{
 				type: "get",
 				async: true,
 				data:{qid:1},

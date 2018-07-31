@@ -96,7 +96,7 @@
 			swipeBack:true //启用右滑关闭功能
 		});
 
-		findSchoolPostionByQid();
+		selectBranchByQID();
 
 		function getItemStr(data){
 			html =[];
@@ -121,8 +121,8 @@
 			return html.join('');
 		}
 
-		function findSchoolPostionByQid(){
-			mui.ajax(PREPATH+"/selectSchoolPostionByQidAndPage",{
+		function selectBranchByQID(){
+			mui.ajax(PREPATH+"/selectBranchByQID",{
 				type:"post",
 				async:true,
 				data:{},

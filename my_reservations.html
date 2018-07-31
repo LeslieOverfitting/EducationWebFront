@@ -170,17 +170,83 @@
 		<script src="js/mui.min.js"></script>
 		<script src="js/mui.pullToRefresh.js"></script>
 	   	<script src="js/mui.pullToRefresh.material.js"></script>
-		
 		<script>
-			
-			var orderStatus ="";
-			var rowId= -1;
+			var selectOrderURL ="/selectFreeListenBookByBookQueryCondition";
+			var rowIDs = new Array(3);
+			rowIDs[0] = -1;
+			rowIDs[0] = -1;
+			rowIDs[0] = -1;
+			var currentRowID= -1;
 			var itemName ="#reservationOrder1";
+			function buttonActionControl(status,id){
+				if(status =="删除"){
+					deleteFreeListenBookProcessed(id);
+				}else{
+					cancelFreeListenBookUnprocessed(id);
+				}
+			}
+			function deleteFreeListenBookProcessed(id){
+				mui.confirm("确定要删除？", '提示', btnArray, function(e) {
+					if(e.index == 1) {
+						mui.ajax(PREPATH+"/deleteFreeListenBookProcessed",{
+							type:"post",
+							async:false,
+							data:{id:id},
+							dataType:"json",
+							xhrFields: {  
+								withCredentials: true  
+							},  
+							crossDomain: true,
+							success:function(data){
+								 if(data==1){
+								 	mui.toast("删除成功");
+								 	$("#"+id+"_0").remove();
+								 	$("#"+id+"_2").remove();
+								 }else{
+								 	mui.toast("删除失败");
+								 }
+							},
+							error:function(xhr,type,errorThrown){
+								mui.toast("操作失败，服务器异常");
+    						}
+						});
+					}
+				});
+			}
+			function cancelFreeListenBookUnprocessed(id){
+				mui.confirm("确定要取消，嘤嘤嘤", '提示', btnArray, function(e) {
+					if(e.index == 1) {
+						mui.ajax(PREPATH+"/cancelFreeListenBookUnprocessed",{
+							type:"post",
+							async:false,
+							data:{id:id},
+							dataType:"json",
+							xhrFields: {  
+								withCredentials: true  
+							},  
+							crossDomain: true,
+							success:function(data){
+								 if(data==1){
+								 	mui.toast("取消成功");
+								 	$("#"+id+"_0").remove();
+								 	$("#"+id+"_1").remove();
+								 }else{
+								 	mui.toast("取消失败");
+								 }
+							},
+							error:function(xhr,type,errorThrown){
+								mui.toast("操作失败，服务器异常");
+    						}
+						});
+					}
+				});
+			}
 			
-			function getItemStr(order_time,order_state,img_name,order_name,order_no)
+			function getItemStr(rowIndex,order_time,order_state,img_name,order_name,order_no)
 			{
+				var buttonValue ="";
 				var html_content = '';
-				html_content += '<div class="mui-card">';
+				html_content += '<div id="'+order_no+"_"+rowIndex+'" class="mui-card">';
 				html_content += '	<div class="mui-card-header">';
 				html_content += '		<table width="100%">';
 				html_content += '			<tr>';
@@ -205,15 +271,28 @@
 				html_content += '		</div>';
 				html_content += '	</div>';
 				html_content += '</div>';
+				if(order_state == "已处理") {
+					buttonValue ="删除";
+				}else{
+					buttonValue ="取消";
+				}
+				html_content += '	<div class="mui-card-footer">';
+				html_content += '		<div style="position: relative; left: 65%; width: 20%;">';
+				html_content += '		</div>';
+				html_content += '		<div style="position: relative; left: 5%; width: 20%;">';
+				html_content += '			<button type="button" class="mui-btn mui-btn-danger" value="' + order_no + '">'+ buttonValue+'</button>';
+				html_content += '		</div>';
+				html_content += '	</div>';
 				return html_content;
 			}
 			
-			function selectAllFreeListenBookByPageAndStatus(status){
+			function selectAllFreeListenBookByPageAndStatus(){
 				//获取所有订单
-				mui.ajax(PREPATH+"/selectAllFreeListenBookByPageAndStatus",{
+				var rowIndex = 0;
+				jqxhr = mui.ajax(PREPATH+selectOrderURL,{
 					type:"post",
-					async:true,
-					data:{status:status,rowId:rowId},
+					async:false,
+					data:{startId:currentRowID},
 					dataType:"json",
 					xhrFields: {  
 						withCredentials: true  
@@ -222,30 +301,31 @@
 					success:function(data){
 						var fatherDiv = $(itemName);						  
 						for(var i = 0; i < data.length; i++) {		
-							var content = getItemStr(data[i].booktime.substring(0,10),data[i].status,data[i].freeListen.imgurl,data[i].freeListen.title,data[i].id);
+							var content = getItemStr(rowIndex,data[i].booktime.substring(0,10),data[i].status,data[i].imgurl,data[i].title,data[i].id);
 							fatherDiv.append(content);
 							if(data.length!=0)
-								rowId = data[data.length-1].id;
+								currentRowID = data[data.length-1].id;
 							else
-								rowId = -2;
+								currentRowID = -2;
+							rowIDs[rowIndex] = currentRowID;
 						}						
+						mui('#' + itemId + ' .mui-scroll').on('tap', 'button', function() {
+							buttonActionControl(this.innerText, this.value)
+						});
 					},
 					error:function(xhr,type,errorThrown){
-						//异常处理；
-						console.log(type);
+						mui.toast("信息加载失败");
     				}
 				});
 			};
 		</script>
 		
 		<script>
-			
 			mui.init({
 				swipeBack: false	
 			});
-			
 			mui.ready(function() {
-				selectAllFreeListenBookByPageAndStatus(orderStatus);
+				selectAllFreeListenBookByPageAndStatus();
 			});			
 			
 			(function($) {
@@ -255,14 +335,18 @@
 				var item1 = document.getElementById('item1');
 				var item2 = document.getElementById('item2');
 				var item3 = document.getElementById('item3');
-				document.getElementById('slider').addEventListener('slide', function(e) {					
-					if (e.detail.slideNumber === 1) {
+				document.getElementById('slider').addEventListener('slide', function(e) {	
+					if (e.detail.slideNumber === 0) {
+						 selectOrderURL="/selectFreeListenBookByBookQueryCondition";
+						 currentRowID = rowIDs[0];
+					}
+					else if (e.detail.slideNumber === 1) {
 						if (item2.querySelector('.mui-loading')) {
 							setTimeout(function() {
-								rowId =-1;
-								orderStatus ="待处理";
+								currentRowID = rowIDs[1];
+								selectOrderURL ="/selectFreeListenBookUnprocessedByBookQueryCondition";
 								itemName = '#reservationOrder2';
-								selectAllFreeListenBookByPageAndStatus("待处理");
+								selectAllFreeListenBookByPageAndStatus();
 								jQuery('#item2 .mui-loading').hide();
 							}, 500);
 						}
@@ -270,10 +354,10 @@
 					else if (e.detail.slideNumber === 2) {
 						if (item3.querySelector('.mui-loading')) {
 							setTimeout(function() {	
-								rowId =-1;
-								orderStatus="已处理";
+								currentRowID = rowIDs[2];
+								selectOrderURL="/selectFreeListenBookProcessedByBookQueryCondition";
 								itemName = '#reservationOrder3';
-								selectAllFreeListenBookByPageAndStatus("已处理");							 
+								selectAllFreeListenBookByPageAndStatus();							 
 							    jQuery('#item3 .mui-loading').hide();
 							}, 500);
 						}
@@ -300,21 +384,12 @@
 					//循环初始化所有下拉刷新，上拉加载。
 					$.each(document.querySelectorAll('.mui-slider-group .mui-scroll'), function(index, pullRefreshEl) {
 						$(pullRefreshEl).pullToRefresh({
-							down: {
-								callback: function() {
-									var self = this;
-									setTimeout(function() {
-										self.endPullDownToRefresh();
-									}, 1000);
-								}
-							},
 							up: {
 								callback: function() {
 									var self = this;
 									setTimeout(function() {
-										console.log("bound=" + rowId);
-										selectAllFreeListenBookByPageAndStatus(orderStatus);
-										self.endPullUpToRefresh();
+										selectAllFreeListenBookByPageAndStatus();
+										self.endPullUpToRefresh(currentRowID==-2);
 									}, 1000);
 								}
 							}

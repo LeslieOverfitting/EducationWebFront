@@ -237,7 +237,7 @@
 					a.type = 'text/javascript';
 					a.async = !0;
 					a.charset = 'utf-8';
-					a.src = 'https://ppmessage.cn/ppcom/assets/pp-library.min.js';
+					a.src = 'js/pp-library.min.js';
 					var b = d.getElementsByTagName('script')[0];
 					b.parentNode.insertBefore(a, b)
 				}
@@ -264,7 +264,7 @@
 		<header class="mui-bar mui-bar-nav">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
 			<h1 class="mui-title">我的</h1>
-			<a class="mui-icon mui-icon-extra mui-icon-extra-custom mui-pull-right" style="color: #777777;"></a>
+			<a id="serviceButton" class="mui-icon mui-icon-extra mui-icon-extra-custom mui-pull-right" style="color: #777777;"></a>
 		</header>
 		<nav class="mui-bar mui-bar-tab">
 			<a class="mui-tab-item" id="home">
@@ -292,7 +292,7 @@
 				<center style="padding-top: 1.5%;">
 					<span id="nickname" class="nickname">颜日升</span>
 				</center>
-				<div class="sign">
+				<div id="signButton" class="sign">
 					<center style="margin-top: 1px;">
 						<a class="mui-icon mui-icon-extra mui-icon-extra-heart" style="color: #FFFFFF; font-size: 15px;">
 							每日签到
@@ -425,6 +425,30 @@
 				});
 			}
 		})
+		$("#serviceButton").click(function() {
+			var ppButton = document.getElementById("pp-launcher-button");
+			ppButton.click();
+		})
+		$("#signButton").click(function() {
+			mui.ajax(PREPATH + "/***************************", {
+				type: "post",
+				dataType: "json",
+				xhrFields: {
+					withCredentials: true
+				},
+				crossDomain: true,
+				success: function(data) {
+					if(data.state === 1) {	
+						mui.toast("签到成功");
+					} else {
+						mui.toast("请勿重复签到");
+					}
+				},
+				error: function() {
+					mui.toast("签到失败");
+				}
+			})
+		})		
 		$("#logout").click(function() {
 			mui.ajax(PREPATH + "/userLogout", {
 				type: "post",
@@ -450,6 +474,7 @@
 
 		//图片预览
 		mui.previewImage();
+
 	</script>
 
 </html>

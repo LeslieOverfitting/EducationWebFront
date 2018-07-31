@@ -51,10 +51,25 @@
 			</div>
 			<div id="lessonTitle" class="title">
 			</div>
+			
+			
 			<div class="mui-card">
-				<ul class="mui-table-view">
+				<ul class="mui-table-view mui-table-view-chevron">
+							<li class="mui-table-view-cell">
+								<a href="#about" >关于MUI <i class="mui-pull-right ">V3.1.0</i></a>
+							</li>
+				</ul>
+				<ul class="mui-table-view">	
 					<li class="mui-table-view-cell mui-media">
-						<img class="mui-media-object mui-pull-right" src="images/pretty.jpg">
+						<img class="mui-media-object mui-pull-left" src="images/pretty.jpg">
+						<div class="mui-media-body" >
+						    用户信息
+							<p id="username" class='mui-ellipsis'>用户名：小王</p>
+							<p id="tel" class='mui-ellipsis'>联系电话：18622351756</p>
+						</div>
+					</li>
+					<li class="mui-table-view-cell mui-media">
+						<img class="mui-media-object mui-pull-left" src="images/pretty.jpg">
 						<div class="mui-media-body">
 							开课分部
 							<p id="schoolLoaction" class='mui-ellipsis'></p>
@@ -63,41 +78,27 @@
 					<li class="mui-table-view-cell mui-media">
 						<img class="mui-media-object mui-pull-right" src="images/pretty.jpg">
 						<div class="mui-media-body">
-							学习方向
-							<p id="studyDirection" class='mui-ellipsis'></p>
+							 订单状态
+							<p id="lessonStatus" class='mui-ellipsis'>已付款</p>
 						</div>
 					</li>
 					<li class="mui-table-view-cell mui-media">
-						<img class="mui-media-object mui-pull-right" src="images/pretty.jpg">
-						<div class="mui-media-body">
-							课程状态
-							<p id="lessonStatus" class='mui-ellipsis'></p>
-						</div>
-					</li>
-					<li class="mui-table-view-cell mui-media">
-						<img class="mui-media-object mui-pull-right" src="images/pretty.jpg">
+						<img class="mui-media-object mui-pull-left" src="images/pretty.jpg">
 						<div class="mui-media-body">
 							课程费用
-							<p id="lessonPrice" class='mui-ellipsis'></p>
+							<p id="total" class='mui-ellipsis'>商品价格：100Y</p>
+							<p id="actual" class='mui-ellipsis'>实际付款：95Y</p>
 						</div>
 					</li>
 				</ul>
 			</div>
 			<div class="mui-card" style="margin-top: 20px;">
 				<div class="mui-content-padded" style="background-color: #FFFFFF;">
-					<p id="lessonDesc"></p>
+					<p id="oid"></p>
+					<p id="ordertime"></p>
 				</div>
 			</div>
-			<div class="mui-content-padded" style="float: right;">
-				<button id="bookOrder" type="button" class="mui-btn mui-btn-primary mui-btn-outlined" style="font-size: 15px;">
-					<span style=" padding-right: 2px;">标记为待付款</span>
-					<span class="mui-icon mui-icon-extra mui-icon-extra-cart"></span>
-				</button>
-				<button id="order" type="button" class="mui-btn mui-btn-warning" style="font-size: 15px;">
-					<span style="padding-right: 2px;">购买课程</span>
-					<span class="mui-icon mui-icon-extra mui-icon-extra-prech"></span>
-				</button>
-			</div>
+			
 		</div>
 	</body>
 	<script src="js/mui.min.js"></script>
@@ -111,7 +112,6 @@
 				url: url
 			});
 		};
-		
 		var lprice = 0;
 		var parameters = ((window.location + '').split('?')[1]).split('=');
 		var requestUrl = PREPATH + "/selectLessonByLid";
@@ -120,7 +120,6 @@
 		console.log(lessonId);
 		$("#lessonHeader").text('精品课程')
 		getLessonInfo(requestUrl, 1, lessonId);
-		
 		function getLessonInfo(url, qid, lessonId) {
 			mui.ajax(url, {
 				type: "post",
@@ -153,7 +152,6 @@
 				}
 			});
 		};
-		
 		document.getElementById("bookOrder").addEventListener('tap', function() {
 			jqxhr = mui.ajax(PREPATH + "/saveSorderUnpaid", {
 				type: "post",
@@ -182,7 +180,6 @@
 				}
 			});
 		})
-		
 		document.getElementById("order").addEventListener('tap', function() {
 			skipHtml("order_lesson.html?lid=" + lessonId + '&oid=0');
 		})
