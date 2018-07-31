@@ -236,8 +236,6 @@
 			});
 		}
 		var qid = 1;
-		// var parameters = ((window.location + '').split('?')[1]).split('=');
-		// var qid = parameters[1];
 		$(function() {
 			mui.ajax(PREPATH + "/selectHomeInfoByQID", {
 				type: "get",
@@ -255,7 +253,6 @@
 					setSwipers(data.swipers);
 					selectHomePageFreeListenByQid(data.frelistens);
 					selectHomePageLessonByQid(data.lesson);
-
 				},
 				error: function(xhr, type, errorThrown) {
 					mui.toast("信息加载失败");

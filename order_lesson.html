@@ -91,7 +91,7 @@
 				requestUrl = PREPATH + "/selectLessonByOid";
 			getLesson(lid, oid, requestUrl);
 			function getLesson(lid, oid, requestUrl) {
-				mui.ajax(requestUrl, {
+			 jqxhr = mui.ajax(requestUrl, {
 					type: "post",
 					async: true,
 					data: {
@@ -114,7 +114,7 @@
 			}
 
 			function saveOrder(userName, tel, oid, lid) {
-				mui.ajax(PREPATH + "/saveSorder", {
+				 mui.ajax(PREPATH + "/saveSorder", {
 					type: "post",
 					async: true,
 					data: {

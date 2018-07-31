@@ -83,7 +83,7 @@
 			getLesson(oid, requestUrl);
 
 			function getLesson(oid, requestUrl) {
-				mui.ajax(PREPATH+"/selectRefundInfoByOID", {
+			  jqxhr = mui.ajax(PREPATH+"/selectRefundInfoByOID", {
 					type: "post",
 					async: true,
 					data: {

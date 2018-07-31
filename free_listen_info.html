@@ -102,7 +102,7 @@
 			document.getElementById("reserve").addEventListener('tap', function() {
 				var fid =this.value;
 				console.log(fid);				
-				var skpiUrl = 'reserve_free_listen.html?fid='+fid+"&fname="+$("#lessonTitle").html();
+				var skpiUrl = 'reserve_free_listen.html?fid='+fid+"";
 				encodeURI(skpiUrl);
 				mui.openWindow({
 					url:skpiUrl ,

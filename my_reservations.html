@@ -289,7 +289,7 @@
 			function selectAllFreeListenBookByPageAndStatus(){
 				//获取所有订单
 				var rowIndex = 0;
-				mui.ajax(PREPATH+selectOrderURL,{
+				jqxhr = mui.ajax(PREPATH+selectOrderURL,{
 					type:"post",
 					async:false,
 					data:{startId:currentRowID},

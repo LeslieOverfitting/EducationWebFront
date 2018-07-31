@@ -279,7 +279,7 @@
 	
 		function getOrderByUidAndStatus(itemId, firstTimeFlag,rowIndex) {
 			
-			mui.ajax(PREPATH + selectURL, {
+		jqxhr = mui.ajax(PREPATH + selectURL, {
 				type: "post",
 				async: false,
 				data: {
@@ -303,6 +303,10 @@
 					if(data.length != 0){
 						rowIDs[rowIndex] = data[data.length - 1].oid;
 						currentRowID = data[data.length - 1].oid;
+						if(selectURL =="/selectRefundBySorderQueryCondition"){
+							rowIDs[rowIndex] = data[data.length - 1].rid;
+							currentRowID = data[data.length - 1].rid;
+						}
 					}
 						
 					else{
@@ -323,7 +327,7 @@
 		}
 
 		function changeOrderStatus(url, oid) {
-			mui.ajax(url, {
+				mui.ajax(url, {
 				type: "post",
 				async: true,
 				data: {
