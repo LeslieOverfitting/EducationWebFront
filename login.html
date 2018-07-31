@@ -58,12 +58,13 @@
 						<input id="code" type="text" class="mui-input-clear" placeholder="验证码将发给手机呦">
 					</div>
 					<div class="mui-button-row" style="height: 50px; padding: 8px;">
-						<button id="verify" type="button" class="mui-btn mui-btn-green" data-loading-text="获取中" 
-							data-loading-icon-position="right" style="width: 45%; font-size: 15px;">
+						<button id="verify" type="button" class="mui-btn mui-btn-green" 
+							style="width: 45%; font-size: 15px;">
 							获取手机验证码
 						</button>
-						<button id="login" type="button" class="mui-btn mui-btn-primary" data-loading-text="登录中" 
-							data-loading-icon-position="right" style="width: 28%; font-size: 15px;">
+						<button id="login" type="button" class="mui-btn mui-btn-primary" 
+							data-loading-text="登录中" data-loading-icon-position="right" 
+							style="width: 28%; font-size: 15px;">
 							登录
 						</button>
 					</div>
@@ -77,6 +78,96 @@
 			//mui初始化
 			mui.init({
 				swipeBack: true //启用右滑关闭功能
+			});
+			
+			//注册点击事件
+			$(function() {
+				//先验证手机号，再发送验证码
+				$("#verify").click(function() {
+					var tel = $("#phone").val();
+					if (checkTel(tel)) {
+						//验证手机号
+						if (checkFlag) {
+							//发送手机验证码
+							mui.ajax(PREPATH + "/sendMobileCode", {
+								type: "post",
+								data: {tel: tel},
+								dataType: "json",
+								async: false,
+								xhrFields: {  
+            						withCredentials: true  
+      							},  
+        						crossDomain: true,
+        						beforeSend: function() {
+        							delayURL(60);
+        						},
+								success: function(data) {
+									if (data.state === 1) {
+										mui.toast("发送成功");
+									}
+									else {
+										mui.toast("发送失败");
+									}
+								},
+								error: function() {
+									mui.toast("发送失败");
+								}
+							});
+						}
+					}
+				});
+				
+				//验证手机号和验证码，并进行登录
+				$("#login").click(function() {
+					var tel = $("#phone").val(); //手机号
+					var code = $("#code").val(); //验证码
+					//验证手机验证码
+					if (checkTel(tel)) {
+						if (code !== null && code !== "") {
+							var codeReg = /^\d{6}$/;
+							if (codeReg.test(code)) {
+								mui.ajax(PREPATH + "/checkMobileCode", {
+									type: "post",
+									data: {tel: tel, code: code},
+									dataType: "json",
+									async: false,
+									xhrFields: {  
+            							withCredentials: true  
+      								},  
+        							crossDomain: true,
+        							beforeSend: function() {
+	        							mui($("#login")).button('loading');
+	        						},
+									success: function(data) {
+										mui($("#login")).button('reset');
+										if (data.state === 1) {
+											mui.openWindow({
+												url: 'personal_info.html',
+									    	});
+										}
+										else if (data.state === 2) {
+											mui.openWindow({
+												url: 'my_own.html',
+									    	});
+										}
+										else {
+											mui.toast("请核对验证码");
+										}
+									},
+									error: function() {
+										mui.toast("登陆失败");
+									}
+								});
+							}
+							else {
+								mui.toast("请核对验证码");
+							}
+						}
+						else {
+							mui.toast("请输入验证码");
+						}
+					}
+				});
 			});
 			
 			//手机验证码登录
@@ -97,9 +188,9 @@
 					return false;
 				}
 			}
+			
 			//计时器
 			var checkFlag = true; //标记是否可发送手机验证码
-			
 			function delayURL(delay) {
 				if (delay > 0) {
 					checkFlag = false;
@@ -113,93 +204,6 @@
 					$("#verify").html("获取验证码");
 				}
 			}
-			//注册点击事件
-			$(function() {
-				//点击 “获取验证码”：先验证手机号，再发送验证码
-				$("#verify").click(function() {
-					var tel = $("#phone").val();
-					if (checkTel(tel)) {
-						//验证手机号
-						if (checkFlag) {
-							mui(this).button('loading');
-							setTimeout(function() {
-								//发送手机验证码
-								$.ajax({
-									url: PREPATH+"/sendMobileCode",
-									type: "post",
-									data: {tel: tel},
-									dataType: "json",
-									async: false,
-									xhrFields: {  
-	            						withCredentials: true  
-	      							},  
-	        						crossDomain: true,
-									success: function(data) {
-										console.log(data.state);
-										console.log(data);
-										if (data.state === 1) {
-											mui.toast("发送成功");
-											delayURL(60);
-										}
-										else {
-											mui.toast("发送失败");
-										}
-									}
-								});
-							}.bind(this), 500);
-						}
-					}
-				});
-				//点击“提交”（验证密码,验证码）
-				$("#login").click(function() {
-					var tel = $("#phone").val(); //手机号
-					var code = $("#code").val(); //验证码
-					//验证手机验证码
-					if (checkTel(tel)) {
-						if (code !== null && code !== "") {
-							var codeReg = /^\d{6}$/;
-							if (codeReg.test(code)) {
-								mui(this).button('loading');
-								setTimeout(function() {
-									$.ajax({
-										url: PREPATH+"/checkMobileCode",
-										type: "post",
-										data: {qid: 1, tel: tel, code: code},
-										dataType: "json",
-										async: false,
-										xhrFields: {  
-	            							withCredentials: true  
-	      								},  
-	        							crossDomain: true,
-										success: function(data) {
-											console.log("yxy");
-											if (data.state === 1) {
-												mui.openWindow({
-													url: 'personal_info.html',
-										    	});
-											}
-											else if (data.state === 2) {
-												mui.openWindow({
-													url: 'my_own.html',
-										    	});
-											}
-											else {
-												mui.toast("请核对验证码");
-											}
-										}
-									});
-								}.bind(this), 500);
-							}
-							else {
-								mui.toast("请核对验证码");
-							}
-						}
-						else {
-							mui.toast("请输入验证码");
-						}
-					}
-				});
-			});
 
 		</script>
 		

@@ -102,7 +102,11 @@
 			<p style="margin-bottom: 0px;">
 				<img src="images/curriculum.png" height="10%" width="100%" />
 			</p>
-			<button id='showLessonPicker' class="mui-btn mui-btn-block" type='button'>地点-方向-类别</button>
+			<button id='showLessonPicker' class="mui-btn mui-btn-block" type='button'>
+				<span style="font-family: '华文新魏'; font-size: 20px; color: #CF2D28;">开课分部</span>&nbsp;-&nbsp;
+				<span style="font-family: '华文新魏'; font-size: 20px; color: #CF2D28;">课程类别</span>&nbsp;-&nbsp;
+				<span style="font-family: '华文新魏'; font-size: 20px; color: #CF2D28;">学习方向</span>
+			</button>
 			<div id="pullrefresh" class="mui-row ">
 				<div id="segmentedControlContents" class="mui-col-xs-12" style="border-left: 1px solid #c8c7cc;">
 				</div>
@@ -126,24 +130,24 @@
 					callback: pullupRefresh
 				}
 			}
-		});
+		})
 		
 		//注册点击事件
-		mui("nav").on("tap", "#home", function() {
+		$("#home").click(function() {
 			mui.openWindow({
 				url: "home.html"
-			})
-		});
-		mui("nav").on("tap", "#moments", function() {
+			});
+		})
+		$("#moments").click(function() {
 			mui.openWindow({
 				url: "moments.html"
-			})
-		});
-		mui("nav").on("tap", "#my_own", function() {
+			});
+		})
+		$("#my_own").click(function() {
 			mui.openWindow({
 				url: "my_own.html"
-			})
-		});
+			});
+		})
 		
 		var branchName="";
 		var freeOrNot="";
@@ -154,20 +158,19 @@
 			$.init();
 			$.ready(function() {
 				//级联示例
-				var lessionPicker = new $.PopPicker({
+				var lessonPicker = new $.PopPicker({
 					layer: 3
 				});			 
-				mui.ajax(PREPATH+"/selectAllCategoryByQid",{
+				mui.ajax(PREPATH + "/selectAllCategoryByQid", {
 					type:"post",
 					async:true,
-					data:{},
 					dataType:"json",
-					xhrFields: {  
+					xhrFields: {
 						withCredentials: true  
 					},  
 					crossDomain: true,
 					success:function(data){
-						 lessionPicker.setData(data); 
+						 lessonPicker.setData(data); 
 						 lessonRequestUrl= PREPATH+"/selectLessonByBranchNameCategoryAndPageAndQidAndPage";
 						 getLessonByBranchNameCategoryAndPage(lessonRequestUrl,data[0].text,"",-1);
 					},
@@ -175,23 +178,27 @@
         				mui.toast("信息获取失败");
     				}
 				});
-		 		var showCityPickerButton = $('#showLessionPicker');
-				var lessionResult = $('#segmentedControlContents'); 	 
-				showCityPickerButton.addEventListener('tap', function(event) {
-					lessionPicker.show(function(items) {
-						 showCityPickerButton.text(items[0].text + "-" + items[1].text + "-" + items[2].text);
-						 branchName = items[0].text;
-						 freeOrNot = items[1].text;
-						 category = items[2].text;
-						 if("精品课"==items[1].text){
-						 	lessonRequestUrl = PREPATH+"/selectLessonByBranchNameCategoryAndPageAndQidAndPage";
-						 }else{
-						 	lessonRequestUrl = PREPATH+"/selectFreeListenByBranchNameAndCategoryAndQidAndPage";
-						 }
-						 boundaryId = -1;
-						 getLessonByBranchNameCategoryAndPage(lessonRequestUrl,items[0].text,items[2].text,boundaryId);
+		 		var showCityPickerButton = $('#showlessonPicker');
+				var lessonResult = $('#segmentedControlContents'); 	 
+				showCityPickerButton.click(function(event) {
+					lessonPicker.show(function(items) {
+						var pickResult = '<span style="font-family: "华文新魏"; font-size: 20px; color: #CF2D28;">' + items[0].text + '</span>&nbsp;-&nbsp;';
+						pickResult += '<span style="font-family: "华文新魏"; font-size: 20px; color: #CF2D28;">' + items[1].text + '</span>&nbsp;-&nbsp;';
+						pickResult += '<span style="font-family: "华文新魏"; font-size: 20px; color: #CF2D28;">' + items[2].text;
+						showCityPickerButton.text(pickResult);
+						branchName = items[0].text;
+						freeOrNot = items[1].text;
+						category = items[2].text;
+						if("精品课"==items[1].text){
+							lessonRequestUrl = PREPATH+"/selectLessonByBranchNameCategoryAndPageAndQidAndPage";
+						}
+						else{
+							lessonRequestUrl = PREPATH+"/selectFreeListenByBranchNameAndCategoryAndQidAndPage";
+						}
+						boundaryId = -1;
+						getLessonByBranchNameCategoryAndPage(lessonRequestUrl,items[0].text,items[2].text,boundaryId);
 					});
-				}, false);
+				});
 			});
 		})(mui, document);
 		
