@@ -43,7 +43,7 @@
 	<body>
 		<header class="mui-bar mui-bar-nav">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
-			<h1 id="lessonHeader" class="mui-title">订单详情</h1>
+			<h1 id="lessonHeader" class="mui-title">退款详情</h1>
 		</header>
 		<div class="mui-content">
 			<div class="mui-content-padded">
@@ -71,7 +71,7 @@
 					<li class="mui-table-view-cell mui-media">
 						<div class="mui-media-body mui-pull-left" >
 							<div class="mui-media-body mui-pull-top-tips" >
-								订单状态
+								退款状态
 							</div>
 							<div class="mui-media-body" >
 								<p id="orderStatus" class='mui-ellipsis'>状态：已付款</p>
@@ -111,10 +111,16 @@
 					</li>
 				</ul>
 			</div>
-			<div class="mui-card" style="margin-top: 20px;">
+			<div class="mui-card" style="margin-top: 10px;">
 				<div class="mui-content-padded" style="background-color: #FFFFFF;">
 					<p id="oid">订单编号：asdasda</p>
 					<p id="ordertime">下单时间：2018-12-15</p>
+				</div>
+			</div>
+			<div class="mui-card" style="margin-top: 10px;">
+				<P style=" color: #000000;font-size: x-large; margin-left: 10px;margin-top: 10px; ">退款理由</P>
+				<div class="mui-content-padded" style="background-color: #FFFFFF;">
+					<p id="reason">课程不是很好听</p>	
 				</div>
 			</div>
 			
@@ -127,11 +133,11 @@
 		});
 		var lprice = 0;
 		var parameters = ((window.location + '').split('?')[1]).split('=');
-		var requestUrl = PREPATH + "/selectOrderByOid";
+		var requestUrl = PREPATH + "/**************************************";
 		var lessonId = parameters[1];
 		lessonId = parameters[1];
 		getLessonInfo(requestUrl, 1, lessonId);
-		function getOrderInfo(url, oid) {
+		function getRefundInfo(url, oid) {
 			mui.ajax(url, {
 				type: "post",
 				async: true,
@@ -155,42 +161,14 @@
 					$("#ordertime").text("订单编号："+ data.ordertime);
 					$("#tel").text("联系电话："+ data.tel);
 					$("#userName").text("联用户名："+ data.username);
+					$("#reason").text("联用户名："+ data.username);
+					
 				},
 				error: function(xhr, type, errorThrown) {
 				 	mui.toast("信息获取失败");
 				}
 			});
 		};
-		document.getElementById("bookOrder").addEventListener('tap', function() {
-			jqxhr = mui.ajax(PREPATH + "/saveSorderUnpaid", {
-				type: "post",
-				async: true,
-				data: {
-					lid: lessonId,
-					total:lprice,
-					actual:lprice
-				},
-				dataType: "json",
-				xhrFields: {
-					withCredentials: true
-				},
-				crossDomain: true,
-				success: function(data) {
-					if(data==1){
-						mui.alert('预定成功', '提示', function() {
-							skipHtml("my_orders.html?lid=" + lessonId + "");
-						});		
-					}else{
-						mui.toast("预约失败");
-					}	
-				},
-				error: function(xhr, type, errorThrown) {
-					mui.toast("预约失败");
-				}
-			});
-		})
-		document.getElementById("order").addEventListener('tap', function() {
-			skipHtml("order_lesson.html?lid=" + lessonId + '&oid=0');
-		})
+		 
 	</script>
 </html>

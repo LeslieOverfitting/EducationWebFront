@@ -171,7 +171,7 @@
 					crossDomain: true,
 					success:function(data){
 						 lessonPicker.setData(data); 
-						 lessonRequestUrl= PREPATH+"/selectLessonByBranchNameCategoryAndPageAndQidAndPage";
+						 lessonRequestUrl= PREPATH+"/selectLessonByLessonQueryCondition";
 						 getLessonByBranchNameCategoryAndPage(lessonRequestUrl,data[0].text,"",-1);
 					},
 					error:function(xhr,type,errorThrown){
@@ -190,10 +190,10 @@
 						pickResult += '<span style="font-family: "华文新魏"; font-size: 20px; color: #CF2D28;">' + category;
 						showCityPickerButton.text(pickResult);						
 						if ("精品课"==items[1].text) {
-						 	lessonRequestUrl = PREPATH + "/selectLessonByBranchNameCategoryAndPageAndQidAndPage";
+						 	lessonRequestUrl = PREPATH + "/selectLessonByLessonQueryCondition";
 						}
 						else {
-							lessonRequestUrl = PREPATH + "/selectFreeListenByBranchNameAndCategoryAndQidAndPage";
+							lessonRequestUrl = PREPATH + "/selectFreeListenByFreeListenQueryCondition";
 						}
 						boundaryId = -1;
 						getLessonByBranchNameCategoryAndPage(lessonRequestUrl,items[0].text,items[2].text,boundaryId);
@@ -202,11 +202,11 @@
 			});
 		})(mui, document);
 		
-		function getLessonByBranchNameCategoryAndPage(requestUrl,branchName,category,rowId){
+		function getLessonByBranchNameCategoryAndPage(requestUrl,branch,category,startId){
 	    	mui.ajax(requestUrl,{
 				type:"post",
 				async:true,
-				data:{branchName:branchName,category:category,rowId:rowId},
+				data:{branch:branch,category:category,startId:startId},
 				dataType:"json",
 				withCredentials:true,
 				crossDomain: true,
@@ -262,13 +262,11 @@
 				mui('#pullrefresh').pullRefresh().endPulldownToRefresh(); //refresh completed
 			}, 1500);
 		}
-
 		/**
 		 * 上拉加载具体业务实现
 		 */
 		function pullupRefresh() {
-			setTimeout(function() {
-				//mui('#pullrefresh').pullRefresh().endPullupToRefresh((++count > 2)); //参数为true代表没有更多数据了。				
+			setTimeout(function() {			
 				console.log(lessonRequestUrl);
 				console.log("bound="+boundaryId);
 				getLessonByBranchNameCategoryAndPage(lessonRequestUrl,branchName,category,boundaryId);
