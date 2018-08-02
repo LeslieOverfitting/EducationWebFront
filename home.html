@@ -71,6 +71,7 @@
 		</nav>
 		<div class="mui-content">
 			<div id="slider" class="mui-slider">
+				
 			</div>
 			<ul class="mui-table-view mui-grid-view mui-grid-9" style="margin-top: 5px;">
 				<li class="mui-table-view-cell mui-media mui-col-xs-3 mui-col-sm-3" style="padding: 5px 0px;">
@@ -162,15 +163,15 @@
 			var slider = $('#slider');
 			var content = '<div class="mui-slider-group mui-slider-loop">';
 			content += '<div class="mui-slider-item mui-slider-item-duplicate">';
-			content += '<img src="' + IMGPATH + data[data.length - 1] + '" width="100%" height="236px">';
+			content += '<img src="' + IMGPATH + data[data.length - 1].imgurl + '" width="100%" height="236px">';
 			content += '</div>';
 			for(var i = 0; i < data.length; i++) {
 				content += '<div class="mui-slider-item">';
-				content += '<img src="' + IMGPATH + data[i] + '" width="100%" height="236px">';
+				content += '<img src="' + IMGPATH + data[i].imgurl + '" width="100%" height="236px">';
 				content += '</div>';
 			}
 			content += '<div class="mui-slider-item mui-slider-item-duplicate">';
-			content += '<img src="' + IMGPATH + data[0] + '" width="100%" height="236px">';
+			content += '<img src="' + IMGPATH + data[0].imgurl + '" width="100%" height="236px">';
 			content += '</div>';
 			slider.append(content);
 			slider.append('</div>');
@@ -181,7 +182,7 @@
 			}
 			content += '</div>';
 			slider.append(content);
-			var slider = $("#slider");
+			var slider = mui("#slider");
 			slider.slider({
 				interval: 3000
 			});
@@ -246,13 +247,12 @@
 				dataType: "json",
 				xhrFields: {
 					withCredentials: true
-
 				},
 				crossDomain: true,
 				success: function(data) {
 					setSwipers(data.swipers);
-					selectHomePageFreeListenByQid(data.frelistens);
-					selectHomePageLessonByQid(data.lesson);
+					setFreeListen(data.freelistens);
+					setLesson(data.lessons);
 				},
 				error: function(xhr, type, errorThrown) {
 					mui.toast("信息加载失败");

@@ -33,6 +33,12 @@
 				width: 73%;
 				float: right;
 			}
+			p textarea {
+				width: 73%;
+				border: 0px solid;
+				margin: 0px;
+				padding: 0px;
+			}
 		</style>
 	</head>
 
@@ -53,52 +59,43 @@
 	<body>
 		<header class="mui-bar mui-bar-nav">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
-			<h1 class="mui-title">订单详情</h1>
+			<h1 id="lessonHeader" class="mui-title">预约详情</h1>
 		</header>
-		<div id="orderDetail" class="mui-content">
+		<div class="mui-content">
 			<div class="mui-content-padded">
 				<img id="imgurl" src="images/curriculum1.png" width="100%"/>
 			</div>
 			<div class="title">
-				课程信息
+				试听课信息
 			</div>
-			<div class="mui-card">	
+			<div class="mui-card">
 				<div class="mui-content-padded">
 					<p class='mui-ellipsis'>
 						<label>课程名称：</label>
-						<span id="lname">小王</span>
+						<span id="title">小王</span>
 					</p>
 					<p class='mui-ellipsis'>
-						<label>课程费用：</label>
-						<span id="total">1000￥</span>
-					</p>
-					<p class='mui-ellipsis'>
-						<label>分部选择：</label>
+						<label>开课分部：</label>
 						<span id="branch">恒大名都</span>
 					</p>
 				</div>
 			</div>
 			<div class="title">
-				订单信息
+				预约信息
 			</div>
 			<div class="mui-card">	
 				<div class="mui-content-padded">
 					<p class='mui-ellipsis'>
-						<label>订单编号：</label>
-						<span id="oid">24214</span>
+						<label>预约编号：</label>
+						<span id="id">23112424</span>
 					</p>
 					<p class='mui-ellipsis'>
-						<label>订单状态：</label>
-						<span id="status">已付款</span>
+						<label>预约状态：</label>
+						<span id="status">已处理</span>
 					</p>
 					<p class='mui-ellipsis'>
-						<label>实付费用：</label>
-						<span id="actual" style="width: 18%; float: none;">800￥</span>
-						<span id="cut" style="width: 55%;">（已优惠200￥）</span>
-					</p>
-					<p class='mui-ellipsis'>
-						<label>下单时间：</label>
-						<span id="ordertime">2018-07-11 12:30:12</span>
+						<label>预约时间：</label>
+						<span id="booktime">2018-07-11 12:30:12</span>
 					</p>
 					<p class='mui-ellipsis'>
 						<label>真实姓名：</label>
@@ -107,6 +104,10 @@
 					<p class='mui-ellipsis'>
 						<label>联系方式：</label>
 						<span id="tel">15804032497</span>
+					</p>
+					<p class='mui-ellipsis'>
+						<label>预约备注：</label>
+						<textarea id="refundreason" rows="3" readonly>好期待这门课啊，感觉那个女老师好漂漂 阿大VAV爱是干啥干啥干啥干啥干啥干啥啊啊爱旧爱骄傲骄傲Java</textarea>
 					</p>
 				</div>
 			</div>
@@ -120,11 +121,11 @@
 		});
 		
 		$(function() {
-			var oid = ((window.location + '').split('?')[1]).split('=')[1];
-			mui.ajax(PREPATH + "/selectSorderByOID", {
+			var id = ((window.location + '').split('?')[1]).split('=')[1];
+			mui.ajax(PREPATH + "/selectFreeListenBookById", {
 				type: "post",
 				async: true,
-				data: {oid: oid},
+				data: {id: id},
 				dataType: "json",
 				xhrFields: {
 					withCredentials: true
@@ -133,56 +134,45 @@
 				success: function(data) {
 					//注入订单详情信息
 					$("#imgurl").attr('src', IMGPATH + data.imgurl);
-					$("#lname").text(data.lname);
+					$("#title").text(data.title);
 					$("#total").text(data.total);
 					$("#branch").text(data.branch);
-					$("#oid").text(data.oid);
+					$("#id").text(data.id);
 					$("#status").text(data.status);
-					if (data.status === "待付款") {
-						$("#actual").text("还没有付款呦^^")
-					}
-					else {
-						$("#actual").text(data.actual);
-						var cut = parseInt(data.actual) - parseInt(data.total);
-					}
-					$("#cut").text("（已优惠" + cut + "￥）");
-					$("#ordertime").text(data.ordertime);
+					$("#booktime").text(data.booktime);
 					$("#username").text(data.username);
 					$("#tel").text(data.tel);
+					$("#comment").val(data.comment);
 					//加载页面按钮
-					if (data.status === "待付款") {
+					if (data.status === "待处理") {
 						var btnHtml = '';
 						btnHtml += '<div class="mui-content-padded" style="float: right;">';
-						btnHtml += '	<button id="cancelUnpaidSorder" type="button" class="mui-btn mui-btn-primary mui-btn-outlined"'; 
+						btnHtml += '	<button id="cancelFreeListenBookUnprocessed" type="button" class="mui-btn mui-btn-primary mui-btn-outlined"'; 
 						btnHtml += '		data-loading-text="取消中" data-loading-icon-position="right" style="font-size: 15px;">';
-						btnHtml += '		<span style="padding-right: 1px;">取消待付款</span>';
+						btnHtml += '		<span style="padding-right: 1px;">取消试听课预约</span>';
 						btnHtml += '		<span class="mui-icon mui-icon-close"></span>';
-						btnHtml += '	</button>';
-						btnHtml += '	<button id="paySorderUnpaid" type="button" class="mui-btn mui-btn-warning" style="font-size: 15px;">';
-						btnHtml += '		<span style="padding-right: 1px;">完成付款</span>';
-						btnHtml += '		<span class="mui-icon mui-icon-extra mui-icon-extra-prech"></span>';
 						btnHtml += '	</button>';
 						btnHtml += '</div>';
 						$("#orderDetail").append(btnHtml);
-						$("#cancelUnpaidSorder").click(function() {
-							mui.ajax(PREPATH + "/cancelUnpaidSorder", {
+						$("#cancelFreeListenBookUnprocessed").click(function() {
+							mui.ajax(PREPATH + "/cancelFreeListenBookUnprocessed", {
 								type: "post",
 								async: true,
-								data: {oid: oid},
+								data: {id: id},
 								dataType: "json",
 								xhrFields: {
 									withCredentials: true
 								},
 								crossDomain: true,
 								beforeSend: function() {
-									mui($("#cancelUnpaidSorder")).button('loading');
+									mui($("#cancelFreeListenBookUnprocessed")).button('loading');
 								},
 								success: function(data) {
-									mui($("#cancelUnpaidSorder")).button('reset');
+									mui($("#cancelFreeListenBookUnprocessed")).button('reset');
 									if (data.state === 1) {
 										mui.toast("取消成功");
 										mui.openWindow({
-											url: "my_orders.html#item2"
+											url: "my_reservations.html#item2"
 										});
 									}
 									else {
@@ -194,56 +184,36 @@
 								}
 							});
 						});
-						$("#paySorderUnpaid").click(function() {
-							mui.openWindow({
-								url: "order_lesson.html"
-							});
-						});
 					}
-					else if (data.status === "已付款") {
+					else if (data.status === "已处理") {
 						var btnHtml = '';
 						btnHtml += '<div class="mui-content-padded" style="float: right;">';
-						btnHtml += '	<button id="requestRefund" type="button" class="mui-btn mui-btn-warning" style="font-size: 15px;">';
-						btnHtml += '		<span style="padding-right: 1px;">申请退款</span>';
-						btnHtml += '		<span class="mui-icon mui-icon-undo"></span>';
-						btnHtml += '	</button>';
-						btnHtml += '</div>';
-						$("#orderDetail").append(btnHtml);
-						$("#requestRefund").click(function() {
-							mui.openWindow({
-								url: "refund.html"
-							});
-						});
-					}
-					else if (data.status === "已使用") {
-						var btnHtml = '';
-						btnHtml += '<div class="mui-content-padded" style="float: right;">';
-						btnHtml += '	<button id="deleteSorderCAV" type="button" class="mui-btn mui-btn-primary mui-btn-outlined"'; 
+						btnHtml += '	<button id="deleteFreeListenBookProcessed" type="button" class="mui-btn mui-btn-primary mui-btn-outlined"'; 
 						btnHtml += '		data-loading-text="删除中" data-loading-icon-position="right" style="font-size: 15px;">';
-						btnHtml += '		<span style="padding-right: 1px;">删除订单记录</span>';
+						btnHtml += '		<span style="padding-right: 1px;">删除退款记录</span>';
 						btnHtml += '		<span class="mui-icon mui-icon-trash"></span>';
 						btnHtml += '	</button>';
 						btnHtml += '</div>';
 						$("#orderDetail").append(btnHtml);
-						$("#deleteSorderCAV").click(function() {
-							mui.ajax(PREPATH + "/deleteSorderCAV", {
+						$("#deleteFreeListenBookProcessed").click(function() {
+							mui.ajax(PREPATH + "/deleteFreeListenBookProcessed", {
 								type: "post",
 								async: true,
-								data: {oid: oid},
+								data: {id: id},
 								dataType: "json",
 								xhrFields: {
 									withCredentials: true
 								},
 								crossDomain: true,
 								beforeSend: function() {
-									mui($("#deleteSorderCAV")).button('loading');
+									mui($("#deleteFreeListenBookProcessed")).button('loading');
 								},
 								success: function(data) {
-									mui($("#deleteSorderCAV")).button('reset');
+									mui($("#deleteFreeListenBookProcessed")).button('reset');
 									if (data.state === 1) {
 										mui.toast("删除成功");
 										mui.openWindow({
-											url: "my_orders.html#item4"
+											url: "my_reservations.html#item3"
 										});
 									}
 									else {

@@ -124,7 +124,9 @@
 			.mui-slider-indicator.mui-segmented-control {
 				background-color: #efeff4;
 			}
-			
+			.order-status{
+				
+			}
 		</style>
 	
 	</head>
@@ -315,7 +317,6 @@
 					}	
 
 					mui('#' + itemId + ' .mui-scroll').on('tap', 'button', function() {
-						console.log(this.innerText);
 						buttonActionControl(this.innerText, this.value)
 					});
 				},
@@ -395,13 +396,16 @@
 			});
 		}
 		function getItemStr(data) {
+			var id = data.oid;
+			if(data.rid !=undefined)
+				id = data.rid;
 			var html_content = '';
-			html_content += '<div class="mui-card" style="margin-bottom: 20px;">';
+			html_content += '<div id="card'+ id +'" class="mui-card" style="margin-bottom: 20px;">';
 			html_content += '	<div class="mui-card-header">';
 			html_content += '		<table width="100%">';
 			html_content += '			<tr>';
 			html_content += '				<td width="50%">订单编号' + data.oid + '</td>';
-			html_content += '				<td width="50%" align="right" id="status' + data.oid + '">' + data.status + '</td>';
+			html_content += '				<td width="50%" align="right" id="status' + data.oid + '" class="order-status" >' + data.status + '</td>';
 			html_content += '			</tr>';
 			html_content += '		</table>';
 			html_content += '	</div>';
@@ -464,6 +468,20 @@
 			return html_content;
 		}
 
+		$(".mui-card").click(function() {
+			var status = $(this).find(".order-status")[0].text();
+			var url = "order_detail.html";
+			var id = $(this).attr('id');
+			id = id.substring('4,7');
+			if(status.indexOf("退款")){
+				url = "refund_detail.html";
+			}
+		 	url +="?id="+id;
+			mui.openWindow({
+				url: url
+			});
+		})
+		
 		(function($) {
 			$('.mui-scroll-wrapper').scroll({
 				indicators: true //是否显示滚动条
@@ -514,7 +532,7 @@
 					//force repaint
 					sliderProgressBar.setAttribute('style', sliderProgressBar.getAttribute('style'));
 				}
-			});
+			});	
 		})(mui);
 	</script>
 

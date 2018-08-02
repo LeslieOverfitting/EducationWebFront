@@ -120,7 +120,6 @@
 	<script type="text/javascript" src="js/mui.picker.js"></script>
 
 	<script>
-
 		mui.init({
 			swipeBack: true ,//启用右滑关闭功能,
 			pullRefresh: {
@@ -130,8 +129,7 @@
 					callback: pullupRefresh
 				}
 			}
-		})
-		
+		})		
 		//注册点击事件
 		$("#home").click(function() {
 			mui.openWindow({
@@ -153,7 +151,7 @@
 		var freeOrNot="";
 		var category="";
 		var lessonRequestUrl="";
-		var boundaryId = -1;
+		var rowId = -1;
 		(function($, doc) {
 			$.init();
 			$.ready(function() {
@@ -161,7 +159,7 @@
 				var lessonPicker = new $.PopPicker({
 					layer: 3
 				});			 
-				mui.ajax(PREPATH + "/selectAllCategoryByQid", {
+				mui.ajax(PREPATH + "/selectAllBranchCategoryByQid", {
 					type:"post",
 					async:true,
 					dataType:"json",
@@ -181,7 +179,7 @@
 		 		var showCityPickerButton = document.getElementById('showLessonPicker');
 				var lessionResult = $('#segmentedControlContents'); 	 
 				showCityPickerButton.addEventListener('tap', function(event) {
-					lessionPicker.show(function(items) {
+					lessonPicker.show(function(items) {
 						branchName = items[0].text;
 						freeOrNot = items[1].text;
 						category = items[2].text;
@@ -195,8 +193,8 @@
 						else {
 							lessonRequestUrl = PREPATH + "/selectFreeListenByFreeListenQueryCondition";
 						}
-						boundaryId = -1;
-						getLessonByBranchNameCategoryAndPage(lessonRequestUrl,items[0].text,items[2].text,boundaryId);
+						rowId = -1;
+						getLessonByBranchNameCategoryAndPage(lessonRequestUrl,items[0].text,items[2].text,rowId);
 					});
 				});
 			});
@@ -205,7 +203,7 @@
 		function getLessonByBranchNameCategoryAndPage(requestUrl,branch,category,startId){
 	    	mui.ajax(requestUrl,{
 				type:"post",
-				async:true,
+				async:false,
 				data:{branch:branch,category:category,startId:startId},
 				dataType:"json",
 				withCredentials:true,
@@ -224,19 +222,20 @@
 						html.push('<a '+ idstr+'> <li class="mui-table-view-cell">' +
 							'<img src="images/' + data[j].imgurl  + '" data-preview-src="" data-preview-group="1" height="10%" width="100%"/>' +
 							'</a></li>');					
-					}				
-					if(data.length>0){
-						if(data[data.length-1].lid !=undefined)
-							boundaryId = data[data.length-1].lid;
-						else
-							boundaryId = data[data.length-1].fid;
-					}else{
-						boundaryId =-2;
 					}
-					html.push('</ul></div>');
 					if(rowId ==-1) {
 						$('#segmentedControlContents').empty();
-					}						
+					}
+					if(data.length>0){
+						if(data[data.length-1].lid !=undefined)
+							rowId = data[data.length-1].lid;
+						else
+							rowId = data[data.length-1].fid;
+					}else{
+						rowId =-2;
+					}
+					html.push('</ul></div>');
+											
 					$('#segmentedControlContents').append(html.join(''));
 				},
 				error:function(xhr,type,errorThrown){
@@ -268,9 +267,9 @@
 		function pullupRefresh() {
 			setTimeout(function() {			
 				console.log(lessonRequestUrl);
-				console.log("bound="+boundaryId);
-				getLessonByBranchNameCategoryAndPage(lessonRequestUrl,branchName,category,boundaryId);
-				mui('#pullrefresh').pullRefresh().endPullupToRefresh(boundaryId==-2);
+				console.log("bound="+rowId);
+				getLessonByBranchNameCategoryAndPage(lessonRequestUrl,branchName,category,rowId);
+				mui('#pullrefresh').pullRefresh().endPullupToRefresh(rowId==-2);
 			}, 1500);
 		}
 
