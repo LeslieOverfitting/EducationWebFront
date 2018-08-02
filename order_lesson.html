@@ -3,25 +3,50 @@
 
 	<head>
 		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
 		<title>Education</title>
-		<link href="css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="css/mui.min.css" />
+		<link rel="stylesheet" type="text/css" href="css/feedback.css" />
 		<link rel="stylesheet" type="text/css" href="css/loaders.min.css" />
 		<link rel="stylesheet" type="text/css" href="css/loading.css" />
 		<script src="js/config.js" type="text/javascript"></script>
 		<script src="js/jquery.min.js" type="text/javascript"></script>
+		<script src="js/ansel_select.js" type="text/javascript"></script>
 		<script src="js/loading.animation.js" type="text/javascript"></script>
+		
 		<style>
-			.title {
-				margin: 15px 15px 0px;
-				color: #6d6d72;
-				font-size: 18px;
-				font-weight: 900;
-			}
 			
+			/*input输入框清空图标样式*/			
 			.mui-icon-clear {
 				margin-top: 8px;
 			}
+			
+			/*选择器插件自定义样式*/
+			.ansel_input {
+				height: 40px;
+				line-height: 40px;
+				margin: 30px auto;
+				width: 200px;
+				padding: 0 10px;
+				background: #fff;
+				border-radius: 4px;
+			}			
+			.ansel_input .ansel_inputval {
+				height: 40px;
+				line-height: 40px;
+				width: 100%;
+			}			
+			.ansel_input {
+				float: right;
+				width: 65%;
+				height: 50px;
+				margin: 0;
+				padding: 0px;
+				border: 0
+			}
+			
 		</style>
 
 	</head>
@@ -53,11 +78,31 @@
 					<div class="mui-input-row" style="height: 50px; padding: 8px;">
 						<label>课程名称</label>
 						<input id="lname" type="text" value="Java与大数据" readonly>
+					</div>					
+					<div class="mui-input-row" style="height: 50px; padding: 8px;">
+						<label>上课分部</label>
+						<select class="select" isval="true" msg="需要选择上课分部呦，亲">
+							<option value="恒大名都">恒大名都</option>
+							<option value="实训中心">实训中心</option>
+							<option value="三好街分部">三好街分部</option>
+						</select>
 					</div>
 					<div class="mui-input-row" style="height: 50px; padding: 8px;">
 						<label>应付费用</label>
 						<input id="total" type="text" value="1,000.00" style="width: 57%; float: none;" readonly>
 						<span style="width: 5%;">￥</span>
+					</div>
+					<div class="mui-input-row" style="height: 50px; padding: 8px;">
+						<label>积分优惠</label>
+						<input id="actual" type="text" value="可用1420035积分" 
+							style="width: 49%; padding: 0px; float: none;" readonly>
+						<div class="mui-switch mui-switch-blue mui-switch-mini" style="margin: 3px 0px 0px; width: 14%;">
+							<div class="mui-switch-handle"></div>
+						</div>
+					</div>
+					<div class="mui-input-row" style="height: 50px; padding: 8px;">
+						<label>卡券优惠</label>
+						<a href="#general" class="mui-navigate-right"></a>
 					</div>
 					<div class="mui-input-row" style="height: 50px; padding: 8px;">
 						<label>实付费用</label>
@@ -89,6 +134,9 @@
 			mui.init({
 				swipeBack: true //启用右滑关闭功能
 			});
+			
+			//选择器插件初始化配置
+			$('.select').anselcfg({});
 			
 			$(function() {
 				var parameters = ((window.location + '').split('?')[1]).split('&'); // ?oid=0&lid=0

@@ -22,6 +22,22 @@
 				margin: 20px 15px 10px;
 				color: #6d6d72;
 				font-size: 17px;
+				font-weight: 700;
+			}
+			p label {
+				width: 27%;
+				float: left;
+				padding-left: 2%;
+			}
+			p span {
+				width: 73%;
+				float: right;
+			}
+			p textarea {
+				width: 73%;
+				border: 0px solid;
+				margin: 0px;
+				padding: 0px;
 			}
 		</style>
 	</head>
@@ -47,128 +63,209 @@
 		</header>
 		<div class="mui-content">
 			<div class="mui-content-padded">
-				<img id="lessonImg" src="images/curriculum1.png " data-preview-src="" data-preview-group="1" width="100%" height="25%" />
+				<img id="imgurl" src="images/curriculum1.png" width="100%"/>
 			</div>
-			<div id="lessonTitle" class="title">
-			</div>		
+			<div class="title">
+				课程信息
+			</div>
 			<div class="mui-card">	
-				<ul class="mui-table-view">	
-					<li class="mui-table-view-cell mui-media">
-						<div class="mui-media-body mui-pull-left" >
-							<div class="mui-media-body mui-pull-top-tips" >
-								用户信息
-							</div>
-							<div class="mui-media-body" >
-								<p id="username" class='mui-ellipsis'>用户名：小王</p>
-								<p id="tel" class='mui-ellipsis'>联系电话：18622351756</p>
-							</div>
-						</div>
-						<div class="mui-media-body mui-pull-right" >
-								<img class="mui-media-object mui-pull-caption" src="images/pretty.jpg">
-						</div>	
-					</li>
-					
-					<li class="mui-table-view-cell mui-media">
-						<div class="mui-media-body mui-pull-left" >
-							<div class="mui-media-body mui-pull-top-tips" >
-								退款状态
-							</div>
-							<div class="mui-media-body" >
-								<p id="orderStatus" class='mui-ellipsis'>状态：已付款</p>
-							</div>
-						</div>
-						<div class="mui-media-body mui-pull-right" >
-							<img class="mui-media-object mui-pull-right" src="images/pretty.jpg">
-						</div>
-					</li>
-					<li class="mui-table-view-cell mui-media">
-						<div class="mui-media-body mui-pull-left" >
-							<div class="mui-media-body mui-pull-top-tips" >
-							开课分部	
-							</div>
-							<div class="mui-media-body " >
-								<p id="branchName" class='mui-ellipsis'>分部：沈阳东软</p>
-							</div>	
-						</div>
-						<div class="mui-media-body mui-pull-right" >
-								<img class="mui-media-object mui-pull-right" src="images/pretty.jpg">
-						</div>	
-						
-					</li>
-					<li class="mui-table-view-cell mui-media">
-						<div class="mui-media-body mui-pull-left" >
-							<div class="mui-media-body mui-pull-top-tips" >
-								订单费用
-							</div>
-							<div class="mui-media-body">
-								<p id="total" class='mui-ellipsis'>商品价格：100Y</p>
-								<p id="actual" class='mui-ellipsis'>实际付款：95Y</p>
-							</div>
-						</div>
-						<div class="mui-media-body mui-pull-right " >
-								<img class="mui-media-object mui-pull-right " src="images/pretty.jpg">
-						</div>	
-					</li>
-				</ul>
-			</div>
-			<div class="mui-card" style="margin-top: 10px;">
-				<div class="mui-content-padded" style="background-color: #FFFFFF;">
-					<p id="oid">订单编号：asdasda</p>
-					<p id="ordertime">下单时间：2018-12-15</p>
+				<div class="mui-content-padded">
+					<p class='mui-ellipsis'>
+						<label>课程名称：</label>
+						<span id="lname">小王</span>
+					</p>
+					<p class='mui-ellipsis'>
+						<label>课程费用：</label>
+						<span id="total">￥1000</span>
+					</p>
+					<p class='mui-ellipsis'>
+						<label>分部选择：</label>
+						<span id="branch">恒大名都</span>
+					</p>
 				</div>
 			</div>
-			<div class="mui-card" style="margin-top: 10px;">
-				<P style=" color: #000000;font-size: x-large; margin-left: 10px;margin-top: 10px; ">退款理由</P>
-				<div class="mui-content-padded" style="background-color: #FFFFFF;">
-					<p id="reason">课程不是很好听</p>	
+			<div class="title">
+				订单信息
+			</div>
+			<div class="mui-card">	
+				<div class="mui-content-padded">
+					<p class='mui-ellipsis'>
+						<label>订单编号：</label>
+						<span id="oid">23124</span>
+					</p>
+					<p class='mui-ellipsis'>
+						<label>订单状态：</label>
+						<span id="status">退款中</span>
+					</p>
+					<p class='mui-ellipsis'>
+						<label>实付费用：</label>
+						<span id="actual">￥800</span>
+					</p>
+					<p class='mui-ellipsis'>
+						<label>下单时间：</label>
+						<span id="ordertime">2018-07-11 12:30:12</span>
+					</p>
+					<p class='mui-ellipsis'>
+						<label>真实姓名：</label>
+						<span id="username">岳星言</span>
+					</p>
+					<p class='mui-ellipsis'>
+						<label>联系方式：</label>
+						<span id="tel">15804032497</span>
+					</p>
 				</div>
 			</div>
-			
+			<div class="title">
+				退款信息
+			</div>
+			<div class="mui-card">	
+				<div class="mui-content-padded">
+					<p class='mui-ellipsis'>
+						<label>应退费用：</label>
+						<span id="refundmoney">￥800</span>
+					</p>
+					<p class='mui-ellipsis'>
+						<label>退款状态：</label>
+						<span id="refundstatus">未处理</span>
+					</p>
+					<p class='mui-ellipsis'>
+						<label>退款时间：</label>
+						<span id="refundtime">2018-07-21 7:23:54</span>
+					</p>
+					<p class='mui-ellipsis'>
+						<label>退款理由：</label>
+						<textarea id="refundreason" rows="3" readonly>真心不喜欢这门课真他娘比感到日他妈的彼得丹特</textarea>
+					</p>
+				</div>
+			</div>
 		</div>
 	</body>
 	<script src="js/mui.min.js"></script>
 	<script>
+		
 		mui.init({
 			swipeBack: true //启用右滑关闭功能
 		});
-		var lprice = 0;
-		var parameters = ((window.location + '').split('?')[1]).split('=');
-		var requestUrl = PREPATH + "/**************************************";
-		var lessonId = parameters[1];
-		lessonId = parameters[1];
-		getLessonInfo(requestUrl, 1, lessonId);
-		function getRefundInfo(url, oid) {
-			mui.ajax(url, {
+		
+		$(function() {
+			var rid = ((window.location + '').split('?')[1]).split('=')[1];
+			mui.ajax(PREPATH + "/selectRefundByRID", {
 				type: "post",
 				async: true,
-				data: {
-					oid:oid
-				},
+				data: {rid: rid},
 				dataType: "json",
 				xhrFields: {
 					withCredentials: true
 				},
 				crossDomain: true,
 				success: function(data) {
-					$("#lessonImg").attr('src', IMGPATH + data.imgurl);
-					$("#branchName").text("分部："+data.branch);
-					$("#lessonTitle").html(data.lname);
-					var schoolContent = data.branches[0].branch;
-					$("#orderStatus").text("状态："+data.status);
-					$("#total").text("课程价格：" + data.total);
-					$("#actual").text("实际付款：" + data.actual);
-					$("#oid").text("订单编号："+ data.oid);
-					$("#ordertime").text("订单编号："+ data.ordertime);
-					$("#tel").text("联系电话："+ data.tel);
-					$("#userName").text("联用户名："+ data.username);
-					$("#reason").text("联用户名："+ data.username);
-					
+					//注入订单详情信息
+					$("#imgurl").attr('src', IMGPATH + data.imgurl);
+					$("#lname").text(data.lname);
+					$("#total").text(data.total);
+					$("#branch").text(data.branch);
+					$("#oid").text(data.oid);
+					$("#status").text(data.status);
+					$("#actual").text(data.actual);
+					$("#ordertime").text(data.ordertime);
+					$("#username").text(data.username);
+					$("#tel").text(data.tel);
+					$("#refundmoney").text(data.actual);
+					$("#refundstatus").text(data.refundstatus);
+					$("#refundtime").text(data.refundtime);
+					$("#refundreason").val(data.refundreason);
+					//加载页面按钮
+					if (data.status === "退款中") {
+						var btnHtml = '';
+						btnHtml += '<div class="mui-content-padded" style="float: right;">';
+						btnHtml += '	<button id="cancelRefundUnprocessed" type="button" class="mui-btn mui-btn-primary mui-btn-outlined"'; 
+						btnHtml += '		data-loading-text="取消中" data-loading-icon-position="right" style="font-size: 15px;">';
+						btnHtml += '		<span style="padding-right: 1px;">取消退款</span>';
+						btnHtml += '		<span class="mui-icon mui-icon-close"></span>';
+						btnHtml += '	</button>';
+						btnHtml += '</div>';
+						$("#orderDetail").append(btnHtml);
+						$("#cancelRefundUnprocessed").click(function() {
+							mui.ajax(PREPATH + "/cancelRefundUnprocessed", {
+								type: "post",
+								async: true,
+								data: {oid: data.oid},
+								dataType: "json",
+								xhrFields: {
+									withCredentials: true
+								},
+								crossDomain: true,
+								beforeSend: function() {
+									mui($("#cancelRefundUnprocessed")).button('loading');
+								},
+								success: function(data) {
+									mui($("#cancelRefundUnprocessed")).button('reset');
+									if (data.state === 1) {
+										mui.toast("取消成功");
+										mui.openWindow({
+											url: "my_orders.html#item5"
+										});
+									}
+									else {
+										mui.toast("取消失败");
+									}
+								},
+								error: function() {
+									mui.toast("取消失败");
+								}
+							});
+						});
+					}
+					else if (data.status === "已退款") {
+						var btnHtml = '';
+						btnHtml += '<div class="mui-content-padded" style="float: right;">';
+						btnHtml += '	<button id="deleteSorderRefunded" type="button" class="mui-btn mui-btn-primary mui-btn-outlined"'; 
+						btnHtml += '		data-loading-text="删除中" data-loading-icon-position="right" style="font-size: 15px;">';
+						btnHtml += '		<span style="padding-right: 1px;">删除退款记录</span>';
+						btnHtml += '		<span class="mui-icon mui-icon-trash"></span>';
+						btnHtml += '	</button>';
+						btnHtml += '</div>';
+						$("#orderDetail").append(btnHtml);
+						$("#deleteSorderRefunded").click(function() {
+							mui.ajax(PREPATH + "/deleteSorderRefunded", {
+								type: "post",
+								async: true,
+								data: {oid: oid},
+								dataType: "json",
+								xhrFields: {
+									withCredentials: true
+								},
+								crossDomain: true,
+								beforeSend: function() {
+									mui($("#deleteSorderRefunded")).button('loading');
+								},
+								success: function(data) {
+									mui($("#deleteSorderRefunded")).button('reset');
+									if (data.state === 1) {
+										mui.toast("删除成功");
+										mui.openWindow({
+											url: "my_orders.html#item5"
+										});
+									}
+									else {
+										mui.toast("删除失败");
+									}
+								},
+								error: function() {
+									mui.toast("删除失败");
+								}
+							});
+						});
+					}
+					else {
+						mui.toast("系统出错");
+					}
 				},
-				error: function(xhr, type, errorThrown) {
-				 	mui.toast("信息获取失败");
+				error: function() {
+					mui.toast("信息获取失败");
 				}
-			});
-		};
+			})
+		})
 		 
 	</script>
 </html>
