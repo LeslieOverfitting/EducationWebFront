@@ -33,7 +33,15 @@
 			.point-value{
 				font-size: 24px;
 				margin-top: 12px;
+				color: #CF2D28;
 			}
+			.signDay{
+				 padding-top: 60px; 
+				 padding-right: 10px; 
+				 text-align: right; 
+				 font-size: 15px;
+			}
+			
 		</style>
 	</head>
 
@@ -57,13 +65,16 @@
 			<h1 id="lessonHeader" class="mui-title">我的积分</h1>
 		</header>
 		<div id="content" class="mui-content mui-scroll-wrapper">
-			<div class="mui-scroll">
+			<div id="point_content" class="mui-scroll">
 				<div style="background-image: url(images/point_icon.png); background-color: #FFFFFF; background-size: 100% 100%; width: 100%; height: 212px;">
 					<center style="padding-top: 25%;">
-						<span class="point">
+						<span id="pointValue" class="point">
 							1234
 						</span>
 					</center>
+					<p class="signDay">
+						连续签到8天
+					</p>
 				</div>
 				<div class="mui-card">	
 					<ul class="mui-table-view">	
@@ -140,31 +151,72 @@
 				mui('#content').pullRefresh().endPullupToRefresh(rowId == -2);
 			}, 1500);
 		}
-		var lprice = 0;
-		var parameters = ((window.location + '').split('?')[1]).split('=');
-		var requestUrl = PREPATH + "/**************************************";
-		var lessonId = parameters[1];
-		lessonId = parameters[1];
-		getLessonInfo(requestUrl, 1, lessonId);
+	
+			selectTotalPointByUID() ;
+			selectPointRecord();	
 		function getItemStr(data){
+			
+			var desc = "";
+			var pointValue ="";
+			if(data.category =="课程订单"){
+				if(data.point >0)
+					desc = "购买课程"+data.lname+"赠送";
+				else	
+					desc += "使用积分购买"+data.lname+"扣除";
+			}else{
+				desc = "签到奖励";
+			}
+			if(data.point>0)
+				pointValue = "+"+data.point;
+			else	
+				pointValue = "-"+data.point;
+			
+			
 			var itemStr = '<li class="mui-table-view-cell mui-media">';
 			itemStr += '<div class="mui-media-body mui-pull-left" >';
 			itemStr += '<div class="mui-media-body" >';
-			itemStr += '<p id="username" class="mui-ellipsis">'+ 购买深度学习课程-11 +'</p>';
-			itemStr += '<p  class="mui-ellipsis">'+ 2018-12-05 +'</p>';
+			itemStr += '<p id="username" class="mui-ellipsis">'+ desc+'</p>';
+			itemStr += '<p  class="mui-ellipsis">'+ data.date +'</p>';
 			itemStr += '</div>';
 			itemStr += '</div>';
 			itemStr += '<div class="mui-media-body mui-pull-right" >';
-			itemStr += '<p class="point-value">'+ -30+'</p>';
+			itemStr += '<p class="point-value">'+pointValue +'</p>';
 			itemStr += '</div>';
 			itemStr += '</li>';
 			return itemStr;								
 		}
 		
-		function selectPointRecord(url) {
-			mui.ajax(url, {
+		function selectPointRecord() {
+			mui.ajax(PREPATH+"/selectPointByUIDAndPage", {
 				type: "post",
 				async: false,
+				data: {
+					startId:rowId
+				},
+				dataType: "json",
+				xhrFields: {
+					withCredentials: true
+				},
+				crossDomain: true,
+				success: function(data) {
+					var content =&("#point_content") ;
+					for(var i = 0; i < data.length; i++) {
+						content.append(getItemStr(data[i]));
+					}
+					if(data.length != 0)
+						rowId = data[data.length - 1].pid;
+					else
+						rowId = -2;
+				},
+				error: function(xhr, type, errorThrown) {
+				 	mui.toast("信息获取失败");
+				}
+			});
+		};
+		function selectTotalPointByUID() {
+			mui.ajax(PREPATH+"/selectTotalPointByUID", {
+				type: "post",
+				async: true,
 				data: {
 				},
 				dataType: "json",
@@ -173,7 +225,8 @@
 				},
 				crossDomain: true,
 				success: function(data) {
-				
+					 $("#pointValue").text(data.totalpoint);
+					 
 				},
 				error: function(xhr, type, errorThrown) {
 				 	mui.toast("信息获取失败");
