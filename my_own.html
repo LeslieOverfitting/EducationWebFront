@@ -431,7 +431,7 @@
 			ppButton.click();
 		})
 		$("#signButton").click(function() {
-		 jqxhr= mui.ajax(PREPATH + "/signIn", {
+			mui.ajax(PREPATH + "/signIn", {
 				type: "post",
 				dataType: "json",
 				xhrFields: {
@@ -440,15 +440,19 @@
 				crossDomain: true,
 				success: function(data) {
 					if(data.state === 1) {	
-						mui.toast("签到成功\n累计签到"+data.days+"天，奖励积分"+data.point);
-					} else {
-						mui.toast("请勿重复签到");
+						mui.toast("签到成功\n已连续签到"+data.days+"天，奖励积分"+data.point);
+					} 
+					else if (data.state === 2) {
+						mui.toast("今天已近签过了呦，亲");
+					}
+					else {
+						mui.toast("签到失败");
 					}
 				},
 				error: function() {
 					mui.toast("签到失败");
 				}
-			})
+			});
 		})		
 		$("#logout").click(function() {
 		jqxhr = mui.ajax(PREPATH + "/userLogout", {

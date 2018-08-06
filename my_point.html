@@ -72,7 +72,7 @@
 							1234
 						</span>
 					</center>
-					<p class="signDay">
+					<p id="days" class="signDay">
 						连续签到8天
 					</p>
 				</div>
@@ -158,20 +158,22 @@
 			
 			var desc = "";
 			var pointValue ="";
+			
 			if(data.category =="课程订单"){
-				if(data.point >0)
-					desc = "购买课程"+data.lname+"赠送";
+				if(data.point > 0)
+					desc = "赠送：购买“" + data.lname + "”课程（订单编号：" + data.oid + "）";
 				else	
-					desc += "使用积分购买"+data.lname+"扣除";
-			}else{
-				desc = "签到奖励";
+					desc += "抵用：购买“" + data.lname + "”课程（订单编号：" + data.oid + "）";
 			}
+			else{
+				desc = "奖励：每日签到";
+			}
+			
 			if(data.point>0)
-				pointValue = "+"+data.point;
+				pointValue = "+" + data.point;
 			else	
-				pointValue = "-"+data.point;
-			
-			
+				pointValue = "-" + data.point;
+						
 			var itemStr = '<li class="mui-table-view-cell mui-media">';
 			itemStr += '<div class="mui-media-body mui-pull-left" >';
 			itemStr += '<div class="mui-media-body" >';
@@ -180,7 +182,7 @@
 			itemStr += '</div>';
 			itemStr += '</div>';
 			itemStr += '<div class="mui-media-body mui-pull-right" >';
-			itemStr += '<p class="point-value">'+pointValue +'</p>';
+			itemStr += '<p class="point-value">' + pointValue +'</p>';
 			itemStr += '</div>';
 			itemStr += '</li>';
 			return itemStr;								
@@ -199,7 +201,7 @@
 				},
 				crossDomain: true,
 				success: function(data) {
-					var content =&("#point_content") ;
+					var content = $("#point_content") ;
 					for(var i = 0; i < data.length; i++) {
 						content.append(getItemStr(data[i]));
 					}
@@ -226,7 +228,7 @@
 				crossDomain: true,
 				success: function(data) {
 					 $("#pointValue").text(data.totalpoint);
-					 
+					 $("#days").text("连续签到" + data.days + "天");
 				},
 				error: function(xhr, type, errorThrown) {
 				 	mui.toast("信息获取失败");
