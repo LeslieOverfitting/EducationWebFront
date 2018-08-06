@@ -89,14 +89,18 @@
 			$(function() {
 				var parameters = ((window.location + '').split('?')[1]).split('&');
 				var id = parameters[0].split('=')[1];
-				mui.ajax(PREPATH + "/selectReserveInfoByID", {
+				jqxhr=$.ajax( {
 					type: "post",
 					async: true,
+					url:PREPATH + "/user/selectReserveInfoByID",
 					data: {id: id},
 					dataType: "json",
 					xhrFields: {
 						withCredentials: true
 					},
+					headers:{
+             				"X-Requested-With":"XMLHttpRequest"
+        			},
 					crossDomain: true,
 					success: function(data) {
 						$("#title").val(data.title);
@@ -127,9 +131,10 @@
 				var username = $('#username').val();
 				var tel = $('#tel').val();
 				var comment = $('#comment').val();
-				mui.ajax(PREPATH + "/saveFreeListenBook", {
+				jqxhr=$.ajax( {
 					type: "post",
 					async: true,
+					url:PREPATH + "/user/saveFreeListenBook",
 					data: {
 						fid: fid,
 						username: username,
@@ -140,6 +145,9 @@
 					xhrFields: {
 						withCredentials: true
 					},
+					headers:{
+             				"X-Requested-With":"XMLHttpRequest"
+        			},
 					crossDomain: true,
 					beforeSend: function() {
 						mui($("#book")).button('loading');

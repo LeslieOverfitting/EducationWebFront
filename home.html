@@ -238,12 +238,17 @@
 		}
 		var qid = 1;
 		$(function() {
-			mui.ajax(PREPATH + "/selectHomeInfoByQID", {
+			jqxhr=$.ajax( {
 				type: "get",
 				async: true,
 				data: {
 					qid: qid
 				},
+				url:PREPATH + "/selectHomeInfoByQID",
+				headers:{
+             		"X-Requested-With":"XMLHttpRequest"
+        		},
+
 				dataType: "json",
 				xhrFields: {
 					withCredentials: true

@@ -118,17 +118,20 @@
 		mui.init({
 			swipeBack: true //启用右滑关闭功能
 		});
-		
 		$(function() {
 			var oid = ((window.location + '').split('?')[1]).split('=')[1];
-			mui.ajax(PREPATH + "/selectSorderByOID", {
+			jqxhr=$.ajax( {
 				type: "post",
 				async: true,
+				url:PREPATH + "/user/selectSorderByOID",
 				data: {oid: oid},
 				dataType: "json",
 				xhrFields: {
 					withCredentials: true
 				},
+				headers:{
+             				"X-Requested-With":"XMLHttpRequest"
+        		},
 				crossDomain: true,
 				success: function(data) {
 					//注入订单详情信息
@@ -165,14 +168,18 @@
 						btnHtml += '</div>';
 						$("#orderDetail").append(btnHtml);
 						$("#cancelUnpaidSorder").click(function() {
-							mui.ajax(PREPATH + "/cancelUnpaidSorder", {
+							jqxhr=$.ajax( {
 								type: "post",
 								async: true,
+								url:PREPATH + "/user/cancelUnpaidSorder",
 								data: {oid: oid},
 								dataType: "json",
 								xhrFields: {
 									withCredentials: true
 								},
+								headers:{
+             						"X-Requested-With":"XMLHttpRequest"
+        						},
 								crossDomain: true,
 								beforeSend: function() {
 									mui($("#cancelUnpaidSorder")).button('loading');
@@ -211,7 +218,7 @@
 						$("#orderDetail").append(btnHtml);
 						$("#requestRefund").click(function() {
 							mui.openWindow({
-								url: "refund.html"
+								url: "refund.html?oid="+oid+""
 							});
 						});
 					}
@@ -226,14 +233,18 @@
 						btnHtml += '</div>';
 						$("#orderDetail").append(btnHtml);
 						$("#deleteSorderCAV").click(function() {
-							mui.ajax(PREPATH + "/deleteSorderCAV", {
+							jqxhr=$.ajax({
 								type: "post",
 								async: true,
+								url:PREPATH + "/user/deleteSorderCAV", 
 								data: {oid: oid},
 								dataType: "json",
 								xhrFields: {
 									withCredentials: true
 								},
+								headers:{
+             						"X-Requested-With":"XMLHttpRequest"
+        						},
 								crossDomain: true,
 								beforeSend: function() {
 									mui($("#deleteSorderCAV")).button('loading');

@@ -61,7 +61,7 @@
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
 			<h1 id="lessonHeader" class="mui-title">退款详情</h1>
 		</header>
-		<div class="mui-content">
+		<div id="orderDetail" class="mui-content">
 			<div class="mui-content-padded">
 				<img id="imgurl" src="images/curriculum1.png" width="100%"/>
 			</div>
@@ -138,6 +138,7 @@
 					</p>
 				</div>
 			</div>
+			
 		</div>
 	</body>
 	<script src="js/mui.min.js"></script>
@@ -148,15 +149,19 @@
 		});
 		
 		$(function() {
-			var rid = ((window.location + '').split('?')[1]).split('=')[1];
-			mui.ajax(PREPATH + "/selectRefundByRID", {
+			var oid = ((window.location + '').split('?')[1]).split('=')[1];
+			jqxhr=$.ajax({
 				type: "post",
 				async: true,
-				data: {rid: rid},
+				url:PREPATH + "/user/selectRefundByOID", 
+				data: {oid: oid},
 				dataType: "json",
 				xhrFields: {
 					withCredentials: true
 				},
+				headers:{
+             				"X-Requested-With":"XMLHttpRequest"
+        		},
 				crossDomain: true,
 				success: function(data) {
 					//注入订单详情信息
@@ -174,6 +179,7 @@
 					$("#refundstatus").text(data.refundstatus);
 					$("#refundtime").text(data.refundtime);
 					$("#refundreason").val(data.refundreason);
+					console.log(data.status);
 					//加载页面按钮
 					if (data.status === "退款中") {
 						var btnHtml = '';
@@ -185,15 +191,20 @@
 						btnHtml += '	</button>';
 						btnHtml += '</div>';
 						$("#orderDetail").append(btnHtml);
+						console.log(data.status);
 						$("#cancelRefundUnprocessed").click(function() {
-							mui.ajax(PREPATH + "/cancelRefundUnprocessed", {
+							jqxhr=$.ajax( {
 								type: "post",
 								async: true,
+								url:PREPATH + "/user/cancelRefundUnprocessed",
 								data: {oid: data.oid},
 								dataType: "json",
 								xhrFields: {
 									withCredentials: true
 								},
+								headers:{
+             						"X-Requested-With":"XMLHttpRequest"
+        						},
 								crossDomain: true,
 								beforeSend: function() {
 									mui($("#cancelRefundUnprocessed")).button('loading');
@@ -203,7 +214,7 @@
 									if (data.state === 1) {
 										mui.toast("取消成功");
 										mui.openWindow({
-											url: "my_orders.html#item5"
+											url: "my_orders.html"
 										});
 									}
 									else {
@@ -227,14 +238,18 @@
 						btnHtml += '</div>';
 						$("#orderDetail").append(btnHtml);
 						$("#deleteSorderRefunded").click(function() {
-							mui.ajax(PREPATH + "/deleteSorderRefunded", {
+							jqxhr=$.ajax( {
 								type: "post",
 								async: true,
+								url:PREPATH + "/user/deleteSorderRefunded",
 								data: {oid: oid},
 								dataType: "json",
 								xhrFields: {
 									withCredentials: true
 								},
+								headers:{
+             						"X-Requested-With":"XMLHttpRequest"
+        						},
 								crossDomain: true,
 								beforeSend: function() {
 									mui($("#deleteSorderRefunded")).button('loading');
@@ -244,7 +259,7 @@
 									if (data.state === 1) {
 										mui.toast("删除成功");
 										mui.openWindow({
-											url: "my_orders.html#item5"
+											url: "my_orders.html"
 										});
 									}
 									else {

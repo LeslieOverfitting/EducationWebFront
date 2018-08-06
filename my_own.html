@@ -287,10 +287,10 @@
 		<div class="mui-content">
 			<div style="background-image: url(images/background.jpg); width: 100%; height: 256px;">
 				<center style="padding-top: 13%;">
-					<img id="userimg" src="images/portrait.jpg" class="portrait" data-preview-src="" data-preview-group="1" />
+					<img id="userimg" src="" class="portrait" data-preview-src="" data-preview-group="1" />
 				</center>
 				<center style="padding-top: 1.5%;">
-					<span id="nickname" class="nickname">颜日升</span>
+					<span id="nickname" class="nickname"></span>
 				</center>
 				<div id="signButton" class="sign">
 					<center style="margin-top: 1px;">
@@ -316,13 +316,13 @@
 					</a>
 				</li>
 				<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4">
-					<a href="contact_us.html">
+					<a  id="coupon"  >
 						<span class="mui-icon mui-icon-extra mui-icon-extra-gift" style="font-size: 35px; color: #AAAAAA;"></span>
 						<div class="mui-media-body">我的优惠</div>
 					</a>
 				</li>
 				<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4">
-					<a href="contact_us.html">
+					<a  id="point"  >
 						<span class="mui-icon mui-icon-extra mui-icon-extra-gold" style="font-size: 35px; color: #AAAAAA;"></span>
 						<div class="mui-media-body">我的积分</div>
 					</a>
@@ -354,12 +354,16 @@
 		});
 
 		$(function() {
-			mui.ajax(PREPATH + "/selectMyOwnInfo", {
+			$.ajax({
 				type: "post",
 				dataType: "json",
 				xhrFields: {
 					withCredentials: true
 				},
+				headers:{
+             				"X-Requested-With":"XMLHttpRequest"
+        		},
+				url:PREPATH + "/user/selectMyOwnInfo", 
 				crossDomain: true,
 				success: function(data) {
 					if(data.userimg !== null && data.userimg !== "") {
@@ -378,6 +382,9 @@
 					if(data.countSorderUnpaid !== 0) {
 						$("#sorderIcon").html('<span class="mui-badge">' + data.countSorderUnpaid + '</span>');
 					}
+					sessionStorage.setItem("nickName",data.nickname);
+					sessionStorage.setItem("uid",data.uid);
+					
 				},
 				error: function() {
 					$("#userimg").attr("src", IMGPATH + "default.jpg");
@@ -389,7 +396,7 @@
 
 		//注册点击事件
 		$("#home").click(function() {
-			console.log("yxyxyxyxyyxyyx");
+			 
 			mui.openWindow({
 				url: 'home.html'
 			});
@@ -407,6 +414,16 @@
 		$("#book").click(function() {
 			mui.openWindow({
 				url: 'my_reservations.html'
+			});
+		})
+		$("#point").click(function() {
+			mui.openWindow({
+				url: 'my_point.html'
+			});
+		})
+		$("#coupon").click(function() {
+			mui.openWindow({
+				url: 'my_coupons.html'
 			});
 		})
 		$("#sorder").click(function() {
@@ -431,12 +448,16 @@
 			ppButton.click();
 		})
 		$("#signButton").click(function() {
-			mui.ajax(PREPATH + "/signIn", {
+			jqxhr= $.ajax({
 				type: "post",
 				dataType: "json",
+				url:PREPATH + "/signIn",
 				xhrFields: {
 					withCredentials: true
 				},
+				headers:{
+             				"X-Requested-With":"XMLHttpRequest"
+        		},
 				crossDomain: true,
 				success: function(data) {
 					if(data.state === 1) {	
@@ -455,12 +476,16 @@
 			});
 		})		
 		$("#logout").click(function() {
-		jqxhr = mui.ajax(PREPATH + "/userLogout", {
+			jqxhr = $.ajax( {
 				type: "post",
 				dataType: "json",
 				xhrFields: {
 					withCredentials: true
 				},
+				headers:{
+             				"X-Requested-With":"XMLHttpRequest"
+        		},
+				url:PREPATH + "/user/userLogout",
 				crossDomain: true,
 				success: function(data) {
 					if(data.state === 1) {

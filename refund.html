@@ -9,6 +9,7 @@
 		<link rel="stylesheet" type="text/css" href="css/loaders.min.css" />
 		<link rel="stylesheet" type="text/css" href="css/loading.css" />
 		<script src="js/jquery.min.js" type="text/javascript"></script>
+		<script src="js/config.js" type="text/javascript"></script>
 		<script src="js/loading.animation.js" type="text/javascript"></script>
 		<style>
 			.title {
@@ -80,12 +81,13 @@
 
 			var parameters = ((window.location + '').split('?')[1]).split('='); // ?oid=0
 			var oid = parameters[1];
-			getLesson(oid, requestUrl);
+			getLesson(oid);
 
-			function getLesson(oid, requestUrl) {
-			  jqxhr = mui.ajax(PREPATH+"/selectRefundInfoByOID", {
+			function getLesson(oid) {
+			  jqxhr = $.ajax( {
 					type: "post",
 					async: true,
+					url:PREPATH+"/user/selectRefundInfoByOID",
 					data: {
 						oid: oid
 					},
@@ -93,9 +95,12 @@
 					xhrFields: {
 						withCredentials: true
 					},
+					headers:{
+             				"X-Requested-With":"XMLHttpRequest"
+        			},
 					crossDomain: true,
 					success: function(data) { // lname ,lprice , refundreason
-
+						$("#lessonTitle").val(data.oid);
 						$("#lname").val(data.lname);
 						$("#lprice").val(data.actual + '￥');
 					},
@@ -109,9 +114,10 @@
 			}
 
 			function saveRefund(oid, refundreason) {
-				mui.ajax(PREPATH+"/saveRefund", {
+				jqxhr=$.ajax( {
 					type: "post",
 					async: true,
+					url:PREPATH+"/user/saveRefund",
 					data: {
 						oid: oid,
 						refundreason: refundreason
@@ -120,6 +126,9 @@
 					xhrFields: {
 						withCredentials: true
 					},
+					headers:{
+             				"X-Requested-With":"XMLHttpRequest"
+        			},
 					crossDomain: true,
 					success: function(data) {
 						if(data.state == 1) {
@@ -150,7 +159,7 @@
 			}
 			document.getElementById("reserve").addEventListener('tap', function() {
 				var btnArray = ['是', '否'];
-				mui.confirm('您是否确认支付？', '准备支付', btnArray, function(e) {
+				mui.confirm('是否确定申请退款？', '提示', btnArray, function(e) {
 					if(e.index == 0) {
 						var reason = $('#refundreason').text();
 						saveRefund(oid, reason);
