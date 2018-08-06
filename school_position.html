@@ -122,16 +122,21 @@
 		}
 
 		function selectBranchByQID(){
-			mui.ajax(PREPATH+"/selectBranchByQID",{
+			$.ajax({
 				type:"post",
 				async:true,
+				url:PREPATH+"/selectBranchByQID",
 				data:{},
 				dataType:"json",
 				withCredentials:true,
 				crossDomain: true,
+				headers:{
+             				"X-Requested-With":"XMLHttpRequest"
+        		},
 				success:function(data){
-					for(var i=0;i<data.length;i++){
-						jQuery('.mui-table-view').append(getItemStr(data[i]));		
+					var branches = data.branches;
+					for(var i=0;i<branches.length;i++){
+						jQuery('.mui-table-view').append(getItemStr(branches[i]));		
 					}		
 					mui(".mui-table-view-cell").on('tap',"button",function(){
 						console.log(this.value);

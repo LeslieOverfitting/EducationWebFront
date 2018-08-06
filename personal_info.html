@@ -17,9 +17,9 @@
 		<!--App自定义的css-->
 		<link rel="stylesheet" type="text/css" href="css/app.css" />
 		<link rel="stylesheet" type="text/css" href="css/loaders.min.css" />
-		<link rel="stylesheet" type="text/css" href="css/loading.css" />
-		<script src="js/config.js" type="text/javascript"></script>
+		<link rel="stylesheet" type="text/css" href="css/loading.css" />	
 		<script src="js/jquery.min.js" type="text/javascript"></script>
+		<script src="js/config.js" type="text/javascript"></script>
 		<script src="js/loading.animation.js" type="text/javascript"></script>
 
 		<style>
@@ -83,12 +83,16 @@
 		});
 
 		$(function() {
-			mui.ajax(PREPATH + "/selectUserByUID", {
+			jqxhr=$.ajax({
 				type: "post",
 				dataType: "json",
+				url:PREPATH + "/user/selectUserByUID", 
 				xhrFields: {
 					withCredentials: true
 				},
+				headers:{
+             				"X-Requested-With":"XMLHttpRequest"
+        		},
 				crossDomain: true,
 				success: function(data) {
 					if(data.userimg !== null && data.userimg !== "") {
@@ -140,17 +144,21 @@
 			if(username === null) {
 				username = "";
 			}
-			mui.ajax(PREPATH + "/updateUser", {
+			$.ajax( {
 				type: "post",
 				data: {
 					tel: tel,
 					nickname: nickname,
 					username: username
 				},
+				url:PREPATH + "/user/updateUser",
 				dataType: "json",
 				xhrFields: {
 					withCredentials: true
 				},
+				headers:{
+             				"X-Requested-With":"XMLHttpRequest"
+        		},
 				crossDomain: true,
 				beforeSend: function() {
 					mui($("#modify")).button('loading');

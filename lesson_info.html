@@ -102,6 +102,7 @@
 	</body>
 	<script src="js/mui.min.js"></script>
 	<script>
+		var lprice = 0;
 		mui.init({
 			swipeBack: true //启用右滑关闭功能
 		});
@@ -111,28 +112,27 @@
 				url: url
 			});
 		};
-		
-		var lprice = 0;
 		var parameters = ((window.location + '').split('?')[1]).split('=');
 		var requestUrl = PREPATH + "/selectLessonByLid";
-		var lessonId = parameters[1];
-		lessonId = parameters[1];
-		console.log(lessonId);
-		$("#lessonHeader").text('精品课程')
-		getLessonInfo(requestUrl, 1, lessonId);
+		var lid = parameters[1];
+		$("#lessonHeader").text('精品课程');
+		getLessonInfo(requestUrl);
 		
-		function getLessonInfo(url, qid, lessonId) {
-			mui.ajax(url, {
+		function getLessonInfo(url) {
+			$.ajax( {
 				type: "post",
 				async: true,
+				url:url,
 				data: {
-					qid: 1,
-					lessonId: lessonId
+					lid: lid
 				},
 				dataType: "json",
 				xhrFields: {
 					withCredentials: true
 				},
+				headers:{
+             				"X-Requested-With":"XMLHttpRequest"
+        		},
 				crossDomain: true,
 				success: function(data) {
 					$("#lessonImg").attr('src', IMGPATH + data.imgurl);
@@ -144,7 +144,7 @@
 					}
 					$("#schoolLoaction").text(schoolContent);
 					$("#lessonPrice").text(data.lprice + '￥');
-					lprice = data.lprice;
+					lprice = data.lprice ;
 					$("#lessonDesc").text(data.ldesc);
 					$("#lessonStatus").text(data.status);
 				},
@@ -155,11 +155,12 @@
 		};
 		
 		document.getElementById("bookOrder").addEventListener('tap', function() {
-			jqxhr = mui.ajax(PREPATH + "/saveSorderUnpaid", {
+			jqxhr = $.ajax( {
 				type: "post",
 				async: true,
+				url:PREPATH + "/user/saveSorderUnpaid",
 				data: {
-					lid: lessonId,
+					lid: lid,
 					total:lprice,
 					actual:lprice
 				},
@@ -167,11 +168,14 @@
 				xhrFields: {
 					withCredentials: true
 				},
+				headers:{
+             				"X-Requested-With":"XMLHttpRequest"
+        		},
 				crossDomain: true,
 				success: function(data) {
-					if(data==1){
+					if(data.state==1){
 						mui.alert('预定成功', '提示', function() {
-							skipHtml("my_orders.html?lid=" + lessonId + "");
+							skipHtml("my_orders.html");
 						});		
 					}else{
 						mui.toast("预约失败");
@@ -184,7 +188,7 @@
 		})
 		
 		document.getElementById("order").addEventListener('tap', function() {
-			skipHtml("order_lesson.html?lid=" + lessonId + '&oid=0');
+			skipHtml("order_lesson.html?lid=" + lid + '&oid=0');
 		})
 	</script>
 </html>

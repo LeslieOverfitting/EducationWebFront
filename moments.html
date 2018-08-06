@@ -295,7 +295,6 @@
 		var mid = 0;
 		var nickName = "";
 		var uid = "";
-
 		mui.init({
 			swipeBack: true, //启用右滑关闭功能,
 			pullRefresh: {
@@ -353,36 +352,26 @@
 
 		var contents = document.getElementById("messageDiv");
 		var prePend = document.getElementById("backImg");
-		selectMessageByQidAndPage(1, -1);
 		getNickName();
+		selectMessageByQidAndPage(-1);
+		
 
 		function getNickName() {
-			mui.ajax(PREPATH + "/selectUserByUid", {
-				type: "post",
-				async: true,
-				data: {},
-				dataType: "json",
-				xhrFields: {
-					withCredentials: true
-				},
-				crossDomain: true,
-				success: function(data) {
-					nickName = data.nickname;
-					uid = data.uid;
-				},
-				error: function(xhr, type, errorThrown) {
-					mui.toast("用户信息获取失败");
-				}
-			});
+			nickName = sessionStorage.getItem('nickName');
+			uid = sessionStorage.getItem('uid');
 		}
 
 		function selectMessageByQidDownFresh() {
-			mui.ajax(PREPATH + "/selectMessageByQidDownFresh", {
+			jqxhr=$.ajax( {
 				type: "post",
 				async: true,
+				url:PREPATH + "/user/selectMessageByQidDownFresh",
 				data: {
 					maxId: maxId
 				},
+				headers:{
+             				"X-Requested-With":"XMLHttpRequest"
+        		},
 				dataType: "json",
 				xhrFields: {
 					withCredentials: true
@@ -395,7 +384,6 @@
 					if(data.length > 0) {
 						maxId = data[0].mid;
 					}
-
 				},
 				error: function(xhr, type, errorThrown) {
 					mui.toast("朋友圈信息获取失败");
@@ -404,27 +392,32 @@
 		}
 
 		function selectMessageByQidAndPage(rowId) {
-			mui.ajax(PREPATH + "/selectMessageByQidAndPage", {
+			jqxhr=$.ajax( {
 				type: "post",
-				async: true,
+				async: false,
+				url:PREPATH + "/user/selectMessageByQidAndPage",
 				data: {
 					startId: rowId
 				},
+				headers:{
+             				"X-Requested-With":"XMLHttpRequest"
+        		},
 				dataType: "json",
 				xhrFields: {
 					withCredentials: true
 				},
 				crossDomain: true,
 				success: function(data) {
-					for(var i = 0; i < data.length; i++) {
-						jQuery(contents).append(getCommentStr(data[i]));
+					var messages = data.messages;
+					for(var i = 0; i < messages.length; i++) {
+						jQuery(contents).append(getCommentStr(messages[i]));
 					}
-					if(data.length != 0)
-						boundaryId = data[data.length - 1].mid;
+					if(messages.length != 0)
+						boundaryId = messages[messages.length - 1].mid;
 					else
 						boundaryId = -2;
 					if(rowId == -1)
-						maxId = data[0].mid;
+						maxId = messages[0].mid;
 				},
 				error: function(xhr, type, errorThrown) {
 					mui.toast("朋友圈信息获取失败");
@@ -439,40 +432,41 @@
 			html.push(data.mtitle);
 			html.push('</div><div class="mui-card-content">');
 			html.push('<div class="mui-card-content-inner">');
-			for(var j = 0; j < data.messageimgs.length; j++) {
-				html.push('<span class="messagelist-imgs' + data.messageimgs.length + '" style="background-image: url(' + 'images/' + data.imgs[j].imgurl + ');">');
-				html.push('<img src="images/' + data.messageimgs[j].imgurl + '" data-preview-src="" data-preview-group="1"  style="opacity: 0;width: 100%;height: 100%;"/></span>');
+			var messageimgs = data.messageimgs;
+			for(var j = 0; j < messageimgs.length; j++) {
+				html.push('<span class="messagelist-imgs' + messageimgs.length + '" style="background-image: url(' + IMGPATH + messageimgs[j].imgurl + ');">');
+				html.push('<img src="'+IMGPATH + messageimgs[j].imgurl + '" data-preview-src="" data-preview-group="1"  style="opacity: 0;width: 100%;height: 100%;"/></span>');
 			}
 			html.push('<p align="right">');
 			html.push(data.mtime);
 			html.push('</p>');
 			html.push('</div></div>');
-			if(data.messagelikes.length > 0 && data.messagereply.length > 0) {
+			if(data.messagelikes.length > 0 || data.messagereply.length > 0) {
 				html.push('<div class="mui-card-footer">');
 				var redOrNot = '';
 				for(var j = 0; j < data.messagelikes.length; j++) {
-					if(data.messagelikes[j].user.uid == uid) {
+					if(data.messagelikes[j].uid == uid) {
 						redOrNot = 'red';
 					}
 				}
 				html.push('<a class="mui-card-link"><span style="color:' + redOrNot + '" class="mui-icon mui-icon-extra mui-icon-extra-heart-filled" value="' + data.mid + '"></span></a>');
 				html.push('<a href="#comment" class="mui-card-link"><span class="mui-icon mui-icon-compose" value="' + data.mid + '" ></span></a></div>');
-				if(data.messagereply.length > 0) {
+				if(data.messagelikes.length > 0) {
 					html.push('<div class="mui-card-footer" style="display: block;">');
 					html.push('<div  style="margin-bottom: 10px;">');
 					html.push('<span class="mui-icon mui-icon-extra mui-icon-extra-heart-filled" style="font-size: 15px;"></span> ');
 					html.push('<p style="display:inline" id="likersName' + data.mid + '" >');
 					for(var j = 0; j < data.messagelikes.length; j++) {
 						if(j + 1 < data.messagelikes.length)
-							html.push(data.messagelikes[j].user.nickname + ' ');
+							html.push(data.messagelikes[j].nickname + ' ');
 						else
-							html.push(data.messagelikes[j].user.nickname);
+							html.push(data.messagelikes[j].nickname);
 					}
 					html.push('</p>');
 					html.push('</div>');
 					html.push('<div id="reply' + data.mid + '" style="margin-bottom: 5px;">');
 					for(var j = 0; j < data.messagereply.length; j++) {
-						html.push(data.messagereply[j].user.nickname + ':' + data.messagereply[j].content + '<br>');
+						html.push(data.messagereply[j].nickname + ':' + data.messagereply[j].content + '<br>');
 					}
 					html.push('</div>');
 					html.push('</div>');
@@ -481,25 +475,28 @@
 			}
 			html.push('</div>');
 			return html.join('');
-
 		}
 
 		function saveLike(mid) {
-			mui.ajax(PREPATH + "/addLike", {
+			jqxhr=$.ajax({
 				type: "post",
+				url:PREPATH + "/user/addLike", 
 				async: true,
 				data: {
 					mid: mid
 				},
+				headers:{
+             				"X-Requested-With":"XMLHttpRequest"
+        		},
 				dataType: "json",
 				xhrFields: {
 					withCredentials: true
 				},
 				crossDomain: true,
 				success: function(data) {
-					if(data == 1) {
+					if(data.state == 1) {
 						console.log("innerText" + document.getElementById('likersName' + mid + '').innerText);
-						document.getElementById('likersName' + mid + '').innerText += ' ' + data.nickname;
+						document.getElementById('likersName' + mid + '').innerText += ' ' + nickName;
 					} else {
 						mui.toast("点赞失败");
 					}
@@ -510,19 +507,23 @@
 			});
 		};
 		function deleteLike(mid) {
-			mui.ajax(PREPATH + "/deleteLike", {
+			jqxhr=$.ajax( {
 				type: "post",
 				async: true,
 				data: {
 					mid: mid
 				},
+				url:PREPATH + "/user/deleteLike",
 				dataType: "json",
 				xhrFields: {
 					withCredentials: true
 				},
+				headers:{
+             				"X-Requested-With":"XMLHttpRequest"
+        		},
 				crossDomain: true,
 				success: function(data) {
-					if(data == 1) {
+					if(data.state == 1) {
 						var likerNames = document.getElementById('likersName' + mid + '').innerText;
 						var temp = likerNames.split(nickName).join('');
 						document.getElementById('likersName' + mid + '').innerText = temp;
@@ -536,34 +537,42 @@
 			});
 		};
 
-		function saveComment(mid, comment) {
-			mui.ajax(PREPATH + "/addMessageReply", {
+		function saveComment(mid, content) {
+			var result = -1;
+			jqxhr=$.ajax( {
 				type: "post",
-				async: true,
+				async: false,
 				data: {
 					mid: mid,
-					comment: comment
+					content: content
 				},
+				url:PREPATH + "/user/addMessageReply",
 				dataType: "json",
 				xhrFields: {
 					withCredentials: true
 				},
+				headers:{
+             				"X-Requested-With":"XMLHttpRequest"
+        		},
 				crossDomain: true,
 				success: function(data) {
-					if(data!=1){
+					if(data.state!=1){
 						mui.toast("添加评论失败");
 					}
+					result = data.state ;
 				},
 				error: function(xhr, type, errorThrown) {
 					//异常处理；
 					mui.toast("添加评论失败");
 				}
 			});
+			return result;
 		};
 
 		mui(".mui-content").on('tap', '.mui-icon-extra-heart-filled', function(item) {
 			console.log($(this).attr('value'));
 			mid = $(this).attr('value');
+			alert(mid);
 			if(('' + this.style.color) == "red") {
 				this.style.color = "";
 				deleteLike(mid);
@@ -575,17 +584,27 @@
 		});
 
 		mui("#comment").on('tap', '#publish', function(item) {
+		
 			var innerComment = $('#commentValue').val();
-			console.log(innerComment);
-			if(document.getElementById('reply' + mid + '') == undefined) {
-				var html = [];
-				html.push('<div id="reply' + mid + '" class="mui-card-footer">');
-				html.push(nickName + ':' + innerComment + '<br>');
-				html.push('</div>');
-				$("#card" + mid).append(html.join(''));
-				saveComment(mid, innerComment);
+			console.log("innerComment");
+			if($('#reply' + mid + '') == undefined) {
+				console.log("ssss");
+				if(saveComment(mid, innerComment)==1){
+					var html = [];
+					html.push('<div id="reply' + mid + '" class="mui-card-footer">');
+					html.push(nickName + ':' + innerComment + '<br>');
+					html.push('</div>');
+					$("#card" + mid).append(html.join(''));
+				}
 			} else {
-				document.getElementById('reply' + mid + '').innerHTML += nickName + ':' + innerComment;
+				var re = saveComment(mid, innerComment);
+				console.log(re+"  re");
+				if(re==1){
+					console.log("ssss");
+					$("#reply"+mid).append(nickName + ':' +innerComment + '<br>');
+				}else{
+					console.log("wrong");
+				}
 			}
 			document.getElementById("comment").style.display = 'none';
 		});

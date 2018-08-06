@@ -61,7 +61,7 @@
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
 			<h1 id="lessonHeader" class="mui-title">预约详情</h1>
 		</header>
-		<div class="mui-content">
+		<div id="orderDetail" class="mui-content">
 			<div class="mui-content-padded">
 				<img id="imgurl" src="images/curriculum1.png" width="100%"/>
 			</div>
@@ -107,7 +107,7 @@
 					</p>
 					<p class='mui-ellipsis'>
 						<label>预约备注：</label>
-						<textarea id="refundreason" rows="3" readonly>好期待这门课啊，感觉那个女老师好漂漂 阿大VAV爱是干啥干啥干啥干啥干啥干啥啊啊爱旧爱骄傲骄傲Java</textarea>
+						<textarea id="refundreason" rows="3" readonly>好期待这门课啊， Java</textarea>
 					</p>
 				</div>
 			</div>
@@ -122,11 +122,15 @@
 		
 		$(function() {
 			var id = ((window.location + '').split('?')[1]).split('=')[1];
-			mui.ajax(PREPATH + "/selectFreeListenBookById", {
+			jqxhr=$.ajax( {
 				type: "post",
+				url:PREPATH + "/user/selectFreeListenBookById",
 				async: true,
 				data: {id: id},
 				dataType: "json",
+				headers:{
+             				"X-Requested-With":"XMLHttpRequest"
+        		},
 				xhrFields: {
 					withCredentials: true
 				},
@@ -155,7 +159,7 @@
 						btnHtml += '</div>';
 						$("#orderDetail").append(btnHtml);
 						$("#cancelFreeListenBookUnprocessed").click(function() {
-							mui.ajax(PREPATH + "/cancelFreeListenBookUnprocessed", {
+							mui.ajax(PREPATH + "/user/cancelFreeListenBookUnprocessed", {
 								type: "post",
 								async: true,
 								data: {id: id},
@@ -163,6 +167,9 @@
 								xhrFields: {
 									withCredentials: true
 								},
+								headers:{
+             						"X-Requested-With":"XMLHttpRequest"
+        						},
 								crossDomain: true,
 								beforeSend: function() {
 									mui($("#cancelFreeListenBookUnprocessed")).button('loading');
@@ -172,7 +179,7 @@
 									if (data.state === 1) {
 										mui.toast("取消成功");
 										mui.openWindow({
-											url: "my_reservations.html#item2"
+											url: "my_reservations.html"
 										});
 									}
 									else {
@@ -196,7 +203,7 @@
 						btnHtml += '</div>';
 						$("#orderDetail").append(btnHtml);
 						$("#deleteFreeListenBookProcessed").click(function() {
-							mui.ajax(PREPATH + "/deleteFreeListenBookProcessed", {
+							mui.ajax(PREPATH + "/user/deleteFreeListenBookProcessed", {
 								type: "post",
 								async: true,
 								data: {id: id},
@@ -204,6 +211,9 @@
 								xhrFields: {
 									withCredentials: true
 								},
+								headers:{
+             						"X-Requested-With":"XMLHttpRequest"
+        						},
 								crossDomain: true,
 								beforeSend: function() {
 									mui($("#deleteFreeListenBookProcessed")).button('loading');
@@ -213,7 +223,7 @@
 									if (data.state === 1) {
 										mui.toast("删除成功");
 										mui.openWindow({
-											url: "my_reservations.html#item3"
+											url: "my_reservations.html"
 										});
 									}
 									else {

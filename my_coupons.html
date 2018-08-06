@@ -84,7 +84,7 @@
 	<body>
 		<header class="mui-bar mui-bar-nav">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
-			<h1 id="lessonHeader" class="mui-title">积分详情</h1>
+			<h1 id="lessonHeader" class="mui-title">优惠券详情</h1>
 		</header>
 		<div id="content" class="mui-content mui-scroll-wrapper">
 			<div id="coupon_content" class="mui-scroll">
@@ -95,6 +95,11 @@
 						</div>
 					</center>
 				</div>
+				<!--
+                	作者：offline
+                	时间：2018-08-04
+                	描述：
+                
 				<div class="mui-card" >
 					<div class="mui-card-content"  >
 						<div class="mui-pull-left" style="width:50%; height: 100px; ">
@@ -107,43 +112,8 @@
 						</div>
 					</div>
 				</div>
-				
-					<div class="mui-card" >
-					<div class="mui-card-content"  >
-						<div class="mui-pull-left" style="width:50%; height: 100px; ">
-							<p id='coupon_money' class="coupon-money-style">￥80</p>
-							<p id='coupon_date' class="coupon-outdate-style">过期时间: 2018-5-12</p>
-						</div>
-						<div class="mui-pull-right" style="width: 50%;height: 100px;   ">
-							<p id='coupon_category' class="coupon-category-style">无类别</p>
-							<p id='coupon_limit' class="coupon-limit-style">满1000元使用</p>
-						</div>
-					</div>
-				</div>
-					<div class="mui-card" >
-					<div class="mui-card-content"  >
-						<div class="mui-pull-left" style="width:50%; height: 100px; ">
-							<p id='coupon_money' class="coupon-money-style">￥100</p>
-							<p id='coupon_date' class="coupon-outdate-style">过期时间: 2018-5-12</p>
-						</div>
-						<div class="mui-pull-right" style="width: 50%;height: 100px;   ">
-							<p id='coupon_category' class="coupon-category-style">Java方向</p>
-							<p id='coupon_limit' class="coupon-limit-style">满1000元使用</p>
-						</div>
-					</div>
-				</div>
-					<div class="mui-card" >
-						<div class="mui-card-content"  >
-							<div class="mui-pull-left" style="width:50%; height: 100px; ">
-								<p id='coupon_money' class="coupon-money-style">￥50</p>
-								<p id='coupon_date' class="coupon-outdate-style">过期时间: 2018-5-12</p>
-							</div>
-							<div class="mui-pull-right" style="width: 50%;height: 100px;   ">
-								<p id='coupon_category' class="coupon-category-style">Java方向</p>
-								<p id='coupon_limit' class="coupon-limit-style">无门槛</p>
-							</div>
-						</div>
-					</div>
+				-->
+					 
 				
 			</div>
 		</div>
@@ -160,50 +130,58 @@
 				}
 			}
 		});
-		var rowId = -2;
+		var rowId = -1;
+		selectCouponByPage();
 		/**
 		 * 上拉加载具体业务实现
 		 */
 		function pullupRefresh() {
 			setTimeout(function() {
-				selectMessageByQidAndPage();
+				selectCouponByPage();
 				mui('#content').pullRefresh().endPullupToRefresh(rowId == -2);
 			}, 1500);
 		}	
-		var requestUrl = PREPATH + "/selectCouponByUIDAndPage";
+		
 		function getItemStr(data) {
 			var itemStr = '<div class="mui-card" >';
+			var desc = "无门槛";
 			itemStr += '<div class="mui-card-content"  >';
 			itemStr += '<div class="mui-pull-left" style="width:50%; height: 100px; ">';
-			itemStr += '<p id="coupon_money" class="coupon-money-style">'+'￥'+ data.money+'</p>';
-			itemStr += '<p id="coupon_date" class="coupon-outdate-style">过期时间: '+data.deadline+'</p>';
+			itemStr += '<p   class="coupon-money-style">'+'￥'+ data.money+'</p>';
+			itemStr += '<p   class="coupon-outdate-style">过期时间: '+data.deadline+'</p>';
 			itemStr += '</div>';
 			itemStr += '<div class="mui-pull-right" style="width: 50%;height: 100px;   ">';
-			itemStr += '<p id="coupon_category" class="coupon-category-style">'+ data.category+'</p>';
-			itemStr += '<p id="coupon_limit" class="coupon-limit-style">'+data.needmoney+'</p>';
+			itemStr += '<p   class="coupon-category-style">'+ data.category+'</p>';
+			if(data.needmoney !=0)
+				desc = "满"+data.needmoney+"使用";
+			itemStr += '<p   class="coupon-limit-style">'+desc+'</p>';
 			itemStr += '</div>';
 			itemStr += '</div>';
 			itemStr += '</div>';
 			return itemStr;
 		}
-		function selectCouponByPage(url) {
-			mui.ajax(url, {
+		function selectCouponByPage( ) {
+			jqxhr=mui.ajax(PREPATH + "/user/selectCouponByUIDAndPage", {
 				type: "post",
 				async: false,
 				data: {
 					startId: rowId
 				},
+				headers:{
+             				"X-Requested-With":"XMLHttpRequest"
+        		},
 				dataType: "json",
 				xhrFields: {
 					withCredentials: true
 				},
 				crossDomain: true,
 				success: function(data) {
-					for(var i = 0; i < data.length; i++) {
-						$("#coupon_content").append(getCommentStr(data[i]));
+					coupons = data.coupons;
+					for(var i = 0; i < coupons.length; i++) {
+						$("#coupon_content").append(getItemStr(coupons[i]));
 					}
-					if(data.length != 0)
-						rowId = data[data.length - 1].recordid;
+					if(coupons.length != 0)
+						rowId = coupons[coupons.length - 1].recordid;
 					else
 						rowId = -2;
 				},

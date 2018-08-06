@@ -57,6 +57,11 @@
 				padding: 20px 10px;
 				font-size: 16px;
 			}
+			.picker-span{
+				font-family: '华文新魏';
+				font-size: 20px; 
+				color: #CF2D28;
+			}
 		</style>
 		
 	</head>
@@ -98,20 +103,22 @@
 				<span class="mui-tab-label">我的</span>
 			</a>
 		</nav>
-		<div class="mui-content">
-			<p style="margin-bottom: 0px;">
-				<img src="images/curriculum.png" height="10%" width="100%" />
-			</p>
-			<button id='showLessonPicker' class="mui-btn mui-btn-block" type='button'>
-				<span style="font-family: '华文新魏'; font-size: 20px; color: #CF2D28;">开课分部</span>&nbsp;-&nbsp;
-				<span style="font-family: '华文新魏'; font-size: 20px; color: #CF2D28;">课程类别</span>&nbsp;-&nbsp;
-				<span style="font-family: '华文新魏'; font-size: 20px; color: #CF2D28;">学习方向</span>
-			</button>
-			<div id="pullrefresh" class="mui-row ">
-				<div id="segmentedControlContents" class="mui-col-xs-12" style="border-left: 1px solid #c8c7cc;">
+		<div id="pullrefresh"  class="mui-content mui-scroll-wrapper">
+			<div class="mui-row ">
+				<p style="margin-bottom: 0px;">
+					<img src="images/curriculum.png" height="10%" width="100%" />
+				</p>
+				<button id='showLessonPicker' class="mui-btn mui-btn-block" type='button'>
+					<span class="picker-span" id="pickerBranchName">开课分部</span>&nbsp;-&nbsp;
+					<span class="picker-span" id="pickerFreeOrNot" >课程类别</span>&nbsp;-&nbsp;
+					<span class="picker-span" id="pickerCategory"  >学习方向</span>
+				</button>
+				<div  >
+					<div id="segmentedControlContents" class="mui-col-xs-12" style="border-left: 1px solid #c8c7cc;">
+						
+					</div>
 				</div>
 			</div>
-
 		</div>
 	</body>
 	
@@ -159,13 +166,17 @@
 				var lessonPicker = new $.PopPicker({
 					layer: 3
 				});			 
-				mui.ajax(PREPATH + "/selectAllBranchCategoryByQid", {
+				$.ajax( {
 					type:"post",
 					async:true,
+					url:PREPATH + "/selectAllBranchCategoryByQid",
 					dataType:"json",
 					xhrFields: {
 						withCredentials: true  
-					},  
+					},
+					headers:{
+             				"X-Requested-With":"XMLHttpRequest"
+        			},
 					crossDomain: true,
 					success:function(data){
 						 lessonPicker.setData(data); 
@@ -176,17 +187,16 @@
         				mui.toast("信息获取失败");
     				}
 				});
-		 		var showCityPickerButton = document.getElementById('showLessonPicker');
+		 		var showBranchCategoryPickerButton = document.getElementById('showLessonPicker');
 				var lessionResult = $('#segmentedControlContents'); 	 
-				showCityPickerButton.addEventListener('tap', function(event) {
+				showBranchCategoryPickerButton.addEventListener('tap', function(event) {
 					lessonPicker.show(function(items) {
 						branchName = items[0].text;
 						freeOrNot = items[1].text;
 						category = items[2].text;
-						var pickResult = '<span style="font-family: "华文新魏"; font-size: 20px; color: #CF2D28;">' + branchName + '</span>&nbsp;-&nbsp;';
-						pickResult += '<span style="font-family: "华文新魏"; font-size: 20px; color: #CF2D28;">' + freeOrNot + '</span>&nbsp;-&nbsp;';
-						pickResult += '<span style="font-family: "华文新魏"; font-size: 20px; color: #CF2D28;">' + category;
-						showCityPickerButton.text(pickResult);						
+						jQuery("#pickerBranchName").text(branchName);	
+						jQuery("#pickerFreeOrNot").text(freeOrNot);		
+						jQuery("#pickerCategory").text(category);		
 						if ("精品课"==items[1].text) {
 						 	lessonRequestUrl = PREPATH + "/selectLessonByLessonQueryCondition";
 						}
@@ -201,42 +211,48 @@
 		})(mui, document);
 		
 		function getLessonByBranchNameCategoryAndPage(requestUrl,branch,category,startId){
-	    	mui.ajax(requestUrl,{
+	    	$.ajax({
 				type:"post",
 				async:false,
+				url:requestUrl,
 				data:{branch:branch,category:category,startId:startId},
 				dataType:"json",
+				headers:{
+             				"X-Requested-With":"XMLHttpRequest"
+        		},
 				withCredentials:true,
 				crossDomain: true,
 				success:function(data){
+					var lessons = data.lessons;
 					html = [];
 					html.push('<div id="content' + '" class="mui-control-content" style="display:block;" ><ul class="mui-table-view"> ');
-					for(var j = 0; j < data.length; j++) {
+					for(var j = 0; j < lessons.length; j++) {
 						var lid = 0;
 						var fid = 0;
 						var idstr ="";
-						if(data[j].lid !=undefined)
-							idstr ="href='lesson_info.html?lid="+data[j].lid+"'";
-						if(data[j].id !=undefined)
-							idstr ="href='free_listen_info.html?fid="+data[j].id+"'";
+						if(lessons[j].lid !=undefined)
+							idstr ="href='lesson_info.html?lid="+lessons[j].lid+"'";
+						if(lessons[j].fid !=undefined)
+							idstr ="href='free_listen_info.html?fid="+lessons[j].fid+"'";
 						html.push('<a '+ idstr+'> <li class="mui-table-view-cell">' +
-							'<img src="images/' + data[j].imgurl  + '" data-preview-src="" data-preview-group="1" height="10%" width="100%"/>' +
+							'<img src="images/' + lessons[j].imgurl  + '" data-preview-src="" data-preview-group="1" height="10%" width="100%"/>' +
 							'</a></li>');					
-					}
-					if(rowId ==-1) {
-						$('#segmentedControlContents').empty();
-					}
-					if(data.length>0){
-						if(data[data.length-1].lid !=undefined)
-							rowId = data[data.length-1].lid;
+					}				
+					if(rowId ==-1)
+						jQuery('#segmentedControlContents').empty();
+					if(lessons.length>0){
+						if(lessons[lessons.length-1].lid !=undefined)
+							rowId = lessons[lessons.length-1].lid;
 						else
-							rowId = data[data.length-1].fid;
+							rowId = lessons[lessons.length-1].fid;
 					}else{
 						rowId =-2;
 					}
+					
 					html.push('</ul></div>');
-											
-					$('#segmentedControlContents').append(html.join(''));
+					
+					jQuery('#segmentedControlContents').append(html.join(''));
+					mui('#segmentedControlContents').on('tap','a',function(){document.location.href=this.href;});
 				},
 				error:function(xhr,type,errorThrown){
 					mui.toast("信息获取失败");
@@ -244,23 +260,7 @@
 	    	});
 		}
 
-	    /**
-		 * 下拉刷新具体业务实现
-		 */
-		function pulldownRefresh() {
-			setTimeout(function() {
-				var table = document.body.querySelector('.mui-table-view');
-				var cells = document.body.querySelectorAll('.mui-table-view-cell');
-				for (var i = cells.length, len = i + 3; i < len; i++) {
-					var li = document.createElement('li');
-					li.className = 'mui-table-view-cell';
-					li.innerHTML = '<a class="mui-navigate-right">Item ' + (i + 1) + '</a>';
-					//下拉刷新，新纪录插到最前面；
-					table.insertBefore(li, table.firstChild);
-				}
-				mui('#pullrefresh').pullRefresh().endPulldownToRefresh(); //refresh completed
-			}, 1500);
-		}
+	   
 		/**
 		 * 上拉加载具体业务实现
 		 */

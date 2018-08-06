@@ -72,56 +72,13 @@
 							1234
 						</span>
 					</center>
-					<p class="signDay">
+					<p id="signDays" class="signDay">
 						签到天数：8天
 					</p>
 				</div>
 				<div class="mui-card">	
 					<ul class="mui-table-view">	
-						<li class="mui-table-view-cell mui-media">
-							<div class="mui-media-body mui-pull-left" >
-								<div class="mui-media-body" >
-									<p class='mui-ellipsis'>购买深度学习课程-11</p>
-									<p  class='mui-ellipsis'>2018-12-05</p>
-								</div>
-							</div>
-							<div class="mui-media-body mui-pull-right" >
-									<p class="point-value">+30</p>
-							</div>	
-						</li>
-						<li class="mui-table-view-cell mui-media">
-							<div class="mui-media-body mui-pull-left" >
-								<div class="mui-media-body" >
-									<p  class='mui-ellipsis'>购买深度学习课程-11</p>
-									<p  class='mui-ellipsis'>2018-12-05</p>
-								</div>
-							</div>
-							<div class="mui-media-body mui-pull-right" >
-									<p class="point-value">- 30</p>
-							</div>	
-						</li>
-						<li class="mui-table-view-cell mui-media">
-							<div class="mui-media-body mui-pull-left" >
-								<div class="mui-media-body" >
-									<p id="username" class='mui-ellipsis'>签到</p>
-									<p id="tel" class='mui-ellipsis'>2018-12-05</p>
-								</div>
-							</div>
-							<div class="mui-media-body mui-pull-right" >
-									<p class="point-value">+30</p>
-							</div>	
-						</li>
-						<li class="mui-table-view-cell mui-media">
-							<div class="mui-media-body mui-pull-left" >
-								<div class="mui-media-body" >
-									<p id="username" class='mui-ellipsis'>购买深度学习课程-11</p>
-									<p id="tel" class='mui-ellipsis'>2018-12-05</p>
-								</div>
-							</div>
-							<div class="mui-media-body mui-pull-right" >
-									<p class="point-value">+30</p>
-							</div>	
-						</li>
+						 
 					</ul>
 				</div>
 				
@@ -141,19 +98,21 @@
 				}
 			}
 		});
-		var rowId =-2;
+		var rowId =-1;
 		/**
 		 * 上拉加载具体业务实现
 		 */
 		function pullupRefresh() {
 			setTimeout(function() {
-				selectMessageByQidAndPage();
+				selectPointRecord();
 				mui('#content').pullRefresh().endPullupToRefresh(rowId == -2);
 			}, 1500);
 		}
 	
 			selectTotalPointByUID() ;
 			selectPointRecord();	
+			
+		 
 		function getItemStr(data){
 			
 			var desc = "";
@@ -171,12 +130,11 @@
 			else	
 				pointValue = "-"+data.point;
 			
-			
 			var itemStr = '<li class="mui-table-view-cell mui-media">';
 			itemStr += '<div class="mui-media-body mui-pull-left" >';
 			itemStr += '<div class="mui-media-body" >';
 			itemStr += '<p id="username" class="mui-ellipsis">'+ desc+'</p>';
-			itemStr += '<p  class="mui-ellipsis">'+ data.date +'</p>';
+			itemStr += '<p  class="mui-ellipsis">'+ (data.date).substring(0,19) +'</p>';
 			itemStr += '</div>';
 			itemStr += '</div>';
 			itemStr += '<div class="mui-media-body mui-pull-right" >';
@@ -187,24 +145,29 @@
 		}
 		
 		function selectPointRecord() {
-			mui.ajax(PREPATH+"/selectPointByUIDAndPage", {
+			jqxhr=$.ajax( {
 				type: "post",
 				async: false,
 				data: {
 					startId:rowId
 				},
+				headers:{
+             				"X-Requested-With":"XMLHttpRequest"
+        		},
+				url:PREPATH+"/user/selectPointByUIDAndPage",
 				dataType: "json",
 				xhrFields: {
 					withCredentials: true
 				},
 				crossDomain: true,
 				success: function(data) {
-					var content =&("#point_content") ;
-					for(var i = 0; i < data.length; i++) {
-						content.append(getItemStr(data[i]));
+					var content =$("#point_content .mui-table-view") ;
+					var points = data.points;
+					for(var i = 0; i < points.length; i++) {
+						content.append(getItemStr(points[i]));
 					}
-					if(data.length != 0)
-						rowId = data[data.length - 1].pid;
+					if(points.length != 0)
+						rowId = points[points.length - 1].pid;
 					else
 						rowId = -2;
 				},
@@ -214,11 +177,15 @@
 			});
 		};
 		function selectTotalPointByUID() {
-			mui.ajax(PREPATH+"/selectTotalPointByUID", {
+			jqxhr=$.ajax( {
 				type: "post",
 				async: true,
+				url:PREPATH+"/user/selectTotalPointByUID",
 				data: {
 				},
+				headers:{
+             				"X-Requested-With":"XMLHttpRequest"
+        		},
 				dataType: "json",
 				xhrFields: {
 					withCredentials: true
@@ -226,7 +193,7 @@
 				crossDomain: true,
 				success: function(data) {
 					 $("#pointValue").text(data.totalpoint);
-					 
+					 $("#signDays").text("签到天数："+data.days+"天");
 				},
 				error: function(xhr, type, errorThrown) {
 				 	mui.toast("信息获取失败");

@@ -239,10 +239,10 @@
 	<script src="js/mui.pullToRefresh.material.js"></script>
 
 	<script>
-		var currentRowID = -1;
 		var itemName = "item1";
-		var selectURL = "/selectSorderBySorderQueryCondition";
+		var selectURL = "/user/selectSorderBySorderQueryCondition";
 		var rowIDs = new Array(5);
+		var rowIndex = 0;
 		rowIDs[0] = -1;
 		rowIDs[1] = -1;
 		rowIDs[2] = -1;
@@ -266,8 +266,8 @@
 							callback: function() {
 								var self = this;
 								setTimeout(function() {
-									getOrderByUidAndStatus(itemName, 0,0);
-									self.endPullUpToRefresh(currentRowID == -2);
+									getOrderByUidAndStatus(itemName, 0);
+									self.endPullUpToRefresh(rowIDs[rowIndex] == -2);
 								}, 1000);
 							}
 						}
@@ -276,49 +276,120 @@
 			});
 		})(mui);
 		mui.ready(function() {
-			getOrderByUidAndStatus('item1', 1,0);
+			getOrderByUidAndStatus('item1', 1);
 		});
 	
-		function getOrderByUidAndStatus(itemId, firstTimeFlag,rowIndex) {
-			
-		jqxhr = mui.ajax(PREPATH + selectURL, {
+	(function($) {
+			$('.mui-scroll-wrapper').scroll({
+				indicators: true //是否显示滚动条
+			});
+			var item1 = document.getElementById('item1');
+			var item2 = document.getElementById('item2');
+			var item3 = document.getElementById('item3');
+			var item4 = document.getElementById('item4');
+			var item5 = document.getElementById('item5');
+			document.getElementById('slider').addEventListener('slide', function(e) {
+				if(e.detail.slideNumber === 0) {
+					  itemName = 'item1';
+					  selectURL = "/user/selectSorderBySorderQueryCondition"; 
+					  rowIndex = 0;
+				} else if(e.detail.slideNumber === 1) {
+					if(item2.querySelector('.mui-loading')) {
+						itemName = 'item2';
+						selectURL = "/user/selectSorderUnpaidBySorderQueryCondition";
+						rowIndex = 1;
+						getOrderByUidAndStatus(itemName, 1);
+					}
+				} else if(e.detail.slideNumber === 2) {
+					if(item3.querySelector('.mui-loading')) {
+						itemName = 'item3';
+						selectURL = "/user/selectSorderPaidBySorderQueryCondition";
+						rowIndex = 2;
+						getOrderByUidAndStatus(itemName, 1);
+					}
+				} else if(e.detail.slideNumber === 3) {
+					if(item4.querySelector('.mui-loading')) {
+						itemName = 'item4';
+						selectURL = "/user/selectSorderCAVBySorderQueryCondition";
+						rowIndex = 3;
+						getOrderByUidAndStatus(itemName, 1);
+					}
+				} else if(e.detail.slideNumber === 4) {
+					if(item5.querySelector('.mui-loading')) {
+						itemName = 'item5';
+						rowIndex = 4;
+						selectURL = "/user/selectRefundBySorderQueryCondition";
+						getOrderByUidAndStatus(itemName, 1);
+					}
+				}
+			});
+			var sliderSegmentedControl = document.getElementById('sliderSegmentedControl');
+			$('.mui-input-group').on('change', 'input', function() {
+				if(this.checked) {
+					sliderSegmentedControl.className = 'mui-slider-indicator mui-segmented-control mui-segmented-control-inverted mui-segmented-control-' + this.value;
+					//force repaint
+					sliderProgressBar.setAttribute('style', sliderProgressBar.getAttribute('style'));
+				}
+			});	
+		})(mui);
+	
+		function getOrderByUidAndStatus(itemId, firstTimeFlag) {
+			jqxhr = $.ajax({
 				type: "post",
 				async: false,
+				url:PREPATH + selectURL, 
 				data: {
 					startId: rowIDs[rowIndex]
 				},
+				headers:{
+             				"X-Requested-With":"XMLHttpRequest"
+        		},
 				dataType: "json",
 				xhrFields: {
 					withCredentials: true
 				},
 				crossDomain: true,
 				success: function(data) {
+					var sorders = data.sorders;
 					if(firstTimeFlag == 1) {
 						jQuery('#' + itemId + ' .mui-loading').hide();
+						mui('#' + itemId).off();
+						mui('#' + itemId + ' .mui-scroll').on('tap', 'button', function(e) {
+							e.stopPropagation();//阻止事件冒泡即可
+							buttonActionControl(this.innerText, this.value)
+						});
+						mui('#' + itemId).on('tap'," .mui-card",function(e) {
+							e.stopPropagation();//阻止事件冒泡即可
+							var status = $(this).find(".order-status").text();
+							var url = "order_detail.html";
+							var id = $(this).attr('id');
+							id = id.substring(4);
+							alert(id);
+							if(status.indexOf("退款")>=0){
+								url = "refund_detail.html";
+							}
+						 	url +="?id="+id;
+							mui.openWindow({
+								url: url
+							});
+						})
 					}
-					var item = "";
-					for(var i = 0; i < data.length; i++) {
+					for(var i = 0; i < sorders.length; i++) {
 						var html = "";
-						html = getItemStr(data[i]);
+						html = getItemStr(sorders[i]);
 						$('#' + itemId + ' .orderContentDiv').append(html);
 					}
-					if(data.length != 0){
-						rowIDs[rowIndex] = data[data.length - 1].oid;
-						currentRowID = data[data.length - 1].oid;
-						if(selectURL =="/selectRefundBySorderQueryCondition"){
-							rowIDs[rowIndex] = data[data.length - 1].rid;
-							currentRowID = data[data.length - 1].rid;
+					if(sorders.length != 0){
+						rowIDs[rowIndex] = sorders[sorders.length - 1].oid;
+						if(selectURL =="/user/selectRefundBySorderQueryCondition"){
+							rowIDs[rowIndex] = sorders[sorders.length - 1].rid;
 						}
 					}
-						
 					else{
 						rowIDs[rowIndex] = -2;
-						currentRowID = -2;
 					}	
 
-					mui('#' + itemId + ' .mui-scroll').on('tap', 'button', function() {
-						buttonActionControl(this.innerText, this.value)
-					});
+					
 				},
 				error: function(xhr, type, errorThrown) {
 					mui.toast("信息加载失败");
@@ -328,21 +399,29 @@
 		}
 
 		function changeOrderStatus(url, oid) {
-				mui.ajax(url, {
+				$.ajax( {
 				type: "post",
 				async: true,
 				data: {
 					oid: oid
 				},
+				url:url,
 				dataType: "json",
 				xhrFields: {
 					withCredentials: true
 				},
+				headers:{
+             				"X-Requested-With":"XMLHttpRequest"
+        		},
 				crossDomain: true,
-				success: function(re_status) {
-					if(re_status==1){
+				success: function(data) {
+					if(data.state==1){
 						mui.alert('操作成功', '提示', function() {
-							window.location.reload();
+							console.log("xxxx");
+							mui('#' + itemName + ' .mui-scroll').off('tap');
+							$('#' + itemName + ' .orderContentDiv').empty();
+							rowIDs[rowIndex] = -1;
+							getOrderByUidAndStatus(itemName,1);
 						});
 					}else{
 						mui.toast("操作失败");
@@ -360,10 +439,10 @@
 			var alertMsg = "";
 			if(text == "取消") {
 				if(orderStatus == "待付款") {
-					requestUrl = PREPATH + "/cancelUnpaidSorder";
+					requestUrl = PREPATH + "/user/cancelUnpaidSorder";
 					alertMsg = "您确定要取消付款，并删除订单？";
 				} else {
-					requestUrl = PREPATH + "/cancelRefundUnprocessed";
+					requestUrl = PREPATH + "/user/cancelRefundUnprocessed";
 					alertMsg = "您确定要取消退款？";
 				}
 			} else if(text == "付款") {
@@ -378,10 +457,10 @@
 				});
 			} else if(text == "删除") {
 				if(orderStatus == "已使用"){
-					requestUrl = PREPATH + "/deleteSorderCAV";
+					requestUrl = PREPATH + "/user/deleteSorderCAV";
 					alertMsg = "您确定要记录？";
 				}else{
-					requestUrl = PREPATH + "/deleteSorderRefunded";
+					requestUrl = PREPATH + "/user/deleteSorderRefunded";
 					alertMsg = "您确定要记录？";
 				}	
 			}
@@ -394,13 +473,11 @@
 					changeOrderStatus(requestUrl, oid);
 				}
 			});
+		    
 		}
 		function getItemStr(data) {
-			var id = data.oid;
-			if(data.rid !=undefined)
-				id = data.rid;
 			var html_content = '';
-			html_content += '<div id="card'+ id +'" class="mui-card" style="margin-bottom: 20px;">';
+			html_content += '<div id="card'+ data.oid +'" class="mui-card" style="margin-bottom: 20px;">';
 			html_content += '	<div class="mui-card-header">';
 			html_content += '		<table width="100%">';
 			html_content += '			<tr>';
@@ -468,72 +545,9 @@
 			return html_content;
 		}
 
-		$(".mui-card").click(function() {
-			var status = $(this).find(".order-status")[0].text();
-			var url = "order_detail.html";
-			var id = $(this).attr('id');
-			id = id.substring('4,7');
-			if(status.indexOf("退款")){
-				url = "refund_detail.html";
-			}
-		 	url +="?id="+id;
-			mui.openWindow({
-				url: url
-			});
-		})
 		
-		(function($) {
-			$('.mui-scroll-wrapper').scroll({
-				indicators: true //是否显示滚动条
-			});
-			var item1 = document.getElementById('item1');
-			var item2 = document.getElementById('item2');
-			var item3 = document.getElementById('item3');
-			var item4 = document.getElementById('item4');
-			var item5 = document.getElementById('item5');
-			document.getElementById('slider').addEventListener('slide', function(e) {
-				if(e.detail.slideNumber === 0) {
-					  selectURL = "/selectSorderBySorderQueryCondition";
-					  currentRowID = rowIDs[0];
-				} else if(e.detail.slideNumber === 1) {
-					if(item2.querySelector('.mui-loading')) {
-						 currentRowID = rowIDs[1];
-						itemName = 'item2';
-						selectURL = "/selectSorderUnpaidBySorderQueryCondition";
-						getOrderByUidAndStatus(itemName, 1,1);
-					}
-				} else if(e.detail.slideNumber === 2) {
-					if(item3.querySelector('.mui-loading')) {
-						itemName = 'item3';
-						currentRowID = rowIDs[2];
-						selectURL = "/selectSorderPaidBySorderQueryCondition";
-						getOrderByUidAndStatus(itemName, 1,1);
-					}
-				} else if(e.detail.slideNumber === 3) {
-					if(item4.querySelector('.mui-loading')) {
-						itemName = 'item4';
-						selectURL = "/selectSorderCAVBySorderQueryCondition";
-						currentRowID = rowIDs[3];
-						getOrderByUidAndStatus(itemName, 1,1);
-					}
-				} else if(e.detail.slideNumber === 4) {
-					if(item5.querySelector('.mui-loading')) {
-						itemName = 'item5';
-						currentRowID = rowIDs[4];
-						selectURL = "/selectRefundBySorderQueryCondition";
-						getOrderByUidAndStatus(itemName, 1,1);
-					}
-				}
-			});
-			var sliderSegmentedControl = document.getElementById('sliderSegmentedControl');
-			$('.mui-input-group').on('change', 'input', function() {
-				if(this.checked) {
-					sliderSegmentedControl.className = 'mui-slider-indicator mui-segmented-control mui-segmented-control-inverted mui-segmented-control-' + this.value;
-					//force repaint
-					sliderProgressBar.setAttribute('style', sliderProgressBar.getAttribute('style'));
-				}
-			});	
-		})(mui);
+		
+		
 	</script>
 
 </html>

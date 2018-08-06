@@ -89,14 +89,18 @@
 						//验证手机号
 						if (checkFlag) {
 							//发送手机验证码
-							mui.ajax(PREPATH + "/sendMobileCode", {
+							$.ajax( {
 								type: "post",
 								data: {tel: tel},
+								url:PREPATH + "/sendMobileCode",
 								dataType: "json",
 								async: false,
 								xhrFields: {  
             						withCredentials: true  
-      							},  
+      							}, 
+      							headers:{
+             						"X-Requested-With":"XMLHttpRequest"
+        						},
         						crossDomain: true,
         						beforeSend: function() {
         							delayURL(60);
@@ -126,10 +130,11 @@
 						if (code !== null && code !== "") {
 							var codeReg = /^\d{6}$/;
 							if (codeReg.test(code)) {
-								mui.ajax(PREPATH + "/checkMobileCode", {
+								$.ajax( {
 									type: "post",
 									data: {tel: tel, code: code},
 									dataType: "json",
+									url:PREPATH + "/checkMobileCode",
 									async: false,
 									xhrFields: {  
             							withCredentials: true  
