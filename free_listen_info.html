@@ -87,7 +87,7 @@
 			<div class="mui-content-padded" style="float: right;">
 				<button id="reserve" type="button" class="mui-btn mui-btn-warning" style="font-size: 15px;" value="">
 					<span style="padding-right: 3px;">申请预约</span>
-					<span class="mui-icon mui-icon-extra mui-icon-extra-cate"></span>
+					<span class="mui-icon mui-icon-extra mui-icon-extra-regist"></span>
 				</button>
 			</div>
 		</div>
@@ -137,10 +137,9 @@
 				    $("#lessonDesc").text(data.fdesc);
 				    $("#reserve").val(fid);
 				    $("#lessonStatus").text(data.status);
-				    
 				},
 				error:function(xhr,type,errorThrown){
-					mui.toast("信息获取失败，服务器异常");
+					mui.toast("信息获取失败");
 				}
 
 			});				
