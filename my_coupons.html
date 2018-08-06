@@ -89,7 +89,7 @@
 		<div id="content" class="mui-content mui-scroll-wrapper">
 			<div id="coupon_content" class="mui-scroll">
 
-				<div style="background-image: url(images/diamond2.jpg);background-repeat: no-repeat;background-size:100% 100%; width: 100%; height: 180px;">
+				<div style="background-image: url(images/diamond.jpg);background-repeat: no-repeat;background-size:100% 100%; width: 100%; height: 180px;">
 					<center style="padding-top: 13%;">
 						<div style="background-color:#007AFF);" class="portrait">
 							
@@ -133,13 +133,13 @@
 			}
 		});
 		var rowId = -1;
-		selectCouponByPage();
+		selectCouponByPage(1);
 		/**
 		 * 上拉加载具体业务实现
 		 */
 		function pullupRefresh() {
 			setTimeout(function() {
-				selectCouponByPage();
+				selectCouponByPage(0);
 				mui('#content').pullRefresh().endPullupToRefresh(rowId == -2);
 			}, 1500);
 		}	
@@ -162,13 +162,17 @@
 			itemStr += '</div>';
 			return itemStr;
 		}
-		function selectCouponByPage( ) {
-			jqxhr=mui.ajax(PREPATH + "/user/selectCouponByUIDAndPage", {
+		function selectCouponByPage(firstTimeFlag) {
+			var asyncFlag = false;
+			if(firstTimeFlag==1)
+				asyncFlag = true;
+			jqxhr=$.ajax( {
 				type: "post",
-				async: false,
+				async: asyncFlag,
 				data: {
 					startId: rowId
 				},
+				url:PREPATH + "/user/selectCouponByUIDAndPage",
 				headers:{
              				"X-Requested-With":"XMLHttpRequest"
         		},

@@ -275,9 +275,9 @@
 				});
 			});
 		})(mui);
-		mui.ready(function() {
-			getOrderByUidAndStatus('item1', 1);
-		});
+		
+		getOrderByUidAndStatus('item1', 1);
+	
 	
 	(function($) {
 			$('.mui-scroll-wrapper').scroll({
@@ -334,9 +334,13 @@
 		})(mui);
 	
 		function getOrderByUidAndStatus(itemId, firstTimeFlag) {
+			
+			var asyncFlag = false;
+			if(firstTimeFlag==1)
+				asyncFlag = true;
 			jqxhr = $.ajax({
 				type: "post",
-				async: false,
+				async: asyncFlag,
 				url:PREPATH + selectURL, 
 				data: {
 					startId: rowIDs[rowIndex]

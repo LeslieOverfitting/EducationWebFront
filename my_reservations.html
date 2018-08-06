@@ -301,10 +301,13 @@
 			}
 			
 			function selectAllFreeListenBookByPageAndStatus(itemId,firstTimeFlag){
+				var asyncFlag = false;
+				if(firstTimeFlag==1)
+					asyncFlag = true;
 				//获取所有订单
 				jqxhr = $.ajax({
 					type:"post",
-					async:false,
+					async:asyncFlag,
 					url:PREPATH+selectOrderURL,
 					data:{startId:rowIDs[rowIndex]},
 					dataType:"json",
