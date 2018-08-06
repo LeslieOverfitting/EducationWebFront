@@ -72,10 +72,8 @@
 							1234
 						</span>
 					</center>
-
-					<p class="signDay">
+					<p id="days" class="signDay">
 						连续签到8天
-
 					</p>
 				</div>
 				<div class="mui-card">	
@@ -119,19 +117,22 @@
 			
 			var desc = "";
 			var pointValue ="";
-			if(data.category =="课程订单"){
-				if(data.point >0)
-					desc = "购买课程"+data.lname+"赠送";
-				else	
-					desc += "使用积分购买"+data.lname+"扣除";
-			}else{
-				desc = "签到奖励";
-			}
-			if(data.point>0)
-				pointValue = "+"+data.point;
-			else	
-				pointValue = "-"+data.point;
 			
+			if(data.category =="课程订单"){
+				if(data.point > 0)
+					desc = "赠送：购买“" + data.lname + "”课程（订单编号：" + data.oid + "）";
+				else	
+					desc += "抵用：购买“" + data.lname + "”课程（订单编号：" + data.oid + "）";
+			}
+			else{
+				desc = "奖励：每日签到";
+			}
+			
+			if(data.point>0)
+				pointValue = "+" + data.point;
+			else	
+				pointValue = "-" + data.point;
+
 			var itemStr = '<li class="mui-table-view-cell mui-media">';
 			itemStr += '<div class="mui-media-body mui-pull-left" >';
 			itemStr += '<div class="mui-media-body" >';
@@ -140,7 +141,7 @@
 			itemStr += '</div>';
 			itemStr += '</div>';
 			itemStr += '<div class="mui-media-body mui-pull-right" >';
-			itemStr += '<p class="point-value">'+pointValue +'</p>';
+			itemStr += '<p class="point-value">' + pointValue +'</p>';
 			itemStr += '</div>';
 			itemStr += '</li>';
 			return itemStr;								
@@ -163,7 +164,7 @@
 				},
 				crossDomain: true,
 				success: function(data) {
-					var content =$("#point_content .mui-table-view") ;
+					var content = $("#point_content .mui-table-view") ;
 					var points = data.points;
 					for(var i = 0; i < points.length; i++) {
 						content.append(getItemStr(points[i]));
@@ -195,7 +196,7 @@
 				crossDomain: true,
 				success: function(data) {
 					 $("#pointValue").text(data.totalpoint);
-					 $("#signDays").text("签到天数："+data.days+"天");
+					 $("#days").text("连续签到" + data.days + "天");
 				},
 				error: function(xhr, type, errorThrown) {
 				 	mui.toast("信息获取失败");
