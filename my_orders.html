@@ -369,7 +369,6 @@
 							var url = "order_detail.html";
 							var id = $(this).attr('id');
 							id = id.substring(4);
-							alert(id);
 							if(status.indexOf("退款")>=0){
 								url = "refund_detail.html";
 							}
@@ -504,11 +503,11 @@
 			}
 			html_content += '						</p>';
 			if (data.status == "退款中" || data.status == "已退款") {
-				html_content += '						<p align="center" style="color: #333;">' + data.refundtime + '</p>';
-				html_content += '						<p align="center" style="color: #AAAAAA;">（' + data.ordertime + '下单）</p>';
+				html_content += '						<p align="center" style="color: #333;">' + (data.refundtime).substring(0,19) + '</p>';
+				html_content += '						<p align="center" style="color: #AAAAAA;">（' + (data.ordertime).substring(0,19) + '下单）</p>';
 			}
 			else {
-				html_content += '						<p align="center" style="color: #333;">' + data.ordertime + '</p>';	
+				html_content += '						<p align="center" style="color: #333;">' + (data.ordertime).substring(0,19) + '</p>';	
 			}
 			html_content += '					</td>';
 			html_content += '				</tr>';
