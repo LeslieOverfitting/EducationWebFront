@@ -162,7 +162,19 @@
 					dataType: "json",
 					success: function(data) {
 						 lessonPicker.setData(data);
-						 selectLessonByLessonQueryCondition(data[0].text, "", -1);
+						 var urlSplit = (window.location + '').split('?');
+						 if (urlSplit.length === 2) {
+						 	var class_arg = (urlSplit[1].split("="))[1];
+						 	if (class_arg === 1) {
+						 		selectLessonByLessonQueryCondition(data[0].text, "", -1);
+						 	}
+						 	else {
+						 		selectFreeListenByFreeListenQueryCondition(data[0].text, "", -1);
+						 	}
+						 }
+						 else {
+						 	selectLessonByLessonQueryCondition(data[0].text, "", -1);
+						 }
 					},
 					error: function() {
 						mui.toast("信息获取失败");

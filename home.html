@@ -120,10 +120,10 @@
 				</li>
 			</ul>
 			<hr>
-			<div id="freeListenCards">
+			<div id="lessonCards">
 				<div class="mui-row">
 					<div class="mui-col-xs-4"></div>
-					<div class="mui-col-xs-4 title" style="padding-left: 1px;">免费试听课</div>
+					<div class="mui-col-xs-4 title" style="padding-left: 10px;">精品课程</div>
 					<div class="mui-col-xs-1"></div>
 					<div id="more1" class="mui-col-xs-3;" style="padding-top: 28px; font-size: 15px;">
 						更多<span class="mui-icon mui-icon-arrowthinright" style="font-size: 15px;"></span>
@@ -131,10 +131,10 @@
 				</div>
 			</div>
 			<hr>
-			<div id="lessonCards">
+			<div id="freeListenCards">
 				<div class="mui-row">
 					<div class="mui-col-xs-4"></div>
-					<div class="mui-col-xs-4 title" style="padding-left: 10px;">精品课程</div>
+					<div class="mui-col-xs-4 title" style="padding-left: 1px;">免费试听课</div>
 					<div class="mui-col-xs-1"></div>
 					<div id="more2" class="mui-col-xs-3;" style="padding-top: 28px; font-size: 15px;">
 						更多<span class="mui-icon mui-icon-arrowthinright" style="font-size: 15px;"></span>
@@ -151,29 +151,29 @@
 			swipeBack: true, //启用右滑关闭功能,
 		});
 		//注册点击事件
-		document.getElementById("lesson").addEventListener("tap", function() {
+		$("lesson").click(function() {
 			mui.openWindow({
 				url: 'lesson.html'
 			});
 		})
-		document.getElementById("moments").addEventListener("tap", function() {
+		$("moments").click(function() {
 			mui.openWindow({
 				url: 'moments.html'
 			});
 		})
-		document.getElementById("my_own").addEventListener("tap", function() {
+		$("my_own").click(function() {
 			mui.openWindow({
 				url: 'my_own.html'
 			});
 		})
-		document.getElementById("more1").addEventListener("tap", function() {
+		$("more1").click(function() {
 			mui.openWindow({
-				url: 'lesson.html'
+				url: 'lesson.html?class=1'
 			});
 		})
-		document.getElementById("more2").addEventListener("tap", function() {
+		$("more2").click(function() {
 			mui.openWindow({
-				url: 'lesson.html'
+				url: 'lesson.html?class=2'
 			});
 		})
 		$("#serviceButton").click(function() {
