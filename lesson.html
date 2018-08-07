@@ -104,7 +104,7 @@
 			</a>
 		</nav>
 		<div id="courses"  class="mui-content mui-scroll-wrapper">
-			<div class="mui-row ">
+			<div class="mui-scroll">
 				<p style="margin-bottom: 0px;">
 					<img src="images/curriculum.png" height="10%" width="100%" />
 				</p>
@@ -149,7 +149,7 @@
 					layer: 3
 				});
 				$.ajax({
-					url: PREPATH + "/selectAllCategoryByQid",
+					url: PREPATH + "/selectAllBranchCategoryByQid",
 					type: "post",
 					async: true,
 					headers: {
@@ -168,16 +168,16 @@
 						mui.toast("信息获取失败");
 					}
 				});
-				var showCoursePicker = $("#showCoursePicker");
+				var showCoursePicker = document.getElementById("showCoursePicker");
 				var coursePicker = $('#coursePicker');
-				showCoursePicker.click(function() {
-					coursePicker.show(function(items) {
+				showCoursePicker.addEventListener('tap', function(event) {
+					lessonPicker.show(function(items) {
 						branch_log = items[0].text;
 						class_log = items[1].text;
 						category_log = items[2].text;
-						$("#branch").text(branch_log);
-						$("#class").text(class_log);
-						$("#category").text(category_log);
+						jQuery("#branch").text(branch_log);
+						jQuery("#class").text(class_log);
+						jQuery("#category").text(category_log);
 						if (class_log === "精品课") {
 							selectLessonByLessonQueryCondition(branch_log, category_log, -1);
 						}
@@ -236,7 +236,7 @@
 						html += '		</div>';
 						html += '	</div>';
 						html += '</div>';
-						$("#courses").append(html);
+						$("#coursePicker").append(html);
 					}
 					if (lessons.length > 0) {
 						startId_log = lessons[lessons.length - 1].lid;
@@ -291,7 +291,7 @@
 						html += '		</div>';
 						html += '	</div>';
 						html += '</div>';
-						$("#courses").append(html);
+						$("#coursePicker").append(html);
 					}
 					if (freelistens.length > 0) {
 						startId_log = freelistens[freelistens.length - 1].fid;
