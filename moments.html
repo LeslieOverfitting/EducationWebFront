@@ -345,7 +345,7 @@
 		function pullupRefresh() {
 			setTimeout(function() {
 				console.log("bound=" + boundaryId);
-				selectMessageByQidAndPage(boundaryId);
+				selectMessageByQidAndPage(boundaryId,0);
 				mui('#content').pullRefresh().endPullupToRefresh(boundaryId == -2);
 			}, 1500);
 		}
@@ -353,7 +353,7 @@
 		var contents = document.getElementById("messageDiv");
 		var prePend = document.getElementById("backImg");
 		getNickName();
-		selectMessageByQidAndPage(-1);
+		selectMessageByQidAndPage(-1,1);
 		
 
 		function getNickName() {
@@ -391,10 +391,13 @@
 			});
 		}
 
-		function selectMessageByQidAndPage(rowId) {
+		function selectMessageByQidAndPage(rowId,firstTimeFlag) {
+			var asyncFlag = false;
+			if(firstTimeFlag == 1)
+				asyncFlag = true;
 			jqxhr=$.ajax( {
 				type: "post",
-				async: false,
+				async: asyncFlag,
 				url:PREPATH + "/user/selectMessageByQidAndPage",
 				data: {
 					startId: rowId
