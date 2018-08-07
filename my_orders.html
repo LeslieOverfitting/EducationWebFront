@@ -497,7 +497,18 @@
 			html_content += '					<td width="50%"><img class="mui-media-object mui-pull-left" src="' + IMGPATH + data.imgurl + '"></td>';
 			html_content += '					<td width="50%" align="right">';
 			html_content += '						<p align="center" style="color: #333;">' + data.lname + '</p>';
-			html_content += '						<p align="center" style="color: #333;">' + data.total + '</p>';
+			html_content += '						<p align="center" style="color: #333;">' + data.actual + "&nbsp;&nbsp;";
+			if (data.actual < data.total) {
+				html_content += '							<s style="color: #AAAAAA;">原定价：' + data.total + '</s></p>';
+			}
+			html_content += '						</p>';
+			if (data.status == "退款中" || data.status == "已退款") {
+				html_content += '						<p align="center" style="color: #333;">' + data.refundtime + '</p>';
+				html_content += '						<p align="center" style="color: #AAAAAA;">（' + data.ordertime + '下单）</p>';
+			}
+			else {
+				html_content += '						<p align="center" style="color: #333;">' + data.ordertime + '</p>';	
+			}
 			html_content += '					</td>';
 			html_content += '				</tr>';
 			html_content += '			</table>';
@@ -512,7 +523,8 @@
 				html_content += '			<button type="button" class="mui-btn mui-btn-danger" value="' + data.oid + '">取消</button>';
 				html_content += '		</div>';
 				html_content += '	</div>';
-			} else if(data.status == "已付款") {
+			}
+			else if(data.status == "已付款") {
 				html_content += '	<div class="mui-card-footer">';
 				html_content += '		<div style="position: relative; left: 65%; width: 20%;">';
 				html_content += '		</div>';
@@ -520,15 +532,8 @@
 				html_content += '			<button type="button" class="mui-btn mui-btn-danger" value="' + data.oid + '">退款</button>';
 				html_content += '		</div>';
 				html_content += '	</div>';
-			} else if(data.status == "退款中") {
-				html_content += '	<div class="mui-card-footer">';
-				html_content += '		<div style="position: relative; left: 65%; width: 20%;">';
-				html_content += '		</div>';
-				html_content += '		<div style="position: relative; left: 5%; width: 20%;">';
-				html_content += '			<button type="button" class="mui-btn mui-btn-danger" value="' + data.oid + '">取消</button>';
-				html_content += '		</div>';
-				html_content += '	</div>';
-			} else if(data.status == "已使用") {
+			}
+			else if(data.status == "已使用") {
 				html_content += '	<div class="mui-card-footer">';
 				html_content += '		<div style="position: relative; left: 65%; width: 20%;">';
 				html_content += '		</div>';
@@ -536,7 +541,17 @@
 				html_content += '			<button type="button" class="mui-btn mui-btn-danger" value="' + data.oid + '">删除</button>';
 				html_content += '		</div>';
 				html_content += '	</div>';
-			} else if(data.status == "已退款") {
+			}
+			else if(data.status == "退款中") {
+				html_content += '	<div class="mui-card-footer">';
+				html_content += '		<div style="position: relative; left: 65%; width: 20%;">';
+				html_content += '		</div>';
+				html_content += '		<div style="position: relative; left: 5%; width: 20%;">';
+				html_content += '			<button type="button" class="mui-btn mui-btn-danger" value="' + data.oid + '">取消</button>';
+				html_content += '		</div>';
+				html_content += '	</div>';
+			} 
+			else if(data.status == "已退款") {
 				html_content += '	<div class="mui-card-footer">';
 				html_content += '		<div style="position: relative; left: 65%; width: 20%;">';
 				html_content += '		</div>';
