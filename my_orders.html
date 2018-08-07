@@ -358,6 +358,7 @@
 					if(firstTimeFlag == 1) {
 						jQuery('#' + itemId + ' .mui-loading').hide();
 						mui('#' + itemId).off();
+						mui('#' + itemId+ ' .mui-scroll').off();
 						mui('#' + itemId + ' .mui-scroll').on('tap', 'button', function(e) {
 							e.stopPropagation();//阻止事件冒泡即可
 							buttonActionControl(this.innerText, this.value)
