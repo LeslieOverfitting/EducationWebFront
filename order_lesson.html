@@ -768,6 +768,7 @@
 					coupons = data.coupons;
 					for(var i = 0; i < coupons.length; i++) {
 						var cloneModel = $("#couponExample").clone(true);
+						cloneModel.removeAttr("id");
 						cloneModel = setCouponModelInfo(coupons[i],cloneModel);
 						$("#coupon_content").append(cloneModel);
 					}

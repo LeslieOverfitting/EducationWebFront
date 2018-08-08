@@ -354,7 +354,7 @@
 		});
 
 		$(function() {
-			$.ajax({
+			jqxhr =$.ajax({
 				type: "post",
 				dataType: "json",
 				xhrFields: {
@@ -363,7 +363,7 @@
 				headers:{
              				"X-Requested-With":"XMLHttpRequest"
         		},
-				url:PREPATH + "/user/selectMyOwnInfo", 
+				url:PREPATH + "/selectMyOwnInfo", 
 				crossDomain: true,
 				success: function(data) {
 					if(data.userimg !== null && data.userimg !== "") {
@@ -451,7 +451,7 @@
 			jqxhr= $.ajax({
 				type: "post",
 				dataType: "json",
-				url:PREPATH + "/signIn",
+				url:PREPATH + "/user/signIn",
 				xhrFields: {
 					withCredentials: true
 				},
@@ -490,8 +490,11 @@
 				success: function(data) {
 					if(data.state === 1) {
 						$("#userimg").attr("src", IMGPATH + "default.jpg");
-						$("#nickname").text("点击登录");
+						$("#nickname").text("点击登录"); 
+						$("#bookIcon").html(' ');
+						$("#sorderIcon").html(' ');
 						mui.toast("注销成功");
+						
 					} else {
 						mui.toast("注销失败");
 					}

@@ -304,6 +304,7 @@
 				},
 				up: {
 					contentrefresh: '正在加载...',
+					contentnomore:'没有更多动态了',
 					callback: pullupRefresh
 				}
 			}
@@ -352,9 +353,8 @@
 
 		var contents = document.getElementById("messageDiv");
 		var prePend = document.getElementById("backImg");
-		getNickName();
 		selectMessageByQidAndPage(-1,1);
-		
+		getNickName();
 
 		function getNickName() {
 			nickName = sessionStorage.getItem('nickName');
@@ -365,7 +365,7 @@
 			jqxhr=$.ajax( {
 				type: "post",
 				async: true,
-				url:PREPATH + "/user/selectMessageByQidDownFresh",
+				url:PREPATH + "/selectMessageByQidDownFresh",
 				data: {
 					maxId: maxId
 				},
@@ -398,7 +398,7 @@
 			jqxhr=$.ajax( {
 				type: "post",
 				async: asyncFlag,
-				url:PREPATH + "/user/selectMessageByQidAndPage",
+				url:PREPATH + "/selectMessageByQidAndPage",
 				data: {
 					startId: rowId
 				},
@@ -444,38 +444,38 @@
 			html.push(data.mtime);
 			html.push('</p>');
 			html.push('</div></div>');
-			if(data.messagelikes.length > 0 || data.messagereply.length > 0) {
-				html.push('<div class="mui-card-footer">');
-				var redOrNot = '';
-				for(var j = 0; j < data.messagelikes.length; j++) {
-					if(data.messagelikes[j].uid == uid) {
-						redOrNot = 'red';
-					}
+			
+			html.push('<div class="mui-card-footer">');
+			var redOrNot = '';
+			for(var j = 0; j < data.messagelikes.length; j++) {
+				if(data.messagelikes[j].uid == uid) {
+					redOrNot = 'red';
 				}
-				html.push('<a class="mui-card-link"><span style="color:' + redOrNot + '" class="mui-icon mui-icon-extra mui-icon-extra-heart-filled" value="' + data.mid + '"></span></a>');
-				html.push('<a href="#comment" class="mui-card-link"><span class="mui-icon mui-icon-compose" value="' + data.mid + '" ></span></a></div>');
-				if(data.messagelikes.length > 0) {
-					html.push('<div class="mui-card-footer" style="display: block;">');
-					html.push('<div  style="margin-bottom: 10px;">');
-					html.push('<span class="mui-icon mui-icon-extra mui-icon-extra-heart-filled" style="font-size: 15px;"></span> ');
-					html.push('<p style="display:inline" id="likersName' + data.mid + '" >');
-					for(var j = 0; j < data.messagelikes.length; j++) {
-						if(j + 1 < data.messagelikes.length)
-							html.push(data.messagelikes[j].nickname + ' ');
-						else
-							html.push(data.messagelikes[j].nickname);
-					}
-					html.push('</p>');
-					html.push('</div>');
-					html.push('<div id="reply' + data.mid + '" style="margin-bottom: 5px;">');
-					for(var j = 0; j < data.messagereply.length; j++) {
-						html.push(data.messagereply[j].nickname + ':' + data.messagereply[j].content + '<br>');
-					}
-					html.push('</div>');
-					html.push('</div>');
+			}
+			html.push('<a class="mui-card-link"><span style="color:' + redOrNot + '" class="mui-icon mui-icon-extra mui-icon-extra-heart-filled" value="' + data.mid + '"></span></a>');
+			html.push('<a href="#comment" class="mui-card-link"><span class="mui-icon mui-icon-compose" value="' + data.mid + '" ></span></a></div>');
+			if(data.messagelikes.length > 0|| data.messagereply.length > 0) {
+				html.push('<div class="mui-card-footer" style="display: block;">');
+				html.push('<div  style="margin-bottom: 10px;">');
+				html.push('<span class="mui-icon mui-icon-extra mui-icon-extra-heart-filled" style="font-size: 15px;"></span> ');
+				html.push('<p style="display:inline" id="likersName' + data.mid + '" >');
+				for(var j = 0; j < data.messagelikes.length; j++) {
+					if(j + 1 < data.messagelikes.length)
+						html.push(data.messagelikes[j].nickname + ' ');
+					else
+						html.push(data.messagelikes[j].nickname);
+				}
+				html.push('</p>');
+				html.push('</div>');
+				html.push('<div id="reply' + data.mid + '" style="margin-bottom: 5px;">');
+				for(var j = 0; j < data.messagereply.length; j++) {
+					html.push(data.messagereply[j].nickname + ':' + data.messagereply[j].content + '<br>');
 				}
 				html.push('</div>');
+				html.push('</div>');
 			}
+			html.push('</div>');
+			
 			html.push('</div>');
 			return html.join('');
 		}
@@ -497,9 +497,11 @@
 				},
 				crossDomain: true,
 				success: function(data) {
+					//getNickName();
 					if(data.state == 1) {
 						console.log("innerText" + document.getElementById('likersName' + mid + '').innerText);
 						document.getElementById('likersName' + mid + '').innerText += ' ' + nickName;
+						$("#card"+mid+" .mui-icon-extra-heart-filled").css("color","red");
 					} else {
 						mui.toast("点赞失败");
 					}
@@ -526,10 +528,13 @@
         		},
 				crossDomain: true,
 				success: function(data) {
+					//getNickName();
 					if(data.state == 1) {
 						var likerNames = document.getElementById('likersName' + mid + '').innerText;
 						var temp = likerNames.split(nickName).join('');
 						document.getElementById('likersName' + mid + '').innerText = temp;
+						$("#card"+mid+" .mui-icon-extra-heart-filled").css("color","");
+					
 					} else {
 						mui.toast("取消点赞失败");
 					}
@@ -573,26 +578,24 @@
 		};
 
 		mui(".mui-content").on('tap', '.mui-icon-extra-heart-filled', function(item) {
-			console.log($(this).attr('value'));
 			mid = $(this).attr('value');
-			alert(mid);
 			if(('' + this.style.color) == "red") {
-				this.style.color = "";
 				deleteLike(mid);
 			} else {
-				this.style.color = "red";
 				saveLike(mid);
+				
 			}
 
 		});
 
 		mui("#comment").on('tap', '#publish', function(item) {
-		
+			//getNickName();
 			var innerComment = $('#commentValue').val();
 			console.log("innerComment");
 			if($('#reply' + mid + '') == undefined) {
-				console.log("ssss");
+				 
 				if(saveComment(mid, innerComment)==1){
+					
 					var html = [];
 					html.push('<div id="reply' + mid + '" class="mui-card-footer">');
 					html.push(nickName + ':' + innerComment + '<br>');
@@ -601,7 +604,7 @@
 				}
 			} else {
 				var re = saveComment(mid, innerComment);
-				console.log(re+"  re");
+				 
 				if(re==1){
 					console.log("ssss");
 					$("#reply"+mid).append(nickName + ':' +innerComment + '<br>');

@@ -85,8 +85,8 @@
 		</header> 
 		<div class="mui-content" style="margin-top: 44px; padding-top: 0;">			
 		   	<div id="allmap"></div>	
-			<ul class="mui-table-view">
-				<li class="mui-table-view-cell">
+			<ul  class="mui-table-view"   >
+				<li id="locationCardExample" class="mui-table-view-cell" style="display: none;">
 				 	<div class="mui-row">
 						<div class="mui-col-xs-10">
 							<div class="title">实训中心</div>
@@ -95,7 +95,7 @@
 									<span class="mui-icon mui-icon-map" style="color: #EC971F; font-size: 25px;"></span>
 								</div>
 								<div class="mui-col-xs-8">
-									<p style="font-size: 16px; margin-top: 3px;">辽宁省 沈阳市 浑南新区</p>
+									<p class="locationDesc" style="font-size: 16px; margin-top: 3px;">辽宁省 沈阳市 浑南新区</p>
 								</div>								
 							</div>
 							<div class="mui-row" style="margin-top: 3px;">
@@ -103,7 +103,7 @@
 									<span class="mui-icon mui-icon-phone" style="color: #EC971F; font-size: 25px;"></span>
 								</div>
 								<div class="mui-col-xs-8">
-									<p style="font-size: 16px; margin-top: 3px;">18622351756</p>
+									<p class="branch-tel" style="font-size: 16px; margin-top: 3px; -webkit-user-select: auto;">18622351756</p>
 								</div>
 							</div>							
 						</div>
@@ -127,7 +127,9 @@
 		mui.init({
 			swipeBack:true //启用右滑关闭功能
 		});
-
+		$(".branch-tel").click(function() {
+			alert($(this).text());
+		})
 		selectBranchByQID();
 
 		function getItemStr(data){
@@ -150,11 +152,12 @@
 			html.push('</tr>');
 			html.push('</table>');
 			html.push('</li>');
+			
 			return html.join('');
 		}
 
 		function selectBranchByQID(){
-			$.ajax({
+			jqxhr =$.ajax({
 				type:"post",
 				async:true,
 				url:PREPATH+"/selectBranchByQID",
@@ -168,7 +171,14 @@
 				success:function(data){
 					var branches = data.branches;
 					for(var i=0;i<branches.length;i++){
-						jQuery('.mui-table-view').append(getItemStr(branches[i]));		
+						var cloneModel = $("#locationCardExample").clone(true);
+						cloneModel.removeAttr("id");
+						cloneModel.find(".title").text(branches[i].branch);
+						cloneModel.css('display', "");
+						cloneModel.find(".locationDesc").text(branches[i].address);
+						cloneModel.find(".branch-tel").text(branches[i].tel);
+						cloneModel.find("button").attr("value",branches[i].longitude+','+branches[i].latitude);
+						jQuery('.mui-table-view').append(cloneModel);		
 					}		
 					mui(".mui-table-view-cell").on('tap',"button",function(){
 						console.log(this.value);
@@ -194,8 +204,6 @@
 	// 百度地图API功能
 	var map = new BMap.Map("allmap");
 	map.enableScrollWheelZoom(true);
-	
-	//theLocation(123,42);
 	var geolocation = new BMap.Geolocation();
     geolocation.getCurrentPosition(function(r){
 		if(this.getStatus() == BMAP_STATUS_SUCCESS){
@@ -219,5 +227,6 @@
 		map.addOverlay(marker);              // 将标注添加到地图中
 		map.panTo(new_point);
 	}
+	
 	
 </script>
