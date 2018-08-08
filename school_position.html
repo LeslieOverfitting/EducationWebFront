@@ -128,8 +128,15 @@
 			swipeBack:true //启用右滑关闭功能
 		});
 		$(".branch-tel").click(function() {
-			window.clipboardData.setData("Text",$(this).text());
-
+			var Url2=$(this).text();
+        	var oInput = document.createElement('input');
+        	oInput.value = Url2;
+        	document.body.appendChild(oInput);
+        	oInput.select(); // 选择对象
+        	document.execCommand("Copy"); // 执行浏览器复制命令
+        	oInput.className = 'oInput';
+        	oInput.style.display='none';
+        	mui.toast("号码已复制");
 		})
 		selectBranchByQID();
 

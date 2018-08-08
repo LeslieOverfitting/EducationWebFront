@@ -54,28 +54,33 @@
 			<div class="mui-card">
 				<ul class="mui-table-view">
 					<li class="mui-table-view-cell mui-media">
-						<img class="mui-media-object mui-pull-right" src="images/pretty.jpg">
-						<div class="mui-media-body">
+						<img class="mui-media-object mui-pull-left mui-col-xs-3" src="images/info_icon1.jpg">
+						<div class="mui-media-body" style="margin-left: 60px;">
 							开课分部
-							<p id="schoolLoaction" class='mui-ellipsis'></p>
+							<p id="schoolLoaction" class='mui-ellipsis'>
+							</p>
 						</div>
 					</li>
+				</ul>
+			</div>
+			<div class="mui-card" style="margin-top: 20px;">
+				<ul class="mui-table-view">
 					<li class="mui-table-view-cell mui-media">
-						<img class="mui-media-object mui-pull-right" src="images/pretty.jpg">
+						<img class="mui-media-object mui-pull-right" src="images/info_icon2.jpg">
 						<div class="mui-media-body">
 							学习方向
 							<p id="studyDirection" class='mui-ellipsis'></p>
 						</div>
 					</li>
 					<li class="mui-table-view-cell mui-media">
-						<img class="mui-media-object mui-pull-right" src="images/pretty.jpg">
+						<img class="mui-media-object mui-pull-right" src="images/info_icon2.jpg">
 						<div class="mui-media-body">
 							课程状态
 							<p id="lessonStatus" class='mui-ellipsis'></p>
 						</div>
 					</li>
 					<li class="mui-table-view-cell mui-media">
-						<img class="mui-media-object mui-pull-right" src="images/pretty.jpg">
+						<img class="mui-media-object mui-pull-right" src="images/info_icon2.jpg">
 						<div class="mui-media-body">
 							课程费用
 							<p id="lessonPrice" class='mui-ellipsis'></p>
@@ -132,18 +137,27 @@
 					withCredentials: true
 				},
 				headers:{
-             				"X-Requested-With":"XMLHttpRequest"
+             		"X-Requested-With":"XMLHttpRequest"
         		},
 				crossDomain: true,
 				success: function(data) {
 					$("#lessonImg").attr('src', IMGPATH + data.imgurl);
 					$("#studyDirection").text(data.category)
 					$("#lessonTitle").html(data.lname);
-					var schoolContent = data.branches[0].branch;
-					for(var i=1;i<data.branches.length;i++){
-						schoolContent +=","+data.branches[i].branch;
+					var branches = data.branches;
+					var schoolContent = branches[0].branch;
+					for (var i = 1; i < branches.length; i++) {
+						schoolContent += ",";
+						if (i % 2 == 0) {
+							schoolContent += "<br>";
+						}
+						schoolContent += branches[i].branch;
 					}
+<<<<<<< HEAD
 					$("#schoolLoaction").text(schoolContent+"速发货速度放缓刷卡积分返还手机客户端开发就是圣诞节发射东方红就是客户附件是大家看法上的飞机喀什地方还是肯定会是否合适恐惧和附件是");
+=======
+					$("#schoolLoaction").html(schoolContent);
+>>>>>>> 45e3d2af514ac974dbc474c0131a2ac9ef112380
 					$("#lessonPrice").text(data.lprice + '￥');
 					lprice = data.lprice ;
 					$("#lessonDesc").text(data.ldesc);
