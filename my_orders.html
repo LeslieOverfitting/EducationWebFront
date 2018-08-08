@@ -149,7 +149,7 @@
 	<body>
 
 		<header class="mui-bar mui-bar-nav">
-			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<a id="backToMyOwn" class="mui-icon mui-icon-left-nav mui-pull-left"></a>
 			<h1 class="mui-title">我的订单</h1>
 		</header>
 		<div id="content" class="mui-content mui-scroll-wrapper">
@@ -563,8 +563,11 @@
 			return html_content;
 		}
 
-		
-		
+		$("#backToMyOwn").click(function() {
+			mui.openWindow({
+				url: "my_own.html"
+			});
+		});
 		
 	</script>
 
