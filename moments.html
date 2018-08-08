@@ -452,10 +452,10 @@
 					redOrNot = 'red';
 				}
 			}
-			html.push('<a class="mui-card-link"><span style="color:' + redOrNot + '" class="mui-icon mui-icon-extra mui-icon-extra-heart-filled" value="' + data.mid + '"></span></a>');
+			html.push('<a class="mui-card-link"><span style="color:' + redOrNot + '" class="mui-icon mui-icon-extra mui-icon-extra-heart-filled heart-RedFlag" value="' + data.mid + '"></span></a>');
 			html.push('<a href="#comment" class="mui-card-link"><span class="mui-icon mui-icon-compose" value="' + data.mid + '" ></span></a></div>');
 			if(data.messagelikes.length > 0|| data.messagereply.length > 0) {
-				html.push('<div class="mui-card-footer" style="display: block;">');
+				html.push('<div id="footer'+data.mid +'" class="mui-card-footer" style="display: block;">');
 				html.push('<div  style="margin-bottom: 10px;">');
 				html.push('<span class="mui-icon mui-icon-extra mui-icon-extra-heart-filled" style="font-size: 15px;"></span> ');
 				html.push('<p style="display:inline" id="likersName' + data.mid + '" >');
@@ -497,11 +497,24 @@
 				},
 				crossDomain: true,
 				success: function(data) {
-					//getNickName();
 					if(data.state == 1) {
-						console.log("innerText" + document.getElementById('likersName' + mid + '').innerText);
-						document.getElementById('likersName' + mid + '').innerText += ' ' + nickName;
-						$("#card"+mid+" .mui-icon-extra-heart-filled").css("color","red");
+						 if($('#footer' + mid + '').length == 0){
+						 	alert("hheheh");
+						 	var html = '<div id="footer'+mid +'" class="mui-card-footer" style="display: block;">'; 
+							html+='<div  style="margin-bottom: 10px;">';
+							html+='<span class="mui-icon mui-icon-extra mui-icon-extra-heart-filled" style="font-size: 15px;"></span> ';
+							html+='<p style="display:inline" id="likersName' + mid + '" >';
+				 			html+=nickName;
+							html+='</p>';
+							html+='</div>';
+							html+='<div id="reply' + mid + '" style="margin-bottom: 5px;">';
+							html+='</div>';
+							html+='</div>';
+							$("#card" +mid+'').append(html);
+						}else{
+						 	document.getElementById('likersName' + mid + '').innerText += ' ' + nickName;
+						}	
+							$("#card"+mid+" .heart-RedFlag").css("color","red");
 					} else {
 						mui.toast("点赞失败");
 					}
@@ -533,8 +546,8 @@
 						var likerNames = document.getElementById('likersName' + mid + '').innerText;
 						var temp = likerNames.split(nickName).join('');
 						document.getElementById('likersName' + mid + '').innerText = temp;
-						$("#card"+mid+" .mui-icon-extra-heart-filled").css("color","");
-					
+						$("#card"+mid+" .heart-RedFlag").css("color","");
+						
 					} else {
 						mui.toast("取消点赞失败");
 					}
@@ -546,10 +559,10 @@
 		};
 
 		function saveComment(mid, content) {
-			var result = -1;
+			 
 			jqxhr=$.ajax( {
 				type: "post",
-				async: false,
+				async: true,
 				data: {
 					mid: mid,
 					content: content
@@ -560,58 +573,56 @@
 					withCredentials: true
 				},
 				headers:{
-             				"X-Requested-With":"XMLHttpRequest"
+             			"X-Requested-With":"XMLHttpRequest"
         		},
 				crossDomain: true,
 				success: function(data) {
-					if(data.state!=1){
+					if(data.state==1){
+						mui.toast("评论成功");
+						 if($('#footer' + mid + '').length==0){
+						 	var html = '<div id="footer'+mid +'" class="mui-card-footer" style="display: block;">'; 
+							html+='<div  style="margin-bottom: 10px;">';
+							html+='<span class="mui-icon mui-icon-extra mui-icon-extra-heart-filled" style="font-size: 15px;"></span> ';
+							html+='<p style="display:inline" id="likersName' + mid + '" >';
+							html+='</p>';
+							html+='</div>';
+							html+='<div id="reply' + mid + '" style="margin-bottom: 5px;">';
+							html+= nickName + ':' + content + '<br>' ;
+							html+='</div>';
+							html+='</div>';
+							$("#card" + mid+'').append(html);	
+						}else{
+								$("#reply"+mid).append(nickName + ':' +content + '<br>');
+					 	}
+					}else{
 						mui.toast("添加评论失败");
 					}
-					result = data.state ;
 				},
 				error: function(xhr, type, errorThrown) {
 					//异常处理；
 					mui.toast("添加评论失败");
 				}
 			});
-			return result;
+			 
 		};
-
 		mui(".mui-content").on('tap', '.mui-icon-extra-heart-filled', function(item) {
 			mid = $(this).attr('value');
+			
+			if(mid==undefined)  //判断是不是显示的心
+				return ;
 			if(('' + this.style.color) == "red") {
 				deleteLike(mid);
 			} else {
 				saveLike(mid);
 				
 			}
-
 		});
 
 		mui("#comment").on('tap', '#publish', function(item) {
 			//getNickName();
 			var innerComment = $('#commentValue').val();
-			console.log("innerComment");
-			if($('#reply' + mid + '') == undefined) {
-				 
-				if(saveComment(mid, innerComment)==1){
-					
-					var html = [];
-					html.push('<div id="reply' + mid + '" class="mui-card-footer">');
-					html.push(nickName + ':' + innerComment + '<br>');
-					html.push('</div>');
-					$("#card" + mid).append(html.join(''));
-				}
-			} else {
-				var re = saveComment(mid, innerComment);
-				 
-				if(re==1){
-					console.log("ssss");
-					$("#reply"+mid).append(nickName + ':' +innerComment + '<br>');
-				}else{
-					console.log("wrong");
-				}
-			}
+			console.log(innerComment);
+			saveComment(mid, innerComment);
 			document.getElementById("comment").style.display = 'none';
 		});
 

@@ -118,8 +118,9 @@
 		mui.init({
 			swipeBack: true //启用右滑关闭功能
 		});
+		var oid = ((window.location + '').split('?')[1]).split('=')[1];
 		$(function() {
-			var oid = ((window.location + '').split('?')[1]).split('=')[1];
+			
 			jqxhr=$.ajax( {
 				type: "post",
 				async: true,
@@ -146,7 +147,7 @@
 					}
 					else {
 						$("#actual").text(data.actual);
-						var cut = parseInt(data.actual) - parseInt(data.total);
+						var cut = parseFloat(data.total) - parseFloat(data.actual)  ;
 						$("#cut").text("（已优惠" + cut + "￥）");
 					}					
 					$("#ordertime").text((data.ordertime).substring(0,19));
@@ -189,7 +190,7 @@
 									if (data.state === 1) {
 										mui.toast("取消成功");
 										mui.openWindow({
-											url: "my_orders.html#item2"
+											url: "my_orders.html"
 										});
 									}
 									else {
@@ -203,7 +204,7 @@
 						});
 						$("#paySorderUnpaid").click(function() {
 							mui.openWindow({
-								url: "order_lesson.html"
+								url: "order_lesson.html?lid=0&oid="+oid+""
 							});
 						});
 					}
@@ -217,7 +218,7 @@
 						btnHtml += '</div>';
 						$("#orderDetail").append(btnHtml);
 						$("#requestRefund").click(function() {
-							mui.openWindow({
+							mui.openWindow({  
 								url: "refund.html?oid="+oid+""
 							});
 						});

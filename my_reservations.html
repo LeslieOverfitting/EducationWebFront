@@ -380,7 +380,8 @@
 								rowIndex = 1;
 								selectOrderURL ="/user/selectFreeListenBookUnprocessedByBookQueryCondition";
 								itemName = 'item2';
-								selectAllFreeListenBookByPageAndStatus(itemName,1);
+								if(rowIDs[rowIndex]==-1)
+									selectAllFreeListenBookByPageAndStatus(itemName,1);
 								 
 						}
 					}
@@ -389,7 +390,8 @@
 								rowIndex = 2;
 								selectOrderURL="/user/selectFreeListenBookProcessedByBookQueryCondition";
 								itemName = 'item3';
-								selectAllFreeListenBookByPageAndStatus(itemName,1);							 
+								if(rowIDs[rowIndex]==-1)
+									selectAllFreeListenBookByPageAndStatus(itemName,1);							 
 						}
 					}
 				});

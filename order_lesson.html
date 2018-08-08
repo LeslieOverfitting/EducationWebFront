@@ -483,9 +483,11 @@
 			
 
 			$(function() {
-				var parameters = ((window.location + '').split('?')[1]).split('&'); // ?oid=0&lid=0
+				var parameters = ((window.location + '').split('?')[1]).split('&'); //lid oid 
 				var lid = parseInt(parameters[0].split('=')[1]);
 				var oid = parseInt(parameters[1].split('=')[1]);
+				console.log("lid="+lid);
+				console.log("oid="+oid);
 				selectPayInfo(lid, oid);
 				
 				//注册支付点击事件
@@ -613,12 +615,11 @@
 				var lessonPriceCanbeDiscount = lessonPrice * discountrate;  //计算课程最大可用价格
 				var temp = Math.ceil(lessonPriceCanbeDiscount / perpointtomoney);//换算为积分
 				point = Math.min(temp,totalpoint); // 与当前积分取小的值
-					
 				pointPrice = point * perpointtomoney;  // 计算可以换算成的钱
 			}
 			
 			function checkTel(tel) {
-				alert("yanzheng");
+
 				if(tel !== null && tel !== "") {
 					if(telReg.test(tel)) {
 						return true;
@@ -642,10 +643,10 @@
 				var tel = $("#tel").val();
 				console.log(username);
 				console.log(branchName);
-				alert(username);
-				alert(branchName);
-				if(point>0)
-				 pointSubmit = point;
+				if($("#pointButton").hasClass("mui-active"))
+				 	pointSubmit = point;
+				else	
+					pointSubmit = 0;
 				if(lid !== 0 && oid === 0) {
 					jqxhr=$.ajax( {
 						type: "post",
@@ -848,9 +849,9 @@
 					var tempText = $("#couponMoney"+couponId).text();
 					couponPrice = tempText.substring(1);
 				}
-				alert(couponPrice);
 				viewApi.back();
 				getActualMoney();
+				$("#actual").val(actualMoney);
 			}else{
 				
 				mui.toast("无法使用");
