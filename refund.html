@@ -61,7 +61,7 @@
 					</div>
 					<div class="mui-input-row" style="height: 160px; padding: 8px;">
 						<label>退款理由</label>
-						<textarea id="refundreason" rows="5" placeholder="例如：7天无理由退课"></textarea>
+						<textarea id="refundreason" rows="5" placeholder="请说明退款理由，亲"></textarea>
 					</div>
 					<div class="mui-button-row" style="height: 60px; padding: 10px;">
 						<button id="reserve" type="button" class="mui-btn mui-btn-primary" style="width: 40%; height: 40px; font-size: 16px;">
@@ -158,10 +158,14 @@
 				});
 			}
 			document.getElementById("reserve").addEventListener('tap', function() {
+				var reason = $('#refundreason').val();
+				if(reason==""){
+					mui.toast("请说明退款理由，亲");
+					return;
+				}
 				var btnArray = ['是', '否'];
 				mui.confirm('是否确定申请退款？', '提示', btnArray, function(e) {
 					if(e.index == 0) {
-						var reason = $('#refundreason').text();
 						saveRefund(oid, reason);
 					}
 				})

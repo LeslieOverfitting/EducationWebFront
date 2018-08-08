@@ -72,15 +72,15 @@
 				<div class="mui-content-padded">
 					<p class='mui-ellipsis'>
 						<label>课程名称：</label>
-						<span id="lname">小王</span>
+						<span id="lname"></span>
 					</p>
 					<p class='mui-ellipsis'>
 						<label>课程费用：</label>
-						<span id="total">￥1000</span>
+						<span id="total"></span>
 					</p>
 					<p class='mui-ellipsis'>
 						<label>分部选择：</label>
-						<span id="branch">恒大名都</span>
+						<span id="branch"></span>
 					</p>
 				</div>
 			</div>
@@ -91,27 +91,27 @@
 				<div class="mui-content-padded">
 					<p class='mui-ellipsis'>
 						<label>订单编号：</label>
-						<span id="oid">23124</span>
+						<span id="oid"></span>
 					</p>
 					<p class='mui-ellipsis'>
 						<label>订单状态：</label>
-						<span id="status">退款中</span>
+						<span id="status"></span>
 					</p>
 					<p class='mui-ellipsis'>
 						<label>实付费用：</label>
-						<span id="actual">￥800</span>
+						<span id="actual"></span>
 					</p>
 					<p class='mui-ellipsis'>
 						<label>下单时间：</label>
-						<span id="ordertime">2018-07-11 12:30:12</span>
+						<span id="ordertime"></span>
 					</p>
 					<p class='mui-ellipsis'>
 						<label>真实姓名：</label>
-						<span id="username">岳星言</span>
+						<span id="username"></span>
 					</p>
 					<p class='mui-ellipsis'>
 						<label>联系方式：</label>
-						<span id="tel">15804032497</span>
+						<span id="tel"></span>
 					</p>
 				</div>
 			</div>
@@ -122,19 +122,19 @@
 				<div class="mui-content-padded">
 					<p class='mui-ellipsis'>
 						<label>应退费用：</label>
-						<span id="refundmoney">￥800</span>
+						<span id="refundmoney"></span>
 					</p>
 					<p class='mui-ellipsis'>
 						<label>退款状态：</label>
-						<span id="refundstatus">未处理</span>
+						<span id="refundstatus"></span>
 					</p>
 					<p class='mui-ellipsis'>
 						<label>退款时间：</label>
-						<span id="refundtime">2018-07-21 7:23:54</span>
+						<span id="refundtime"></span>
 					</p>
 					<p class='mui-ellipsis'>
 						<label>退款理由：</label>
-						<textarea id="refundreason" rows="3" readonly>真心不喜欢这门课真他娘比感到日他妈的彼得丹特</textarea>
+						<textarea id="refundreason" rows="3" readonly></textarea>
 					</p>
 				</div>
 			</div>
@@ -172,12 +172,12 @@
 					$("#oid").text(data.oid);
 					$("#status").text(data.status);
 					$("#actual").text(data.actual);
-					$("#ordertime").text(data.ordertime);
+					$("#ordertime").text((data.ordertime).substring(0,19));
 					$("#username").text(data.username);
 					$("#tel").text(data.tel);
 					$("#refundmoney").text(data.actual);
 					$("#refundstatus").text(data.refundstatus);
-					$("#refundtime").text(data.refundtime);
+					$("#refundtime").text((data.refundtime).substring(0,19));
 					$("#refundreason").val(data.refundreason);
 					console.log(data.status);
 					//加载页面按钮

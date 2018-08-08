@@ -72,11 +72,11 @@
 				<div class="mui-content-padded">
 					<p class='mui-ellipsis'>
 						<label>课程名称：</label>
-						<span id="title">小王</span>
+						<span id="title"></span>
 					</p>
 					<p class='mui-ellipsis'>
 						<label>开课分部：</label>
-						<span id="branch">恒大名都</span>
+						<span id="branch"></span>
 					</p>
 				</div>
 			</div>
@@ -87,27 +87,27 @@
 				<div class="mui-content-padded">
 					<p class='mui-ellipsis'>
 						<label>预约编号：</label>
-						<span id="id">23112424</span>
+						<span id="id"></span>
 					</p>
 					<p class='mui-ellipsis'>
 						<label>预约状态：</label>
-						<span id="status">已处理</span>
+						<span id="status"></span>
 					</p>
 					<p class='mui-ellipsis'>
 						<label>预约时间：</label>
-						<span id="booktime">2018-07-11 12:30:12</span>
+						<span id="booktime"></span>
 					</p>
 					<p class='mui-ellipsis'>
 						<label>真实姓名：</label>
-						<span id="username">岳星言</span>
+						<span id="username"></span>
 					</p>
 					<p class='mui-ellipsis'>
 						<label>联系方式：</label>
-						<span id="tel">15804032497</span>
+						<span id="tel"></span>
 					</p>
 					<p class='mui-ellipsis'>
 						<label>预约备注：</label>
-						<textarea id="refundreason" rows="3" readonly>好期待这门课啊， Java</textarea>
+						<textarea id="refundreason" rows="3" readonly></textarea>
 					</p>
 				</div>
 			</div>
@@ -143,7 +143,7 @@
 					$("#branch").text(data.branch);
 					$("#id").text(data.id);
 					$("#status").text(data.status);
-					$("#booktime").text(data.booktime);
+					$("#booktime").text((data.booktime).substring(0,19));
 					$("#username").text(data.username);
 					$("#tel").text(data.tel);
 					$("#comment").val(data.comment);

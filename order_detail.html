@@ -66,15 +66,15 @@
 				<div class="mui-content-padded">
 					<p class='mui-ellipsis'>
 						<label>课程名称：</label>
-						<span id="lname">小王</span>
+						<span id="lname"></span>
 					</p>
 					<p class='mui-ellipsis'>
 						<label>课程费用：</label>
-						<span id="total">1000￥</span>
+						<span id="total"></span>
 					</p>
 					<p class='mui-ellipsis'>
 						<label>分部选择：</label>
-						<span id="branch">恒大名都</span>
+						<span id="branch"></span>
 					</p>
 				</div>
 			</div>
@@ -85,28 +85,28 @@
 				<div class="mui-content-padded">
 					<p class='mui-ellipsis'>
 						<label>订单编号：</label>
-						<span id="oid">24214</span>
+						<span id="oid"></span>
 					</p>
 					<p class='mui-ellipsis'>
 						<label>订单状态：</label>
-						<span id="status">已付款</span>
+						<span id="status"></span>
 					</p>
 					<p class='mui-ellipsis'>
 						<label>实付费用：</label>
-						<span id="actual" style="width: 18%; float: none;">800￥</span>
-						<span id="cut" style="width: 55%;">（已优惠200￥）</span>
+						<span id="actual" style="width: 18%; float: none;"></span>
+						<span id="cut" style="width: 55%;"></span>
 					</p>
 					<p class='mui-ellipsis'>
 						<label>下单时间：</label>
-						<span id="ordertime">2018-07-11 12:30:12</span>
+						<span id="ordertime"></span>
 					</p>
 					<p class='mui-ellipsis'>
 						<label>真实姓名：</label>
-						<span id="username">岳星言</span>
+						<span id="username"></span>
 					</p>
 					<p class='mui-ellipsis'>
 						<label>联系方式：</label>
-						<span id="tel">15804032497</span>
+						<span id="tel"></span>
 					</p>
 				</div>
 			</div>
@@ -149,7 +149,7 @@
 						var cut = parseInt(data.actual) - parseInt(data.total);
 					}
 					$("#cut").text("（已优惠" + cut + "￥）");
-					$("#ordertime").text(data.ordertime);
+					$("#ordertime").text((data.ordertime).substring(0,19));
 					$("#username").text(data.username);
 					$("#tel").text(data.tel);
 					//加载页面按钮
@@ -254,7 +254,7 @@
 									if (data.state === 1) {
 										mui.toast("删除成功");
 										mui.openWindow({
-											url: "my_orders.html#item4"
+											url: "my_orders.html"
 										});
 									}
 									else {
