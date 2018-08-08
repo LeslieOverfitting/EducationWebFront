@@ -188,37 +188,45 @@
 			}
 			
 			.coupon-money-style {
-				margin-top: 15%;
+				margin-top: 10%;
 				margin-left: 10px;
-				font-size: 40px;
+				font-size: 30px;
 				color: #CF2D28;
 			}
 			.coupon-outdate-style{
-				padding-top: 10px;
+				padding-top: 5px;
 				font-size: 15px;
 				font-weight: bold;
-				padding-left: 10px;
+				padding-left: 5px;
 			}
 			.coupon-category-style{
 				color: #000000; 
-				font-size: 30px;
+				font-size: 20px;
 				text-align: center; 
-				margin-top: 15%;
+				margin-top: 10%;
 			}
 			.coupon-limit-style{
 				font-size: 15px;
-				padding-top: 10px; 
+				padding-top: 5px; 
 				text-align: center; 
 				font-weight: bold;
 				
 			}
 			.coupon-checked{
-				 font-size: 30px; 
+				 font-size: 20px; 
 				 padding-top: 20px; 
 				 padding-left: 10px; 
 				 color: #CF2D28;
 			}
-			
+			.mui-checkbox input[type=checkbox]:before, .mui-radio input[type=radio]:before{
+				font-size: 25px;
+			}
+			.mui-pull-bottom-pocket{
+				background-color: #FFFFFF;
+			}
+			.mui-scroll{
+				background-color: #FFFFFF;
+			}
 		</style>
 
 	</head>
@@ -262,7 +270,7 @@
 					<form class="mui-input-group">
 						<div class="mui-input-row" style="height: 50px; padding: 8px;">
 							<label>课程名称</label>
-							<input id="lname" type="text" value="Java与大数据" readonly>
+							<input id="lname" type="text" value="" readonly>
 						</div>
 						<div class="mui-input-row" style="height: 50px; padding: 8px;">
 							<label>上课分部</label>
@@ -277,7 +285,7 @@
 						</div>
 						<div class="mui-input-row" style="height: 50px; padding: 8px;">
 							<label>积分优惠</label>
-							<input id="point" type="text" value="可用1420035积分" style="width: 49%; padding: 0px; float: none;" readonly>
+							<input id="point" type="text" value="" style="width: 49%; padding: 0px; float: none;" readonly>
 							<div  id="pointButton" class="mui-switch mui-switch-blue mui-switch-mini" style="margin: 3px 0px 0px; width: 14%;">
 								<div class="mui-switch-handle"></div>
 							</div>
@@ -319,32 +327,32 @@
 				<h1 class="mui-center mui-title">优惠券</h1>
 			</div>
 			<div class="mui-page-content">
-				<div id="wrapper_content" class=" mui-scroll-wrapper">
+				<div id="wrapper_content" class=" mui-scroll-wrapper" style="background: #ffffff;">
 					<div   class="mui-scroll">
 					<form id="coupon_content" class="mui-input-group">
-						<div class="mui-input-row mui-radio mui-left" style="height: 80px;">
+						<div class="mui-input-row mui-radio mui-left" style="height: 70px;">
 							<div class="mui-card">
-								<div class="mui-card-content mui-pull-right" style="width: 90%;height: 70px;">
+								<div class="mui-card-content mui-pull-right" style="width: 90%;height: 60px;">
 									 <p class="coupon-checked">有钱任性，不使用</p>
 								</div>
 							</div>
-							<input name="checkbox" value="0" type="radio" style="padding-top: 25px;" checked>
+							<input name="checkbox" value="0" type="radio" style="padding-top: 25px;font-size: 10px;" checked>
 						</div>
-						<div id="couponExample" class="mui-input-row mui-radio mui-left" style="height: 120px; display:none;">
+						<div id="couponExample" class="mui-input-row mui-radio mui-left" style="height: 90px; display:none;">
 							<div class="mui-card">
 								<div class="mui-card-content mui-pull-right" style="width: 90%;">
-									<div class="mui-pull-left" style="width:50%; height: 100px; ">
+									<div class="mui-pull-left" style="width:50%; height: 80px; ">
 										<p id="couponMoney1" class="coupon-money-style">￥100</p>
 										<p  class="coupon-outdate-style">过期时间: 2018-5-12</p>
 									</div>
-									<div class="mui-pull-right" style="width: 50%;height: 100px;   ">
+									<div class="mui-pull-right" style="width: 50%;height: 80px;   ">
 										<p  class="coupon-category-style">Java</p>
 										<p  class="coupon-limit-style">满1000元使用</p>
 									</div>
 								</div>
 							</div>
 							<div>
-								<input name="checkbox" value="1" type="radio" style="padding-top: 40px;"/>
+								<input name="checkbox" value="1" type="radio" style="padding-top: 30px"/>
 							</div>
 							
 						</div>
@@ -461,14 +469,14 @@
 			var viewApi = mui('#app').view({
 				defaultPage: '#setting'
 			});
-			var lidSubmit = "";
-			var category = "";
-			var lessonPrice = "";
-			var couponPrice = "";
-			var couponId = 0;
-			var pointPrice = 0;
-			var rowId = -1;
-			var point = 0;
+			var lidSubmit = "";//课程id数据
+			var category = ""; // 课程类别
+			var lessonPrice = "";// 课程价格
+			var couponPrice = "";// 优惠券价格
+			var couponId = 0;// 优惠券id
+			var pointPrice = 0; // 积分价值
+			var rowId = -1; //优惠券界面，分页id
+			var point = 0; //积分
 			
 			var telReg = /^((1[3,8][0-9])|(15[012356789])|(14[5,7,9])|(17[0,1,3,5,6,7,8]))\d{8}$/;
 
@@ -541,12 +549,13 @@
 							$("#total").val(data.lprice);
 							$("#actual").val(data.lprice);
 							$("#username").val(data.username);
+							$("#tel").val(data.tel);
 							lidSubmit = lid;
 							var discountrate = data.discountrate;
 							var perpointtomoney = data.perpointtomoney ;
 							var totalpoint = data.totalpoint;
-							pointPrice =  -getPointPrice(totalpoint,discountrate,perpointtomoney);
-							$("#tel").val(data.tel);
+							getPointPrice(totalpoint,discountrate,perpointtomoney);	
+							$("#point").val("可用"+point+"积分");	
 							selectCouponByPage();
 						},
 						error: function() {
@@ -584,13 +593,14 @@
 							$("#lname").val(data.lname);
 							$("#total").val(data.lprice);
 							$("#actual").val(data.lprice);
-							lidSubmit = data.lid;
 							$("#username").val(data.username);
 							$("#tel").val(data.tel);
+							lidSubmit = data.lid;
 							var discountrate = data.discountrate;
 							var perpointtomoney = data.perpointtomoney ;
 							var totalpoint = data.totalpoint; 
-							pointPrice =  -getPointPrice(totalpoint,discountrate,perpointtomoney);
+							getPointPrice(totalpoint,discountrate,perpointtomoney);
+							$("#point").val("可用"+point+"积分");	
 							selectCouponByPage();
 						},
 						error: function() {
@@ -600,13 +610,11 @@
 				}
 			}
 			function getPointPrice(totalpoint,discountrate,perpointtomoney){
-				var lessonPriceCanbeDiscount = lessonPrice * discountrate;
-				var temp = Math.ceil(lessonPriceCanbeDiscount / perpointtomoney);
-				var pointCanUse = Math.min(temp,totalpoint);
-				$("#point").val("可用"+pointCanUse+"积分");
-				point = -pointCanUse;
-				var pointMoneyCanbeUsed = pointCanUse * perpointtomoney;
-				return pointMoneyCanbeUsed;
+				var lessonPriceCanbeDiscount = lessonPrice * discountrate;  //计算课程最大可用价格
+				var temp = Math.ceil(lessonPriceCanbeDiscount / perpointtomoney);//换算为积分
+				point = Math.min(temp,totalpoint); // 与当前积分取小的值
+					
+				pointPrice = point * perpointtomoney;  // 计算可以换算成的钱
 			}
 			
 			function checkTel(tel) {
@@ -767,27 +775,30 @@
 			if(pointValue < 0 )
 				pointValue = 0;
 			var actualPrice = Number(totalPrice) - pointValue  - Number(couponPrice) ;
+			console.log(actualPrice +"  totalPrice "+actualPrice+"  pointValue   "+pointValue);
 			if(actualPrice<0)
 				actualPrice = 0;
-			$("#actual").val(actualPrice);
+			return actualPrice;
 		}
 		function setCouponModelInfo(data,couponModel) {
 			couponModel.css('display', "");
 			couponModel.attr("id","couponModel"+data.recordid);
 			var desc = "无门槛";
+			var couponCatefory =data.category;
 			console.log(category+" --- "+data.category);
 			console.log(lessonPrice+" --- "+data.needmoney);
-			if((category ==data.category||data.category=="无类别" )&& lessonPrice>=data.needmoney)
+			if((category ==data.category||data.category=="ALL" )&& lessonPrice>=data.needmoney)
 			{
+				couponCatefory ="无类别";
 			}else{
 				couponModel.find("input").attr("disabled","disabled");
-				couponModel.find(".mui-card").css('background-color','#ACACB4');
+				couponModel.find(".mui-card").css('background-color','rgb(215, 215, 215)');
 				couponModel.find(".coupon-money-style").css("color","#000000");
 			}
 			couponModel.find(".coupon-money-style").text('￥'+ data.money);
 			couponModel.find(".coupon-money-style").attr("id","couponMoney"+data.recordid);
 			couponModel.find(".coupon-outdate-style").text('过期时间: '+data.deadline);
-			couponModel.find(".coupon-category-style").text(data.category);
+			couponModel.find(".coupon-category-style").text(couponCatefory);
 			if(data.needmoney !=0)
 				desc = "满"+data.needmoney+"使用";
 			couponModel.find(".coupon-limit-style").text(desc);
@@ -847,9 +858,21 @@
 			 
 		})
 		$("#pointButton").click(function() {
-			pointPrice = -pointPrice;
-			point = -point;
-			getActualMoney();
+			if($("#pointButton").hasClass("mui-active")){
+				console.log("激活");
+				if(pointPrice<0)
+					pointPrice = -pointPrice;
+				if(point<0)
+					point = -point;
+				$("#point").val("已用"+point+"积分");	
+			}else{
+				$("#point").val("可用"+point+"积分");	
+				console.log("未激活");
+				pointPrice = -pointPrice;
+				point = -point;
+			}
+			var actualMoney = getActualMoney();
+			$("#actual").val(actualMoney);
 		})
 		</script>
 

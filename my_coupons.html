@@ -147,13 +147,16 @@
 		function getItemStr(data) {
 			var itemStr = '<div class="mui-card" >';
 			var desc = "无门槛";
+			var coupounCategory ="无类别";
 			itemStr += '<div class="mui-card-content"  >';
 			itemStr += '<div class="mui-pull-left" style="width:50%; height: 100px; ">';
 			itemStr += '<p   class="coupon-money-style">'+'￥'+ data.money+'</p>';
 			itemStr += '<p   class="coupon-outdate-style">过期时间: '+data.deadline+'</p>';
 			itemStr += '</div>';
 			itemStr += '<div class="mui-pull-right" style="width: 50%;height: 100px;   ">';
-			itemStr += '<p   class="coupon-category-style">'+ data.category+'</p>';
+			if(data.category!="ALL")
+				coupounCategory = data.category;
+			itemStr += '<p   class="coupon-category-style">'+ coupounCategory+'</p>';
 			if(data.needmoney !=0)
 				desc = "满"+data.needmoney+"使用";
 			itemStr += '<p   class="coupon-limit-style">'+desc+'</p>';
