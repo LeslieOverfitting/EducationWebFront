@@ -136,6 +136,7 @@
 				container: '#courses',
 				up: {
 					contentrefresh: '正在加载...',
+					contentnomore:'没有更多课程了',
 					callback: pullRefresh
 				}
 			}
@@ -148,7 +149,7 @@
 				var lessonPicker = new $.PopPicker({
 					layer: 3
 				});
-				$.ajax({
+				jqxhr=$.ajax({
 					url: PREPATH + "/selectAllBranchCategoryByQid",
 					type: "post",
 					async: true,
@@ -165,7 +166,7 @@
 						 var urlSplit = (window.location + '').split('?');
 						 if (urlSplit.length === 2) {
 						 	var class_arg = (urlSplit[1].split("="))[1];
-						 	if (class_arg === 1) {
+						 	if (class_arg == 1) {
 						 		selectLessonByLessonQueryCondition(data[0].text, "", -1);
 						 	}
 						 	else {
@@ -214,7 +215,7 @@
 		}
 		
 		function selectLessonByLessonQueryCondition(branch, category, startId) {
-			$.ajax({
+			jqxhr=$.ajax({
 				url: PREPATH + "/selectLessonByLessonQueryCondition",
 				type: "post",
 				async: false,
@@ -233,9 +234,11 @@
 				dataType: "json",
 				success: function(data) {
 					var lessons = data.lessons;
+					if(startId ==-1)
+						jQuery('#coursePicker').empty();
 					for (var i = 0; i < lessons.length; i++) {
 						var html = "";
-						html += '<div class="mui-card" style="margin-bottom: 23px;">';
+						html += '<div class="mui-card lesson-card" style="margin-bottom: 23px;">';
 						html += '	<div class="mui-card-header mui-card-media"';
 						html += '		style="background-image: url(' + IMGPATH + lessons[i].imgurl + ');';
 						html += '			background-size: 100% 100%; height: 200px;">';
@@ -256,7 +259,8 @@
 					else {
 						startId_log = -2;
 					}
-					mui("#courses").on("tap", ".mui-card", function() {
+					mui("#courses .lesson-card").off();
+					mui("#courses").on("tap", ".lesson-card", function() {
 						mui.openWindow({
 							url: 'lesson_info.html?lid=' + this.querySelector(".lid").innerHTML
 						});
@@ -269,8 +273,8 @@
 		}
 		
 		function selectFreeListenByFreeListenQueryCondition(branch, category, startId) {
-			$.ajax({
-				url: PREPATH + "selectFreeListenByFreeListenQueryCondition",
+			jqxhr=$.ajax({
+				url: PREPATH + "/selectFreeListenByFreeListenQueryCondition",
 				type: "post",
 				async: false,
 				data: {
@@ -287,10 +291,12 @@
 				crossDomain: true,
 				dataType: "json",
 				success: function(data) {
+					if(startId ==-1)
+						jQuery('#coursePicker').empty();
 					var freelistens = data.freelistens;
 					for (var i = 0; i < freelistens.length; i++) {
 						var html = "";
-						html += '<div class="mui-card" style="margin-bottom: 23px;">';
+						html += '<div class="mui-card freeListen-card" style="margin-bottom: 23px;">';
 						html += '	<div class="mui-card-header mui-card-media"';
 						html += '		style="background-image: url(' + IMGPATH + freelistens[i].imgurl + ');';
 						html += '			background-size: 100% 100%; height: 200px;">';
@@ -311,7 +317,8 @@
 					else {
 						startId_log = -2;
 					}
-					mui("#courses").on("tap", ".mui-card", function() {
+					mui("#courses .freeListen-card").off();
+					mui("#courses ").on("tap", ".freeListen-card", function() {
 						mui.openWindow({
 							url: 'free_listen_info.html?fid=' + this.querySelector(".fid").innerHTML
 						});

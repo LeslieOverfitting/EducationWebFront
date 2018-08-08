@@ -95,7 +95,7 @@
 		selectTeacherSwiperByQID();
 		selectTeacherByQIDAndPage();
 		function selectTeacherSwiperByQID() { //-------------------------------------------
-			$.ajax( {
+			jqxhr =$.ajax( {
 				type: "get",
 				async: true,
 				data: {
@@ -147,7 +147,7 @@
 		
 		
 		function selectTeacherByQIDAndPage() {
-			$.ajax( {
+			jqxhr =$.ajax( {
 				type: "get",
 				async: false,
 				data: {
