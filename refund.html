@@ -102,7 +102,8 @@
 					success: function(data) { // lname ,lprice , refundreason
 						$("#lessonTitle").val(data.oid);
 						$("#lname").val(data.lname);
-						$("#lprice").val(data.actual + '￥');
+						console.log(data.actual);
+						$("#actual").val(data.actual + '￥');
 					},
 					error: function(xhr, type, errorThrown) {
 						//异常处理；

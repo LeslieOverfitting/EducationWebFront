@@ -19,7 +19,7 @@
 		<style>
 			.mui-control-content {
 				background-color: #EFEFF4;
-				min-height: 584px;
+				min-height: 100%;
 			}
 			.mui-control-content .mui-loading {
 				margin-top: 50px;
@@ -380,7 +380,8 @@
 								rowIndex = 1;
 								selectOrderURL ="/user/selectFreeListenBookUnprocessedByBookQueryCondition";
 								itemName = 'item2';
-								selectAllFreeListenBookByPageAndStatus(itemName,1);
+								if(rowIDs[rowIndex]==-1)
+									selectAllFreeListenBookByPageAndStatus(itemName,1);
 								 
 						}
 					}
@@ -389,7 +390,8 @@
 								rowIndex = 2;
 								selectOrderURL="/user/selectFreeListenBookProcessedByBookQueryCondition";
 								itemName = 'item3';
-								selectAllFreeListenBookByPageAndStatus(itemName,1);							 
+								if(rowIDs[rowIndex]==-1)
+									selectAllFreeListenBookByPageAndStatus(itemName,1);							 
 						}
 					}
 				});
